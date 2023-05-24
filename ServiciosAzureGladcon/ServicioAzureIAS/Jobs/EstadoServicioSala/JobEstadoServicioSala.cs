@@ -32,8 +32,8 @@ namespace ServicioAzureIAS.Jobs.EstadoServicioSala
             funciones.logueo("INICIO - "+mensajeLog);
 
             List<EstadoServiciosEntidad> lista = new List<EstadoServiciosEntidad>();
-            //string urlWebOnline = string.Empty;
-            string urlWebOnline = ConfigurationManager.AppSettings["UrlWebOnline"];
+            string urlWebOnline = string.Empty;
+            //urlWebOnline = ConfigurationManager.AppSettings["UrlWebOnline"]; //Descomentar para pruebas 
 
             try
             {
@@ -42,7 +42,7 @@ namespace ServicioAzureIAS.Jobs.EstadoServicioSala
 
                 foreach(var item in listaSalas)
                 {
-                    //urlWebOnline = item.UrlSalaOnline;
+                    urlWebOnline = item.UrlSalaOnline; //Comentar para pruebas 
                     var client = new System.Net.WebClient();
                     string ruta = "/EstadoServicios/ConsultarServicios";
                     string url = urlWebOnline + ruta;
@@ -67,7 +67,7 @@ namespace ServicioAzureIAS.Jobs.EstadoServicioSala
                     var titulo = "ALERTA";
                     var servidorKey = FirebaseKey;
                     List<NotificacionDispositivo> devices = new List<NotificacionDispositivo>();
-                    item.CodSala = 7;
+                    //item.CodSala = 7; //Descomentar para pruebas 
                     devices = estadoServiciosDAL.GetDevicesToNotification(item.CodSala);
 
                     string[] dispositivos_ = devices.Select(x => x.id).ToArray();
