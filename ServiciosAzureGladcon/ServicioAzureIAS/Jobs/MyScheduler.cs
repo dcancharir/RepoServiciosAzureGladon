@@ -9,7 +9,7 @@ namespace ServicioAzureIAS.Jobs.EstadoServicioSala
     public class MyScheduler
     {
         public static string nombre = "CONTADORES ONLINE HORA SCHEDULER...";
-        public static int intervaloSegundos = Convert.ToInt32(ConfigurationManager.AppSettings["IntervaloSegundosJobConsultaEstadoServicioSala"]);
+        public static int intervaloMinutos = Convert.ToInt32(ConfigurationManager.AppSettings["IntervaloMinutosJobConsultaEstadoServicioSala"]);
         public async Task StartEstadoEnvioSalaJob() {
             //Configurar el planificador(Scheduler)
             IScheduler scheduler = await StdSchedulerFactory.GetDefaultScheduler();
@@ -21,7 +21,7 @@ namespace ServicioAzureIAS.Jobs.EstadoServicioSala
                 .WithIdentity("TriggerEstadoServicioSala", "GrupoTriggerEstadoServicioSala")
                 .StartNow()
                 .WithSimpleSchedule(x =>
-                    x.WithIntervalInSeconds(intervaloSegundos)//Invervalo en segundos
+                    x.WithIntervalInMinutes(intervaloMinutos)//Invervalo en segundos
                     .RepeatForever()//Repetir Infinitamente
                 ).Build();
             //Programar el trabajo con el disparador
