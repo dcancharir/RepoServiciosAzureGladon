@@ -26,7 +26,7 @@ namespace ServicioMigracionClientes
             Task.Run(async () =>
             {
                 MyScheduler schedulerClass = new MyScheduler();
-                await schedulerClass.StartEstadoEnvioSalaJob();
+                await schedulerClass.StartMigracionData();
             });
             funciones.logueo("Jobs iniciados");
         }

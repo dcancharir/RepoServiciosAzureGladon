@@ -32,6 +32,7 @@ namespace ServicioMigracionClientes.Clases
                ,[Mail]
                ,[FechaNacimiento]
                ,[FechaRegistro]
+               ,[FechaRegistroIas]
                ,[Nombre]
                ,[Sala]
                ,[TipoDocumento]
@@ -47,6 +48,7 @@ namespace ServicioMigracionClientes.Clases
                ,@Celular2
                ,@Mail
                ,@FechaNacimiento
+               ,getdate()
                ,@FechaRegistro
                ,@Nombre
                ,@Sala

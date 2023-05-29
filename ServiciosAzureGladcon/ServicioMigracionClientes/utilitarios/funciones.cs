@@ -14,11 +14,11 @@ namespace ServicioMigracionClientes.utilitarios
         {
 #if (!DEBUG)
             switch(tipo){
-                case "Debug": EventLog.WriteEntry(ServicioAzureIAS.nombreservicio,mensaje,EventLogEntryType.Information) ; break;
-                case "Warn": EventLog.WriteEntry(ServicioAzureIAS.nombreservicio, mensaje, EventLogEntryType.Warning); break;
-                case "Error": EventLog.WriteEntry(ServicioAzureIAS.nombreservicio, mensaje, EventLogEntryType.Error); break;
-                case "default": EventLog.WriteEntry(ServicioAzureIAS.nombreservicio, mensaje, EventLogEntryType.Information); break;
-                default: EventLog.WriteEntry(ServicioAzureIAS.nombreservicio, mensaje, EventLogEntryType.Information); break;
+                case "Debug": EventLog.WriteEntry(ServicioMigracionClientes.nombreservicio,mensaje,EventLogEntryType.Information) ; break;
+                case "Warn": EventLog.WriteEntry(ServicioMigracionClientes.nombreservicio, mensaje, EventLogEntryType.Warning); break;
+                case "Error": EventLog.WriteEntry(ServicioMigracionClientes.nombreservicio, mensaje, EventLogEntryType.Error); break;
+                case "default": EventLog.WriteEntry(ServicioMigracionClientes.nombreservicio, mensaje, EventLogEntryType.Information); break;
+                default: EventLog.WriteEntry(ServicioMigracionClientes.nombreservicio, mensaje, EventLogEntryType.Information); break;
             }
                  //   Service1.log.Debug(mensaje);
 #else

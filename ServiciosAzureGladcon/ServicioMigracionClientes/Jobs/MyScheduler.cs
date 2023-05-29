@@ -13,7 +13,7 @@ namespace ServicioMigracionClientes.Jobs.MigracionData
     {
         public static string nombre = "MIGRACION DATA SCHEDULER...";
         public static string hora_activacion = ConfigurationManager.AppSettings["HoraActivacionJobMigracion"];
-        public async Task StartEstadoEnvioSalaJob()
+        public async Task StartMigracionData()
         {
             var horar = Convert.ToDateTime(hora_activacion);
             //Configurar el planificador(Scheduler)
