@@ -40,6 +40,8 @@ namespace ServicioAzureIAS.Jobs.EstadoServicioSala
                 EstadoServiciosEntidad entidad = new EstadoServiciosEntidad();
                 List<SalaEntidad> listaSalas = estadoServiciosDAL.ListadoSalaActivas();
 
+                listaSalas = listaSalas.Where(x => x.CodSala == 37).ToList();
+
                 foreach(var item in listaSalas)
                 {
                     urlWebOnline = item.UrlSalaOnline; //Comentar para pruebas 
@@ -49,6 +51,7 @@ namespace ServicioAzureIAS.Jobs.EstadoServicioSala
                     client.Headers.Add("content-type", "application/json; charset=utf-8");
                     client.Encoding = Encoding.UTF8;
                     var response = client.UploadString(url, "POST");
+                    //response = "{\"respuesta\":true,\"mensaje\":\"{ ERROR SERVICIO GLADCON SERVICES =\\u003e Error en el servidor remoto: (404) No se encontró. }\",\"data\":{\"estadoWebOnline\":true,\"estadoGladconServices\":false}}";
                     ResponseEstadoServicios jsonResponse = JsonConvert.DeserializeObject<ResponseEstadoServicios>(response);
                     if (Convert.ToBoolean(jsonResponse.respuesta))
                     {
@@ -71,6 +74,16 @@ namespace ServicioAzureIAS.Jobs.EstadoServicioSala
                     devices = estadoServiciosDAL.GetDevicesToNotification(item.CodSala);
 
                     string[] dispositivos_ = devices.Select(x => x.id).ToArray();
+
+                    if (!entidad.EstadoWebOnline && !entidad.EstadoGladconServices)
+                    {
+
+                        if (dispositivos_.Count() > 0)
+                        {
+                            titulo = "¡Servicio Web Online y Servicio Gladcon Services no funcionando!";
+                            EnvioFirebase(servidorKey, dispositivos_, errormensaje, titulo);
+                        }
+                    } else
                     if (!entidad.EstadoWebOnline)
                     {
 
@@ -79,7 +92,7 @@ namespace ServicioAzureIAS.Jobs.EstadoServicioSala
                             titulo = "¡Servicio Web Online no funcionando!";
                             EnvioFirebase(servidorKey, dispositivos_, errormensaje, titulo);
                         }
-                    }
+                    } else
                     if (!entidad.EstadoGladconServices)
                     {
 
