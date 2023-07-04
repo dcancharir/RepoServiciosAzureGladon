@@ -56,8 +56,17 @@ namespace ServicioAzureIAS.Jobs.EstadoServicioSala
                     if (Convert.ToBoolean(jsonResponse.respuesta))
                     {
                         var data = jsonResponse.data;
-                        entidad.EstadoWebOnline = Convert.ToBoolean(data.estadoWebOnline);
-                        entidad.EstadoGladconServices = Convert.ToBoolean(data.estadoGladconServices);
+
+                        if(data == null && !jsonResponse.respuesta)
+                        {
+                            funciones.logueo(jsonResponse.mensaje, "Error");
+                            funciones.logueo("TERMINADO - " + mensajeLog);
+                            return true;
+                        } else
+                        {
+                            entidad.EstadoWebOnline = Convert.ToBoolean(data.estadoWebOnline);
+                            entidad.EstadoGladconServices = Convert.ToBoolean(data.estadoGladconServices);
+                        }
                     }
                     entidad.CodSala = item.CodSala;
                     entidad.FechaRegistro = DateTime.Now;
