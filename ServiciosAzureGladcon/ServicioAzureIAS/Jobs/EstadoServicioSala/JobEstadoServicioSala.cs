@@ -68,7 +68,7 @@ namespace ServicioAzureIAS.Jobs.EstadoServicioSala
                             entidad.EstadoGladconServices = Convert.ToBoolean(data.estadoGladconServices);
                         }
                     }
-                    entidad.CodSala = item.CodSala;
+                    entidad.CodSala = item.CodSala; 
                     entidad.FechaRegistro = DateTime.Now;
                     estadoServiciosDAL.InsertEstadoServicios(entidad);
                     funciones.logueo("NWO:"+entidad.EstadoWebOnline+" - GS:"+entidad.EstadoGladconServices+ " - Sala:" + item.Nombre + " - Fecha:" + DateTime.Now);
