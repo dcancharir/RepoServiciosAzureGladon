@@ -2,6 +2,8 @@
 using Quartz;
 using System.Threading.Tasks;
 using ServicioAzureIAS.Jobs.RegistroProgresivo;
+using System.Configuration;
+using System;
 
 namespace ServicioAzureIAS.Schedulers
 {
@@ -9,6 +11,18 @@ namespace ServicioAzureIAS.Schedulers
     {
         public async Task Start_RP_LimpiarHistorialJob()
         {
+            string horaLimpiarHistorial = string.Empty;
+            try
+            {
+                horaLimpiarHistorial = ConfigurationManager.AppSettings["HoraLimpiarHistorial"];
+            }
+            catch
+            {
+                horaLimpiarHistorial = "01:00";
+            }
+
+            var hora = Convert.ToDateTime(horaLimpiarHistorial);
+
             IScheduler scheduler = await StdSchedulerFactory.GetDefaultScheduler();
 
             await scheduler.Start();
@@ -17,7 +31,8 @@ namespace ServicioAzureIAS.Schedulers
             
             ITrigger trigger = TriggerBuilder.Create()
                 .WithIdentity("TRIGGER_RP_Limpiar_Historial", "GROUP_Registro_Progresivo")
-                .WithCronSchedule("0 0 * * *")
+                .WithSchedule(CronScheduleBuilder.DailyAtHourAndMinute(hora.Hour, hora.Minute))
+                .ForJob(jobDetail)
                 .StartNow()
                 .Build();
 
