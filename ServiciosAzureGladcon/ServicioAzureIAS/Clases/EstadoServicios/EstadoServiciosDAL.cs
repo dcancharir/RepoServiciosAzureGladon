@@ -55,44 +55,44 @@ namespace ServicioAzureIAS.Clases.EstadoServicios
 
         }
 
-        public List<SalaEntidad> ListadoSalaActivas()
-        {
-            List<SalaEntidad> lista = new List<SalaEntidad>();
-            string consulta = @"SELECT CodSala,CodEmpresa,CodUbigeo,Nombre,UrlProgresivo,IpPublica,UrlSalaOnline FROM Sala where Estado=1";
-            try
-            {
-                using (var con = new SqlConnection(_conexion))
-                {
-                    con.Open();
-                    var query = new SqlCommand(consulta, con);
-                    using (var dr = query.ExecuteReader())
-                    {
-                        while (dr.Read())
-                        {
-                            var item = new SalaEntidad();
+        //public List<SalaEntidad> ListadoSalaActivas()
+        //{
+        //    List<SalaEntidad> lista = new List<SalaEntidad>();
+        //    string consulta = @"SELECT CodSala,CodEmpresa,CodUbigeo,Nombre,UrlProgresivo,IpPublica,UrlSalaOnline FROM Sala where Estado=1";
+        //    try
+        //    {
+        //        using (var con = new SqlConnection(_conexion))
+        //        {
+        //            con.Open();
+        //            var query = new SqlCommand(consulta, con);
+        //            using (var dr = query.ExecuteReader())
+        //            {
+        //                while (dr.Read())
+        //                {
+        //                    var item = new SalaEntidad();
 
-                            item.CodSala = Convert.ToInt32(dr["CodSala"]);
-                            item.CodEmpresa = Convert.ToInt32(dr["CodEmpresa"]);
-                            item.CodUbigeo = Convert.ToInt32(dr["CodUbigeo"]);
-                            item.Nombre = Convert.ToString(dr["Nombre"]);
-                            item.UrlProgresivo = Convert.ToString(dr["UrlProgresivo"]);
-                            item.IpPublica = Convert.ToString(dr["IpPublica"]);
-                            item.UrlSalaOnline = Convert.ToString(dr["UrlSalaOnline"]);
+        //                    item.CodSala = Convert.ToInt32(dr["CodSala"]);
+        //                    item.CodEmpresa = Convert.ToInt32(dr["CodEmpresa"]);
+        //                    item.CodUbigeo = Convert.ToInt32(dr["CodUbigeo"]);
+        //                    item.Nombre = Convert.ToString(dr["Nombre"]);
+        //                    item.UrlProgresivo = Convert.ToString(dr["UrlProgresivo"]);
+        //                    item.IpPublica = Convert.ToString(dr["IpPublica"]);
+        //                    item.UrlSalaOnline = Convert.ToString(dr["UrlSalaOnline"]);
 
-                            lista.Add(item);
-                        }
-                    }
-                }
+        //                    lista.Add(item);
+        //                }
+        //            }
+        //        }
 
 
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine(ex.Message);
+        //    }
 
-            return lista;
-        }
+        //    return lista;
+        //}
         public List<NotificacionDispositivo> GetDevicesToNotification(int codsala)
         {
             List<NotificacionDispositivo> lista = new List<NotificacionDispositivo>();

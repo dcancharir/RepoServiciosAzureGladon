@@ -22,16 +22,16 @@ namespace ServicioAzureIAS.Clases.EstadoServicios
         public dynamic data { get; set; }
     }
 
-    public class SalaEntidad
-    {
-        public int CodSala { get; set; }
-        public int CodEmpresa { get; set; }
-        public int CodUbigeo { get; set; }
-        public string Nombre { get; set; }
-        public string UrlProgresivo { get; set; }
-        public string IpPublica { get; set; }
-        public string UrlSalaOnline { get; set; }
-    }
+    //public class SalaEntidad
+    //{
+    //    public int CodSala { get; set; }
+    //    public int CodEmpresa { get; set; }
+    //    public int CodUbigeo { get; set; }
+    //    public string Nombre { get; set; }
+    //    public string UrlProgresivo { get; set; }
+    //    public string IpPublica { get; set; }
+    //    public string UrlSalaOnline { get; set; }
+    //}
 
     public class NotificacionDispositivo
     {
