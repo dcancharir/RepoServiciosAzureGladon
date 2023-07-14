@@ -21,7 +21,14 @@ namespace ServicioMigracionClientes.Clases
             bool respuesta = false;
 
             string consulta = @"
-        INSERT INTO [dbo].[Cliente]
+
+        IF EXISTS (SELECT * FROM [dbo].[Cliente] WHERE IdIas =@IdIas)
+        BEGIN
+           SELECT 1 
+        END
+        ELSE
+        BEGIN
+           INSERT INTO [dbo].[Cliente]
                ([NroDoc]
                ,[NombreCompleto]
                ,[ApelPat]
@@ -54,7 +61,10 @@ namespace ServicioMigracionClientes.Clases
                ,@Sala
                ,@TipoDocumento
                ,@Ubigeo
-               ,@IdIas)";
+               ,@IdIas)
+        END
+
+        ";
 
             try
             {
