@@ -45,7 +45,7 @@ namespace ServicioAzureIAS.Jobs.EstadoServicioSala
                 EstadoServiciosEntidad entidad = new EstadoServiciosEntidad();
                 List<SalaEntidad> listaSalas = salaDAL.ListarSalaActivas().Where(x => !string.IsNullOrEmpty(x.UrlSalaOnline) && !string.IsNullOrEmpty(x.IpPrivada)).ToList();
 
-                listaSalas = listaSalas.Where(x => x.CodSala == 37).ToList();
+                listaSalas = listaSalas.Where(x => x.CodSala == 37 || x.CodSala ==61).ToList();
                 List<string> urls = listaSalas.Select(x => x.UrlSalaOnline).ToList();
 
                 foreach (SalaEntidad sala in listaSalas)
