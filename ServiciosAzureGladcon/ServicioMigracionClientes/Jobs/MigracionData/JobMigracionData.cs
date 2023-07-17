@@ -53,7 +53,7 @@ namespace ServicioMigracionClientes.Jobs.MigracionData
             {
                 int maximoId = clienteDAL.ObtenerMaximoIdIas();
                 string urlIAS = $"{URL_IAS}/AsistenciaCliente/ListarClienteMigracion?Id={maximoId}";
-                client.Headers.Add("content-type", "application/json");
+                client.Headers.Add("content-type", "application/json; charset=utf-8");
                 response = client.DownloadString(urlIAS);
                 jsonResponse = JsonConvert.DeserializeObject<List<Cliente>>(response);
             }
