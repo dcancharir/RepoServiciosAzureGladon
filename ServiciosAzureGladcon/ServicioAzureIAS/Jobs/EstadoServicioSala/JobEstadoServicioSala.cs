@@ -43,9 +43,48 @@ namespace ServicioAzureIAS.Jobs.EstadoServicioSala
             {
 
                 EstadoServiciosEntidad entidad = new EstadoServiciosEntidad();
-                List<SalaEntidad> listaSalas = salaDAL.ListarSalaActivas().Where(x => !string.IsNullOrEmpty(x.UrlSalaOnline) && !string.IsNullOrEmpty(x.IpPrivada)).ToList();
+                List<SalaEntidad> listaSalas = new List<SalaEntidad>();
+                List<SalaEntidad> listaAuxSalas = salaDAL.ListarSalaActivas().Where(x => !string.IsNullOrEmpty(x.UrlSalaOnline) && !string.IsNullOrEmpty(x.IpPrivada)).ToList();
 
-                listaSalas = listaSalas.Where(x => x.CodSala == 37 || x.CodSala ==61).ToList();
+                string cadenaSalas = string.Empty;
+
+
+                try
+                {
+                    cadenaSalas = ConfigurationManager.AppSettings["SalasSeleccionadas"];
+                }
+                catch
+                {
+                    cadenaSalas = "";
+                }
+
+                if(cadenaSalas == null)
+                {
+                    cadenaSalas = "0";
+                }
+
+                string[] filtroSalas = cadenaSalas.Split(',');
+
+                if(filtroSalas.Length > 0 && !filtroSalas.Contains(""))
+                {
+
+                    if (!filtroSalas.Contains("0")) {
+
+                        foreach (var item in filtroSalas)
+                        {
+                            var salaFiltrada = listaAuxSalas.Where(x => x.CodSala == Convert.ToInt32(item)).FirstOrDefault();
+                            if (salaFiltrada != null)
+                            {
+                                listaSalas.Add(salaFiltrada);
+                            }
+                        }
+                    }                     
+                } else
+                {
+                    listaSalas.AddRange(listaAuxSalas);
+                }
+
+
                 List<string> urls = listaSalas.Select(x => x.UrlSalaOnline).ToList();
 
                 foreach (SalaEntidad sala in listaSalas)
