@@ -22,7 +22,7 @@ namespace ServicioMigracionClientes.Clases
 
             string consulta = @"
 
-        IF EXISTS (SELECT * FROM [dbo].[Cliente] WHERE IdIas =@IdIas)
+        IF EXISTS (SELECT * FROM [dbo].[Cliente] (nolock) WHERE IdIas =@IdIas)
         BEGIN
            SELECT 1 
         END
@@ -103,7 +103,7 @@ namespace ServicioMigracionClientes.Clases
         {
             int result = 0;
             string consulta = @"SELECT max(idias) as maximo
-                              FROM [dbo].[Cliente]";
+                              FROM [dbo].[Cliente] (nolock)";
             try
             {
                 using (var con = new SqlConnection(_conexion))

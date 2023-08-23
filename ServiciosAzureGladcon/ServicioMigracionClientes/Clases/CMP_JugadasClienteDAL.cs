@@ -20,7 +20,7 @@ namespace ServicioMigracionClientes.Clases
         {
             int result = 0;
             string consulta = @"SELECT max(SesionMigracionId) as maximo
-                              FROM [dbo].[CMP_JugadasCliente]";
+                              FROM [dbo].[CMP_JugadasCliente] (nolock)";
             try
             {
                 using (var con = new SqlConnection(_conexion))
