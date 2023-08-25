@@ -10,10 +10,10 @@ using System.Threading.Tasks;
 
 namespace ServicioGladconData.DAL
 {
-    public class detalle_maquina_auditDAL
+    public class detalle_maquinas_auditDAL
     {
         private string _conexion = string.Empty;
-        public detalle_maquina_auditDAL()
+        public detalle_maquinas_auditDAL()
         {
             _conexion = ConfigurationManager.ConnectionStrings["connectionBD"].ConnectionString;
         }

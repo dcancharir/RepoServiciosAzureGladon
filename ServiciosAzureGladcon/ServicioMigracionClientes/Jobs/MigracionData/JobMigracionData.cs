@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Quartz;
 using ServicioMigracionClientes.Clases;
+using ServicioMigracionClientes.DAL;
 using ServicioMigracionClientes.utilitarios;
 using System;
 using System.Collections.Generic;

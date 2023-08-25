@@ -80,15 +80,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Clases\Cliente.cs" />
-    <Compile Include="Clases\ClienteDAL.cs" />
+    <Compile Include="DAL\ClienteDAL.cs" />
     <Compile Include="Clases\CMP_JugadasCliente.cs" />
-    <Compile Include="Clases\CMP_JugadasClienteDAL.cs" />
+    <Compile Include="DAL\CMP_JugadasClienteDAL.cs" />
     <Compile Include="Clases\CMP_SesionClienteMigracion.cs" />
-    <Compile Include="Clases\CMP_SesionClienteMigracionDAL.cs" />
+    <Compile Include="DAL\CMP_SesionClienteMigracionDAL.cs" />
     <Compile Include="Clases\CMP_SesionMigracion.cs" />
-    <Compile Include="Clases\CMP_SesionMigracionDAL.cs" />
+    <Compile Include="DAL\CMP_SesionMigracionDAL.cs" />
     <Compile Include="Clases\CMP_SesionSorteoSalaMigracion.cs" />
-    <Compile Include="Clases\CMP_SesionSorteoSalaMigracionDAL.cs" />
+    <Compile Include="DAL\CMP_SesionSorteoSalaMigracionDAL.cs" />
     <Compile Include="Jobs\MigracionData\JobMigracionData.cs" />
     <Compile Include="Jobs\MigracionData\JobMigracionSesiones.cs" />
     <Compile Include="Jobs\MyScheduler.cs" />

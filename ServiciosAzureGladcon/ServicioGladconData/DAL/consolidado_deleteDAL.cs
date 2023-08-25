@@ -53,7 +53,7 @@ net_win, average_bet, game_played, isla, zona, tipo_maquina, fecha_ultimo_ingre,
                                     isla = ManejoNulos.ManageNullStr(dr["isla"]),
                                     zona = ManejoNulos.ManageNullStr(dr["zona"]),
                                     tipo_maquina = ManejoNulos.ManageNullStr(dr["tipo_maquina"]),
-                                    fecha_ultimo_ingre = ManejoNulos.ManageNullDate(dr["fecha_ultimo_ingreso"]),
+                                    fecha_ultimo_ingre = ManejoNulos.ManageNullDate(dr["fecha_ultimo_ingre"]),
                                     marca_modelo = ManejoNulos.ManageNullStr(dr["marca_modelo"]),
                                     posicion = ManejoNulos.ManageNullStr(dr["posicion"]),
                                 };
@@ -106,7 +106,7 @@ average_bet, game_played, isla, zona, tipo_maquina, fecha_ultimo_ingre, marca_mo
                                     isla = ManejoNulos.ManageNullStr(dr["isla"]),
                                     zona = ManejoNulos.ManageNullStr(dr["zona"]),
                                     tipo_maquina = ManejoNulos.ManageNullStr(dr["tipo_maquina"]),
-                                    fecha_ultimo_ingre = ManejoNulos.ManageNullDate(dr["fecha_ultimo_ingreso"]),
+                                    fecha_ultimo_ingre = ManejoNulos.ManageNullDate(dr["fecha_ultimo_ingre"]),
                                     marca_modelo = ManejoNulos.ManageNullStr(dr["marca_modelo"]),
                                     posicion = ManejoNulos.ManageNullStr(dr["posicion"]),
                                 };

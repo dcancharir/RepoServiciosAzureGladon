@@ -1,4 +1,5 @@
-﻿using ServicioMigracionClientes.utilitarios;
+﻿using ServicioMigracionClientes.Clases;
+using ServicioMigracionClientes.utilitarios;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -7,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ServicioMigracionClientes.Clases
+namespace ServicioMigracionClientes.DAL
 {
     public class ClienteDAL
     {
