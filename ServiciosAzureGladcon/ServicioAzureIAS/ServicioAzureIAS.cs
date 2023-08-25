@@ -121,6 +121,7 @@ namespace ServicioAzureIAS
             try
             {
                 var cors = new EnableCorsAttribute("*", "*", "*");
+                config.MaxReceivedMessageSize = 2147483647; // use config for this value
                 config.EnableCors(cors);
                 config.Routes.MapHttpRoute(
                    name: "API",
