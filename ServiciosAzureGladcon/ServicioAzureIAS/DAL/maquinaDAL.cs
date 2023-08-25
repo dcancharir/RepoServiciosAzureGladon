@@ -15,7 +15,7 @@ namespace ServicioAzureIAS.DAL
         private string _conexion = string.Empty;
         public maquinaDAL()
         {
-            _conexion = ConfigurationManager.ConnectionStrings["connectionBD"].ConnectionString;
+            _conexion = ConfigurationManager.ConnectionStrings["connectionBDGladconData"].ConnectionString;
         }
         public List<maquina> ListarMaquina(int maquina_id)
         {
@@ -69,8 +69,13 @@ namespace ServicioAzureIAS.DAL
 
         public int InsertarMaquina(maquina obj)
         {
-            int idInsertado = 0;
-            string consulta = @"INSERT INTO [maquina]
+            int idInsertado = -1;
+            string consulta = @"
+IF NOT EXISTS (SELECT * FROM maquina 
+                   WHERE id_maquina=@id_maquina)
+   BEGIN
+
+INSERT INTO [maquina]
            ([id_maquina]
            ,[fecha_ultimo_ingreso]
            ,[marca]
@@ -98,7 +103,9 @@ namespace ServicioAzureIAS.DAL
            ,@id_sala
            ,@juego
            ,@estado_maquina
-           ,@posicion)";
+           ,@posicion)
+    END
+";
             try
             {
                 using (var con = new SqlConnection(_conexion))
@@ -124,7 +131,7 @@ namespace ServicioAzureIAS.DAL
             }
             catch (Exception ex)
             {
-                idInsertado = 0;
+                idInsertado = -1;
             }
 
             return idInsertado;

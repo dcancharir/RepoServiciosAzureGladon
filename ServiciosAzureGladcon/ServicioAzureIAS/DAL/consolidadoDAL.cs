@@ -15,7 +15,7 @@ namespace ServicioAzureIAS.DAL
         private string _conexion = string.Empty;
         public consolidadoDAL()
         {
-            _conexion = ConfigurationManager.ConnectionStrings["connectionBD"].ConnectionString;
+            _conexion = ConfigurationManager.ConnectionStrings["connectionBDGladconData"].ConnectionString;
         }
         public List<consolidado> ListarConsolidado(int consolidado_id)
         {
@@ -74,8 +74,14 @@ tipo_maquina, fecha_ultimo_ingre, marca_modelo, posicion, id_consolidad
         }
         public int InsertarConsolidado(consolidado obj)
         {
-            int idInsertado = 0;
-            string consulta = @"INSERT INTO [consolidado]
+            int idInsertado = -1;
+            string consulta = @"
+IF NOT EXISTS (SELECT * FROM consolidado 
+                   WHERE id_consolidad=@id_consolidad)
+   BEGIN
+
+
+INSERT INTO [consolidado]
            ([fecha]
            ,[id_sala_consolidado]
            ,[id_maquina]
@@ -111,7 +117,9 @@ tipo_maquina, fecha_ultimo_ingre, marca_modelo, posicion, id_consolidad
            ,@fecha_ultimo_ingre
            ,@marca_modelo
            ,@posicion
-           ,@id_consolidad)";
+           ,@id_consolidad)
+    END
+";
             try
             {
                 using (var con = new SqlConnection(_conexion))
@@ -141,7 +149,7 @@ tipo_maquina, fecha_ultimo_ingre, marca_modelo, posicion, id_consolidad
             }
             catch (Exception ex)
             {
-                idInsertado = 0;
+                idInsertado = -1;
             }
 
             return idInsertado;

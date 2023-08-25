@@ -15,7 +15,7 @@ namespace ServicioAzureIAS.DAL
         private string _conexion = string.Empty;
         public detalle_maquinas_auditDAL()
         {
-            _conexion = ConfigurationManager.ConnectionStrings["connectionBD"].ConnectionString;
+            _conexion = ConfigurationManager.ConnectionStrings["connectionBDGladconData"].ConnectionString;
         }
         public List<detalle_maquinas_audit> ListarDetalleMaquinasAudit(int detalle_maquinas_audit_id)
         {
@@ -69,8 +69,14 @@ where detalle_maquinas_audit_id>@detalle_maquinas_audit_id
 
         public int InsertarDetalleMaquinasAudit(detalle_maquinas_audit obj)
         {
-            int idInsertado = 0;
-            string consulta = @"INSERT INTO [detalle_maquinas_audit]
+            int idInsertado = -1;
+            string consulta = @"
+
+IF NOT EXISTS (SELECT * FROM detalle_maquinas_audit 
+                   WHERE id_audit=@id_audit)
+   BEGIN
+
+INSERT INTO [detalle_maquinas_audit]
            ([id_audit]
            ,[fecha_hora]
            ,[marca_modelo]
@@ -100,7 +106,9 @@ where detalle_maquinas_audit_id>@detalle_maquinas_audit_id
            ,@tipo_contrato
            ,@tipo_sistema
            ,@propiedad
-           ,@operacion)";
+           ,@operacion)
+    END
+";
             try
             {
                 using (var con = new SqlConnection(_conexion))
@@ -127,7 +135,7 @@ where detalle_maquinas_audit_id>@detalle_maquinas_audit_id
             }
             catch (Exception ex)
             {
-                idInsertado = 0;
+                idInsertado = -1;
             }
 
             return idInsertado;

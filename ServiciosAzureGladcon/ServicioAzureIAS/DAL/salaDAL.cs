@@ -15,7 +15,7 @@ namespace ServicioAzureIAS.DAL
         private string _conexion = string.Empty;
         public salaDAL()
         {
-            _conexion = ConfigurationManager.ConnectionStrings["connectionBD"].ConnectionString;
+            _conexion = ConfigurationManager.ConnectionStrings["connectionBDGladconData"].ConnectionString;
         }
         public List<sala> ListarSala()
         {
@@ -60,20 +60,28 @@ namespace ServicioAzureIAS.DAL
 
         public int InsertarSala(sala obj)
         {
-            int idInsertado = 0;
-            string consulta = @"INSERT INTO [sala]
+            int idInsertado = -1;
+            string consulta = @"
+IF NOT EXISTS (SELECT * FROM sala 
+                   WHERE id_sala=@id_sala)
+   BEGIN
+
+INSERT INTO [sala]
            ([id_sala]
            ,[nombre_sala]
            ,[nombre_operador]
            ,[departamento_sala]
            ,[provincia_sala])
-     Output Inserted.sala_id
+     Output Inserted.id_sala
      VALUES
            (@id_sala
            ,@nombre_sala
            ,@nombre_operador
            ,@departamento_sala
-           ,@provincia_sala)";
+           ,@provincia_sala)
+
+    END
+";
             try
             {
                 using (var con = new SqlConnection(_conexion))
@@ -91,7 +99,7 @@ namespace ServicioAzureIAS.DAL
             }
             catch (Exception ex)
             {
-                idInsertado = 0;
+                idInsertado = -1;
             }
 
             return idInsertado;

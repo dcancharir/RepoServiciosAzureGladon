@@ -15,7 +15,7 @@ namespace ServicioAzureIAS.DAL
         private string _conexion = string.Empty;
         public consolidado_tmpDAL()
         {
-            _conexion = ConfigurationManager.ConnectionStrings["connectionBD"].ConnectionString;
+            _conexion = ConfigurationManager.ConnectionStrings["connectionBDGladconData"].ConnectionString;
         }
         public List<consolidado_tmp> ListarConsolidadoTMP(int consolidado_tmp_id)
         {
@@ -67,8 +67,13 @@ namespace ServicioAzureIAS.DAL
 
         public int InsertarConsolidadoTMP(consolidado_tmp obj)
         {
-            int idInsertado = 0;
-            string consulta = @"INSERT INTO [consolidado_tmp]
+            int idInsertado = -1;
+            string consulta = @"
+IF NOT EXISTS (SELECT * FROM consolidado_tmp 
+                   WHERE id_consolidado_tmp=@id_consolidado_tmp)
+   BEGIN
+
+INSERT INTO [consolidado_tmp]
             ([id_consolidado_tmp]
            ,[fecha]
            ,[sala]
@@ -88,7 +93,9 @@ namespace ServicioAzureIAS.DAL
            ,@coin_in
            ,@net_win
            ,@average_bet
-           ,@game_played)";
+           ,@game_played)
+    END
+";
             try
             {
                 using (var con = new SqlConnection(_conexion))
@@ -110,7 +117,7 @@ namespace ServicioAzureIAS.DAL
             }
             catch (Exception ex)
             {
-                idInsertado = 0;
+                idInsertado = -1;
             }
 
             return idInsertado;

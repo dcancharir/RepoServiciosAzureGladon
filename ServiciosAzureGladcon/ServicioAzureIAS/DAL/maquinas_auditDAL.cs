@@ -15,7 +15,7 @@ namespace ServicioAzureIAS.DAL
         private string _conexion = string.Empty;
         public maquinas_auditDAL()
         {
-            _conexion = ConfigurationManager.ConnectionStrings["connectionBD"].ConnectionString;
+            _conexion = ConfigurationManager.ConnectionStrings["connectionBDGladconData"].ConnectionString;
         }
         public List<maquinas_audit> ListarMaquinasAudit(int maquinas_audit_id)
         {
@@ -74,8 +74,13 @@ namespace ServicioAzureIAS.DAL
 
         public int InsertarMaquinasAudit(maquinas_audit obj)
         {
-            int idInsertado = 0;
-            string consulta = @"INSERT INTO [maquinas_audit]
+            int idInsertado = -1;
+            string consulta = @"
+IF NOT EXISTS (SELECT * FROM maquinas_audit 
+                   WHERE id_audit=@id_audit)
+   BEGIN
+
+INSERT INTO [maquinas_audit]
            ([id_audit]
            ,[fecha_hora]
            ,[id_maquina]
@@ -109,7 +114,9 @@ namespace ServicioAzureIAS.DAL
            ,@operacion
            ,@posicion
            ,@estado_maquina
-           ,@juego)";
+           ,@juego)
+    END
+";
             try
             {
                 using (var con = new SqlConnection(_conexion))
@@ -129,6 +136,7 @@ namespace ServicioAzureIAS.DAL
                     query.Parameters.AddWithValue("@tipo_maquina", obj.tipo_maquina);
                     query.Parameters.AddWithValue("@id_sala", obj.id_sala);
                     query.Parameters.AddWithValue("@operacion", obj.operacion);
+                    query.Parameters.AddWithValue("@posicion", obj.posicion);
                     query.Parameters.AddWithValue("@estado_maquina", obj.estado_maquina);
                     query.Parameters.AddWithValue("@juego", obj.juego);
                     idInsertado = Convert.ToInt32(query.ExecuteScalar());
@@ -137,7 +145,7 @@ namespace ServicioAzureIAS.DAL
             }
             catch (Exception ex)
             {
-                idInsertado = 0;
+                idInsertado = -1;
             }
 
             return idInsertado;

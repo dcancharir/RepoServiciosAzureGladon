@@ -42,6 +42,7 @@ namespace ServicioGladconData.Jobs.MigracionPostgres
             var consolidados_delete = _consolidadoDeleteDAL.ListarConsolidadoDeleteTodo();
             var consolidados_tmp = _consolidadoTmpDAL.ListarConsolidadoTMPTodo();
             var detalles_maquinas = _detalleMaquinaDAL.ListarDetalleMaquina();
+            var detalles_maquinas_audit = _detalleMaquinasAuditDAL.ListarDetalleMaquinaAuditTodo();
             var maquinas = _maquinaDAL.ListarMaquina();
             var maquinas_audit = _maquinasAuditDAL.ListarMaquinasAudit();
             var salas = _salaDAL.ListarSala();
@@ -50,20 +51,23 @@ namespace ServicioGladconData.Jobs.MigracionPostgres
                     Total Consolidados Delete=${consolidados_delete.Count}        
                     Total Consolidados Tmp=${consolidados_tmp.Count}        
                     Total Detalles Maquina=${detalles_maquinas.Count}        
+                    Total Detalles Maquina Audit=${detalles_maquinas_audit.Count}        
                     Total Maquinas=${maquinas.Count}        
                     Total Maquinas Audit=${maquinas_audit.Count}        
                     Total Salas=${salas.Count}        
                     ");
-            object oEnvio = new {
-                consolidados= consolidados,
-                consolidados_delete= consolidados_delete,
-                consolidados_tmp= consolidados_tmp,
-                detalles_maquinas= detalles_maquinas,
-                maquinas= maquinas,
-                maquinas_audit= maquinas_audit,
-                salas= salas
+            object oEnvio = new
+            {
+                consolidados = consolidados,
+                consolidados_delete = consolidados_delete,
+                consolidados_tmp = consolidados_tmp,
+                detalles_maquinas = detalles_maquinas,
+                detalles_maquinas_audit = detalles_maquinas_audit,
+                maquinas = maquinas,
+                maquinas_audit = maquinas_audit,
+                salas = salas
             };
-            string uri = "Servicio/RecepcionarGladconData";
+            string uri = "/Servicio/RecepcionarGladconData";
             EnviarPostIASAsync(oEnvio,uri);
         }
         private async Task<bool> EnviarPostIASAsync(object oEnvio, string uri)

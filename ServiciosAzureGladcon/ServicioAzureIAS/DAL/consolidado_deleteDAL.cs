@@ -15,7 +15,7 @@ namespace ServicioAzureIAS.DAL
         private string _conexion = string.Empty;
         public consolidado_deleteDAL()
         {
-            _conexion = ConfigurationManager.ConnectionStrings["connectionBD"].ConnectionString;
+            _conexion = ConfigurationManager.ConnectionStrings["connectionBDGladconData"].ConnectionString;
         }
         public List<consolidado_delete> ListarConsolidadoDelete(int consolidado_delete_id)
         {
@@ -74,8 +74,13 @@ net_win, average_bet, game_played, isla, zona, tipo_maquina, fecha_ultimo_ingre,
 
         public int InsertarConsolidadoDelete (consolidado_delete obj)
         {
-            int idInsertado = 0;
-            string consulta = @"INSERT INTO [consolidado]
+            int idInsertado = -1;
+            string consulta = @"
+IF NOT EXISTS (SELECT * FROM consolidado_delete 
+                   WHERE id_sala_consolidado=@id_sala_consolidado AND id_maquina=@id_maquina AND fecha=@fecha)
+   BEGIN
+
+INSERT INTO [consolidado_delete]
            ([fecha]
            ,[id_sala_consolidado]
            ,[id_maquina]
@@ -109,7 +114,9 @@ net_win, average_bet, game_played, isla, zona, tipo_maquina, fecha_ultimo_ingre,
            ,@tipo_maquina
            ,@fecha_ultimo_ingre
            ,@marca_modelo
-           ,@posicion)";
+           ,@posicion)
+    END
+";
             try
             {
                 using (var con = new SqlConnection(_conexion))
@@ -138,7 +145,7 @@ net_win, average_bet, game_played, isla, zona, tipo_maquina, fecha_ultimo_ingre,
             }
             catch (Exception ex)
             {
-                idInsertado = 0;
+                idInsertado = -1;
             }
 
             return idInsertado;

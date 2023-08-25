@@ -21,7 +21,7 @@ namespace ServicioGladconData.DAL
         {
             List<consolidado_tmp> lista = new List<consolidado_tmp>();
             string consulta = @"SELECT id_consolidado_tmp, fecha, sala, cod_maquina, serie, coin_in, net_win, average_bet, game_played
-	FROM public.consolidado_tmp
+	FROM public.consolidado_tmp WHERE fecha=@fechaOperacion
                                 order by fecha asc;";
             try
             {
