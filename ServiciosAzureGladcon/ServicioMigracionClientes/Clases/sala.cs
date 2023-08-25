@@ -8,5 +8,10 @@ namespace ServicioMigracionClientes.Clases
 {
     public class sala
     {
+        public int id_sala { get; set; }
+        public string nombre_sala { get; set; }
+        public string nombre_operador { get; set; }
+        public string departamento_sala { get; set; }
+        public string provincia_sala { get; set; }
     }
 }

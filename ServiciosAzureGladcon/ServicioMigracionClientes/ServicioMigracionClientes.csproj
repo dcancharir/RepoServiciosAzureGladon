@@ -98,6 +98,13 @@
     <Compile Include="Clases\CMP_SesionSorteoSalaMigracion.cs" />
     <Compile Include="DAL\CMP_SesionSorteoSalaMigracionDAL.cs" />
     <Compile Include="DAL\consolidadoDAL.cs" />
+    <Compile Include="DAL\consolidado_deleteDAL.cs" />
+    <Compile Include="DAL\consolidado_tmpDAL.cs" />
+    <Compile Include="DAL\detalle_maquinaDAL.cs" />
+    <Compile Include="DAL\detalle_maquinas_auditDAL.cs" />
+    <Compile Include="DAL\maquinaDAL.cs" />
+    <Compile Include="DAL\maquinas_auditDAL.cs" />
+    <Compile Include="DAL\salaDAL.cs" />
     <Compile Include="Jobs\MigracionData\JobMigracionData.cs" />
     <Compile Include="Jobs\MigracionData\JobMigracionGladonData.cs" />
     <Compile Include="Jobs\MigracionData\JobMigracionSesiones.cs" />

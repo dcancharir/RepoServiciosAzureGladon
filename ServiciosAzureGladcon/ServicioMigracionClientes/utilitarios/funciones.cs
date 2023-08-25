@@ -4,12 +4,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
+using Newtonsoft.Json;
+using System.Data.SqlClient;
+using System.IO;
 
 namespace ServicioMigracionClientes.utilitarios
 {
     public class funciones
     {
         public static ConsoleColor colorinicial = Console.ForegroundColor;
+        public static string conexion = System.Configuration.ConfigurationManager.ConnectionStrings["connectionBD"].ConnectionString;
         public static void logueo(string mensaje, string tipo = "Color", ConsoleColor color = System.ConsoleColor.Gray)
         {
 #if (!DEBUG)
@@ -38,6 +42,46 @@ namespace ServicioMigracionClientes.utilitarios
 
 #endif
 
+        }
+        public static String consultaBDMigracion(string query)
+        {
+            StringBuilder sb = new StringBuilder();
+            StringWriter sw = new StringWriter(sb);
+            JsonWriter jsonWriter = new JsonTextWriter(sw);
+            jsonWriter.WriteStartArray();
+
+            /*  if (query.Length == 0)
+              {
+                  query = "SELECT * FROM " + tabla + "";
+              }*/
+            try
+            {
+                using (var connection = new SqlConnection(conexion))
+                {
+                    connection.Open();
+                    using (var command = new SqlCommand(query, connection))
+                    {
+                        var reader = command.ExecuteReader();
+                        while (reader.Read())
+                        {
+                            jsonWriter.WriteStartObject();
+                            int fields = reader.FieldCount;
+                            for (int i = 0; i < fields; i++)
+                            {
+                                jsonWriter.WritePropertyName(reader.GetName(i));
+                                jsonWriter.WriteValue(reader[i]);
+                            }
+                            jsonWriter.WriteEndObject();
+                        }
+                        jsonWriter.WriteEndArray();
+                    }
+                }
+                return sb.ToString();
+            }
+            catch (Exception ex)
+            {
+                return "ERROR SQL";// ex.Message;
+            }
         }
     }
 }
