@@ -80,6 +80,18 @@
       <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.3\lib\netstandard1.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
     <Reference Include="System.Runtime.Remoting" />
+    <Reference Include="System.Web.Cors, Version=5.2.9.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Cors.5.2.9\lib\net45\System.Web.Cors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http, Version=5.2.9.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.9\lib\net45\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.Cors, Version=5.2.9.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Cors.5.2.9\lib\net45\System.Web.Http.Cors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.SelfHost, Version=5.2.9.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.SelfHost.5.2.9\lib\net45\System.Web.Http.SelfHost.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -91,8 +103,24 @@
   <ItemGroup>
     <Compile Include="Clases\EstadoServicios\EstadoServiciosDAL.cs" />
     <Compile Include="Clases\EstadoServicios\EstadoServiciosEntidad.cs" />
+    <Compile Include="Clases\GladconData\consolidado.cs" />
+    <Compile Include="Clases\GladconData\consolidado_delete.cs" />
+    <Compile Include="Clases\GladconData\consolidado_tmp.cs" />
+    <Compile Include="Clases\GladconData\detalle_maquina.cs" />
+    <Compile Include="Clases\GladconData\detalle_maquinas_audit.cs" />
+    <Compile Include="Clases\GladconData\maquina.cs" />
+    <Compile Include="Clases\GladconData\maquinas_audit.cs" />
+    <Compile Include="Clases\GladconData\sala.cs" />
     <Compile Include="Clases\Sala\SalaDAL.cs" />
     <Compile Include="Clases\Sala\SalaEntidad.cs" />
+    <Compile Include="DAL\consolidadoDAL.cs" />
+    <Compile Include="DAL\consolidado_deleteDAL.cs" />
+    <Compile Include="DAL\consolidado_tmpDAL.cs" />
+    <Compile Include="DAL\detalle_maquinaDAL.cs" />
+    <Compile Include="DAL\detalle_maquinas_auditDAL.cs" />
+    <Compile Include="DAL\maquinaDAL.cs" />
+    <Compile Include="DAL\maquinas_auditDAL.cs" />
+    <Compile Include="DAL\salaDAL.cs" />
     <Compile Include="Jobs\EstadoServicioSala\JobEstadoServicioSala.cs" />
     <Compile Include="Jobs\MyScheduler.cs" />
     <Compile Include="Jobs\RegistroProgresivo\RP_LimpiarHistorialJob.cs" />
@@ -111,6 +139,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ServicioController.cs" />
     <Compile Include="utilitarios\CheckPortHelper.cs" />
     <Compile Include="utilitarios\ErrorLinea.cs" />
     <Compile Include="utilitarios\funciones.cs" />
