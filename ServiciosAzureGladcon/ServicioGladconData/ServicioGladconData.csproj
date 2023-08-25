@@ -39,15 +39,33 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Npgsql, Version=4.0.13.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Npgsql.4.0.13\lib\net451\Npgsql.dll</HintPath>
+    </Reference>
     <Reference Include="Quartz, Version=3.0.6.0, Culture=neutral, PublicKeyToken=f6b8c98a402cc8a4, processorArchitecture=MSIL">
       <HintPath>..\packages\Quartz.3.0.6\lib\net452\Quartz.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Buffers, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Buffers.4.4.0\lib\netstandard1.1\System.Buffers.dll</HintPath>
+    </Reference>
     <Reference Include="System.Configuration" />
     <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Core" />
     <Reference Include="System.Management" />
+    <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Memory.4.5.3\lib\netstandard1.1\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.2\lib\netstandard1.0\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
     <Reference Include="System.Runtime.Remoting" />
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.2\lib\portable-net45+win8+wp8+wpa81\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -57,6 +75,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Clases\consolidado.cs" />
+    <Compile Include="DAL\consolidadoDAL.cs" />
+    <Compile Include="Clases\consolidado_delete.cs" />
+    <Compile Include="Clases\consolidado_tmp.cs" />
+    <Compile Include="Clases\detalle_maquina.cs" />
+    <Compile Include="Clases\detalle_maquinas_audit.cs" />
+    <Compile Include="Clases\maquina.cs" />
+    <Compile Include="Clases\maquinas_audit.cs" />
+    <Compile Include="Clases\sala.cs" />
+    <Compile Include="DAL\consolidado_deleteDAL.cs" />
+    <Compile Include="DAL\consolidado_tmpDAL.cs" />
+    <Compile Include="DAL\detalle_maquinaDAL.cs" />
+    <Compile Include="DAL\detalle_maquina_auditDAL.cs" />
+    <Compile Include="DAL\maquinaDAL.cs" />
+    <Compile Include="DAL\maquinas_auditDAL.cs" />
+    <Compile Include="DAL\salaDAL.cs" />
     <Compile Include="Jobs\MigracionPostgres\JobMigracionPostgres.cs" />
     <Compile Include="Jobs\MyScheduler.cs" />
     <Compile Include="ProjectInstaller.cs">
