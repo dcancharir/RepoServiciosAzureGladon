@@ -21,7 +21,14 @@ namespace ServicioMigracionClientes.DAL
         public bool ConsolidadoInsertar(consolidado item)
         {
             bool response = false;
-            string consulta = @"INSERT INTO [dbo].[consolidado]
+            string consulta = @"
+ IF EXISTS (SELECT * FROM [dbo].[consolidado] (nolock) WHERE consolidado_id_ias = @consolidado_id_ias)
+        BEGIN
+           SELECT 1 
+        END
+        ELSE
+        BEGIN
+INSERT INTO [dbo].[consolidado]
            ([consolidado_id_ias]
            ,[fecha]
            ,[id_sala_consolidado]
@@ -59,7 +66,8 @@ namespace ServicioMigracionClientes.DAL
            ,@marca_modelo 
            ,@posicion 
            ,@id_consolidad
-           ) ";
+           ) 
+end";
             try
             {
                 using (var con = new SqlConnection(_conexion))
