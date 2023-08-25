@@ -33,6 +33,7 @@ namespace ServicioMigracionClientes.Jobs.MigracionData
         }
         public void MigrarData()
         {
+            funciones.logueo("Job Migracion Informacion de GladconData Iniciado");
             try
             {
                 var ultimoConsolidado = ObtenerUltimoId("consolidado","consolidado_id_ias");
@@ -58,52 +59,61 @@ namespace ServicioMigracionClientes.Jobs.MigracionData
                     item.consolidado_id = 0;
                     _consolidadoDAL.ConsolidadoInsertar(item);
                 }
+                funciones.logueo("Tabla consolidado migrada - "+listaConsolidado.Count + " - registros");
                 foreach (var item in listaConsolidadoDelete)
                 {
                     item.consolidado_delete_id_ias = item.consolidado_delete_id;
                     item.consolidado_delete_id = 0;
                     _consolidadoDeleteDAL.InsertarConsolidadoDelete(item);
                 }
+                funciones.logueo("Tabla consolidado_delete migrada" + listaConsolidadoDelete.Count+" - registros");
                 foreach (var item in listaConsolidadoTmp)
                 {
                     item.consolidado_tmp_id_ias = item.consolidado_tmp_id;
                     item.consolidado_tmp_id = 0;
                     _consolidadoTmpDAL.InsertarConsolidadoTMP(item);
                 }
+                funciones.logueo("Tabla consolidado_tmp migrada" + listaConsolidadoTmp.Count+" - registros");
                 foreach (var item in listaDetalleMaquina)
                 {
                     item.detalle_maquina_id_ias = item.detalle_maquina_id;
                     item.detalle_maquina_id = 0;
                     _detalleMaquinaDAL.InsertarDetalleMaquina(item);
                 }
-                foreach(var item in listaDetalleMaquinaAudit)
+                funciones.logueo("Tabla detalle_maquina migrada" + listaDetalleMaquina+" - registros");
+                foreach (var item in listaDetalleMaquinaAudit)
                 {
                     item.detalle_maquinas_audit_id_ias = item.detalle_maquinas_audit_id;
                     item.detalle_maquinas_audit_id = 0;
                     _detalleMaquinaAuditDAL.InsertarDetalleMaquinasAudit(item);
                 }
-                foreach(var item in listaMaquina)
+                funciones.logueo("Tabla detalle_maquinas_audit migrada" + listaDetalleMaquinaAudit + " - registros");
+                foreach (var item in listaMaquina)
                 {
                     item.maquina_id_ias=item.maquina_id;
                     item.maquina_id=0;
                     _maquinaDAL.InsertarMaquina(item);  
                 }
-                foreach(var item in listaMaquinasAudit)
+                funciones.logueo("Tabla maquina migrada" +listaMaquina.Count() + " - registros");
+                foreach (var item in listaMaquinasAudit)
                 {
                     item.maquinas_audit_id_ias = item.maquinas_audit_id;
                     item.maquinas_audit_id=0;
                     _maquinasAuditDAL.InsertarMaquinasAudit(item);
                 }
-                foreach(var item in listaSalas)
+                funciones.logueo("Tabla maquinas_audit migrada" + listaMaquinasAudit.Count()+" - registros");
+                foreach (var item in listaSalas)
                 {
                     _salaDAL.InsertarSala(item);
                 }
+                funciones.logueo("Tabla sala migrada"+listaSalas.Count()+" - registros");
             }
             catch (Exception ex)
             {
                 var response = " - " + ex.Message.ToString() + "\n ----------- InnerException=\n" + ex.InnerException + "\n --------------- Stack: ------------\n" + ex.StackTrace.ToString();
-                funciones.logueo("ERROR OBTENIENDO CLIENTES - " + response, "Error");
+                funciones.logueo("ERROR Job Migracion GladonData - " + response, "Error");
             }
+            funciones.logueo("Job Migracion Informacion de GladconData Terminado");
         }
         public List<consolidado> ObtenerListaConsolidado(int maximoId)
         {

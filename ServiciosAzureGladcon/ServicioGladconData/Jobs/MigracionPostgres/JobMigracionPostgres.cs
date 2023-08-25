@@ -33,13 +33,12 @@ namespace ServicioGladconData.Jobs.MigracionPostgres
         {
             Console.WriteLine("Job Iniciado Ahora");
             DateTime fechaOperacion = DateTime.Now.Date;
-            //fechaOperacion = fechaOperacion.AddDays(-21);
             MigrarData(fechaOperacion);
             return Task.CompletedTask;
         }
         public void MigrarData(DateTime fechaOperacion)
         {
-
+            fechaOperacion = new DateTime(2023, 8, 11);
             var consolidados = _consolidadoDAL.ListarConsolidadoPorFechaOperacion(fechaOperacion);
             var consolidados_delete = _consolidadoDeleteDAL.ListarConsolidadoDeletePorFechaOperacion(fechaOperacion);
             var consolidados_tmp = _consolidadoTmpDAL.ListarConsolidadoTMPPorFechaOperacion(fechaOperacion);

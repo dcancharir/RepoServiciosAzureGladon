@@ -43,7 +43,7 @@ INSERT INTO [detalle_maquinas_audit]
            ,[operacion])
      Output Inserted.detalle_maquinas_audit_id
      VALUES
-           (@detalle_maquinas_audit_ias,@id_audit
+           (@detalle_maquinas_audit_id_ias,@id_audit
            ,@fecha_hora
            ,@marca_modelo
            ,@cod_maquina

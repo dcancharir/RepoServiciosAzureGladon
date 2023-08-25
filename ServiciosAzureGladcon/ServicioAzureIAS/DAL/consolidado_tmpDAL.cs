@@ -20,7 +20,7 @@ namespace ServicioAzureIAS.DAL
         public List<consolidado_tmp> ListarConsolidadoTMP(int consolidado_tmp_id)
         {
             List<consolidado_tmp> lista = new List<consolidado_tmp>();
-            string consulta = @"SELECT consolidado_tmp_id, fecha, sala, cod_maquina, serie, coin_in, net_win, average_bet, game_played
+            string consulta = @"SELECT consolidado_tmp_id,id_consolidado_tmp, fecha, sala, cod_maquina, serie, coin_in, net_win, average_bet, game_played
 	FROM consolidado_tmp where consolidado_tmp_id>@consolidado_tmp_id
                                 order by consolidado_tmp_id asc;";
             try

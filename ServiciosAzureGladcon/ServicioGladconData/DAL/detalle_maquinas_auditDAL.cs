@@ -22,7 +22,7 @@ namespace ServicioGladconData.DAL
             List<detalle_maquinas_audit> lista = new List<detalle_maquinas_audit>();
             string consulta = @"SELECT id_audit, fecha_hora, marca_modelo, cod_maquina, serie, modelo_comercial, tipo_maquina, progresivo, juego, propietario, tipo_contrato, tipo_sistema, propiedad, operacion
 	FROM public.detalle_maquinas_audit
-where fecha_hora=@fechaOperacion
+where CAST(fecha_hora AS DATE)=@fechaOperacion
                                 order by id_audit asc;";
             try
             {

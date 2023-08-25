@@ -40,7 +40,7 @@ tipo_maquina, fecha_ultimo_ingre, marca_modelo, posicion, id_consolidad
                             {
                                 var detalle = new consolidado
                                 {
-                                    consolidado_id = ManejoNulos.ManageNullDate(dr["consolidado_id"]),
+                                    consolidado_id = ManejoNulos.ManageNullInteger(dr["consolidado_id"]),
                                     fecha = ManejoNulos.ManageNullDate(dr["fecha"]),
                                     id_sala_consolidado = ManejoNulos.ManageNullInteger(dr["id_sala_consolidado"]),
                                     id_maquina = ManejoNulos.ManageNullInteger(dr["id_maquina"]),

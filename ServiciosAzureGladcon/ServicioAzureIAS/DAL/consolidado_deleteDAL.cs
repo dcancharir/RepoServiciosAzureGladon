@@ -40,7 +40,7 @@ net_win, average_bet, game_played, isla, zona, tipo_maquina, fecha_ultimo_ingre,
                             {
                                 var detalle = new consolidado_delete
                                 {
-                                    consolidado_delete_id = ManejoNulos.ManageNullDate(dr["consolidado_delete_id"]),
+                                    consolidado_delete_id = ManejoNulos.ManageNullInteger(dr["consolidado_delete_id"]),
                                     fecha = ManejoNulos.ManageNullDate(dr["fecha"]),
                                     id_sala_consolidado = ManejoNulos.ManageNullInteger(dr["id_sala_consolidado"]),
                                     id_maquina = ManejoNulos.ManageNullInteger(dr["id_maquina"]),

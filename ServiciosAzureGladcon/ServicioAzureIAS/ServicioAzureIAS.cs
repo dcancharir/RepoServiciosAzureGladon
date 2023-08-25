@@ -18,7 +18,7 @@ namespace ServicioAzureIAS
     {
 
 
-        public static string nombreservicio = "Servicio WebOnline";
+        public static string nombreservicio = "ServicioAzureIAS";
         public static string Sala = "";
 
         public static int codSala = 0;
@@ -54,13 +54,13 @@ namespace ServicioAzureIAS
         {
             funciones.logueo("El servicio se ha iniciado");
 
-            //Task.Run(async () =>
-            //{
-            //    MyScheduler schedulerClass = new MyScheduler();
-            //    await schedulerClass.StartEstadoEnvioSalaJob();
+            Task.Run(async () =>
+            {
+                MyScheduler schedulerClass = new MyScheduler();
+                await schedulerClass.StartEstadoEnvioSalaJob();
 
-            //    await new RegistroProgresivoScheduler().Start_RP_LimpiarHistorialJob();
-            //});
+                await new RegistroProgresivoScheduler().Start_RP_LimpiarHistorialJob();
+            });
 
 
 
@@ -105,7 +105,7 @@ namespace ServicioAzureIAS
             //password = ConfigurationManager.AppSettings["password"];
 
             iplocal = GetLocalIPAddress();
-            urlserviciowindows = "http://localhost:" + puertoserviciowindows;
+            urlserviciowindows = "http://+:" + puertoserviciowindows;
             //funciones.logueo("")
 
             //urlias = ConfigurationManager.AppSettings["urlIAS"];
