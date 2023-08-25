@@ -1,6 +1,4 @@
-﻿using ServicioMigracionClientes.Jobs.MigracionData;
-using ServicioMigracionClientes.utilitarios;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -9,17 +7,18 @@ using System.Linq;
 using System.ServiceProcess;
 using System.Text;
 using System.Threading.Tasks;
+using ServicioGladconData.Jobs;
+using ServicioGladconData.utilitarios;
 
-namespace ServicioMigracionClientes
+namespace ServicioGladconData
 {
-    public partial class ServicioMigracionClientes : ServiceBase
+    public partial class ServicioGladconData : ServiceBase
     {
-        public static string nombreservicio = "SevicioMigracionClientes";
-        public ServicioMigracionClientes()
+        public static string nombreservicio = "ServicioGladconData";
+        public ServicioGladconData()
         {
             InitializeComponent();
         }
-
         protected override void OnStart(string[] args)
         {
             funciones.logueo("El servicio se ha iniciado");
@@ -27,11 +26,9 @@ namespace ServicioMigracionClientes
             {
                 MyScheduler schedulerClass = new MyScheduler();
                 await schedulerClass.StartMigracionData();
-                await schedulerClass.StartMigracionSesiones();
             });
             funciones.logueo("Jobs iniciados");
         }
-
         protected override void OnStop()
         {
         }

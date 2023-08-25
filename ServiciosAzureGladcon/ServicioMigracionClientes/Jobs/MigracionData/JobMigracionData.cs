@@ -30,6 +30,7 @@ namespace ServicioMigracionClientes.Jobs.MigracionData
                 int count = 0;
                 foreach (var cliente in listaClientesIAS)
                 {
+                    cliente.FechaRegistro = cliente.FechaRegistro.ToLocalTime();
                     bool respuesta=clienteDAL.GuardarCliente(cliente);
                     if (respuesta)
                     {
