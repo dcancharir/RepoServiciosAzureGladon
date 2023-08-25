@@ -59,6 +59,30 @@ namespace ServicioMigracionClientes.Jobs.MigracionData
             ////Detener el planificador
             //await scheduler.Shutdown();
         }
+        public async Task StartMigracionGladconData()
+        {
+            int minutos = ObtenerMinutos();
+            //var horar = Convert.ToDateTime(hora_activacion);
+            //Configurar el planificador(Scheduler)
+            IScheduler scheduler = await StdSchedulerFactory.GetDefaultScheduler();
+            await scheduler.Start();
+            //Crear el trabajo(job)
+            IJobDetail job = JobBuilder.Create<JobMigracionGladonData>().WithIdentity("JobMigracionGladconData", "GrupoMigracionGladconData").Build();
+            //Crear el disparador(trigger)
+            ITrigger trigger = TriggerBuilder.Create()
+                .WithIdentity("TriggerMigracionGladconData", "GrupoTriggerMigracionGladconData")
+                //.WithSchedule(CronScheduleBuilder.DailyAtHourAndMinute(horar.Hour, horar.Minute))
+                .WithSimpleSchedule(a => a.WithIntervalInMinutes(minutos).RepeatForever())
+                .StartNow()
+                .ForJob(job)
+                .Build();
+            //Programar el trabajo con el disparador
+            await scheduler.ScheduleJob(job, trigger);
+            ////Esperar
+            //await Task.Delay(TimeSpan.FromSeconds(1));
+            ////Detener el planificador
+            //await scheduler.Shutdown();
+        }
         public int ObtenerMinutos()
         {
             try

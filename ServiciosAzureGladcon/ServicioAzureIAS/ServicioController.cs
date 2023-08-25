@@ -198,6 +198,111 @@ namespace ServicioAzureIAS
             return recepcionado;
         }
 
-
+        #region
+        [HttpGet]
+        public IHttpActionResult ListarConsolidado([FromUri] int Id)
+        {
+            try
+            { 
+                var result= consolidadoDAL.ListarConsolidado(Id);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet]
+        public IHttpActionResult ListarConsolidadoDelete([FromUri] int Id)
+        {
+            try
+            {
+                var result = consolidado_deleteDAL.ListarConsolidadoDelete(Id);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet]
+        public IHttpActionResult ListarConsolidadoTmp([FromUri] int Id)
+        {
+            try
+            {
+                var result = consolidado_tmpDAL.ListarConsolidadoTMP(Id);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet]
+        public IHttpActionResult ListarDetalleMaquina([FromUri] int Id)
+        {
+            try
+            {
+                var result = detalle_maquinaDAL.ListarDetalleMaquina(Id);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet]
+        public IHttpActionResult ListarDetalleMaquinasAudit([FromUri] int Id)
+        {
+            try
+            {
+                var result = detalle_maquinas_auditDAL.ListarDetalleMaquinasAudit(Id);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet]
+        public IHttpActionResult ListarMaquina([FromUri] int Id)
+        {
+            try
+            {
+                var result = maquinaDAL.ListarMaquina(Id);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet]
+        public IHttpActionResult ListarMaquinasAudit([FromUri] int Id)
+        {
+            try
+            {
+                var result = maquinas_auditDAL.ListarMaquinasAudit(Id);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        [HttpGet]
+        public IHttpActionResult ListarSala()
+        {
+            try
+            {
+                var result = salaDAL.ListarSala();
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        #endregion
     }
 }

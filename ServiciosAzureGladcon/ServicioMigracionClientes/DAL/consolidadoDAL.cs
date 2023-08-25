@@ -18,9 +18,10 @@ namespace ServicioMigracionClientes.DAL
         {
             _conexion = ConfigurationManager.ConnectionStrings["connectionBD"].ConnectionString;
         }
-        public bool ConsolidadoInsertar(consolidado item)
+        public int ConsolidadoInsertar(consolidado item)
         {
-            bool response = false;
+            int idInsertado = 0;
+            //bool response = false;
             string consulta = @"
  IF EXISTS (SELECT * FROM [dbo].[consolidado] (nolock) WHERE consolidado_id_ias = @consolidado_id_ias)
         BEGIN
@@ -47,6 +48,7 @@ INSERT INTO [dbo].[consolidado]
            ,[marca_modelo]
            ,[posicion]
            ,[id_consolidad])
+output inserted.consolidado_id
      VALUES
            (@consolidado_id_ias
            ,@fecha 
@@ -92,15 +94,16 @@ end";
                     query.Parameters.AddWithValue("@marca_modelo", ManejoNulos.ManageNullStr(item.marca_modelo));
                     query.Parameters.AddWithValue("@posicion", ManejoNulos.ManageNullStr(item.posicion));
                     query.Parameters.AddWithValue("@id_consolidad", ManejoNulos.ManageNullInteger(item.id_consolidad));
-                    query.ExecuteNonQuery();
-                    response = true;
+                    idInsertado=Convert.ToInt32(query.ExecuteScalar());
+                    //query.ExecuteNonQuery();
+                    //response = true;
                 }
             }
             catch (Exception ex)
             { 
-                response = false;
+                idInsertado = 0;
             }
-            return response;
+            return idInsertado;
         }
     }
 }

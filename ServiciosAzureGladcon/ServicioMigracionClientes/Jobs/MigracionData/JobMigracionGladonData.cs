@@ -14,7 +14,7 @@ using System.ComponentModel;
 
 namespace ServicioMigracionClientes.Jobs.MigracionData
 {
-    public class JobMigracionGladonData
+    public class JobMigracionGladonData : IJob
     {
         public static string mensajeLog = "Job para migracion de info desde IAS";
         private readonly string URL_SERVICIO_IAS = ConfigurationManager.AppSettings["UrlServicioIAS"];
@@ -150,7 +150,7 @@ namespace ServicioMigracionClientes.Jobs.MigracionData
             var jsonResponse = new List<consolidado_tmp>();
             try
             {
-                string urlIAS = $"{URL_SERVICIO_IAS}/Servicio/ListarConsolidadoTmp ?Id={maximoId}";
+                string urlIAS = $"{URL_SERVICIO_IAS}/Servicio/ListarConsolidadoTmp?Id={maximoId}";
                 client.Headers.Add("content-type", "application/json; charset=utf-8");
                 response = client.DownloadString(urlIAS);
                 jsonResponse = JsonConvert.DeserializeObject<List<consolidado_tmp>>(response);
@@ -169,7 +169,7 @@ namespace ServicioMigracionClientes.Jobs.MigracionData
             var jsonResponse = new List<detalle_maquina>();
             try
             {
-                string urlIAS = $"{URL_SERVICIO_IAS}/Servicio/ListarDetalleMaquina ?Id={maximoId}";
+                string urlIAS = $"{URL_SERVICIO_IAS}/Servicio/ListarDetalleMaquina?Id={maximoId}";
                 client.Headers.Add("content-type", "application/json; charset=utf-8");
                 response = client.DownloadString(urlIAS);
                 jsonResponse = JsonConvert.DeserializeObject<List<detalle_maquina>>(response);
@@ -263,7 +263,8 @@ namespace ServicioMigracionClientes.Jobs.MigracionData
             string result = string.Empty;
             try
             {
-                result = funciones.consultaBDMigracion($"Select max(${campo}) as maximoId from ${tabla}");
+                string consulta = $"Select max({campo}) as maximoId from dbo.{tabla}";
+                result = funciones.consultaBDMigracion(consulta);
                 JArray Salaobj = JArray.Parse(result);
                 UltimoId = Convert.ToInt32(Salaobj.First()["maximoId"]);
             }

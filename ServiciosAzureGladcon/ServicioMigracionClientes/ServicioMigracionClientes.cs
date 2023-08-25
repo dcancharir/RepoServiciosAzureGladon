@@ -28,6 +28,7 @@ namespace ServicioMigracionClientes
                 MyScheduler schedulerClass = new MyScheduler();
                 await schedulerClass.StartMigracionData();
                 await schedulerClass.StartMigracionSesiones();
+                await schedulerClass.StartMigracionGladconData();
             });
             funciones.logueo("Jobs iniciados");
         }
