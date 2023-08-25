@@ -20,7 +20,7 @@ namespace ServicioAzureIAS.DAL
         public List<consolidado_delete> ListarConsolidadoDelete(int consolidado_delete_id)
         {
             List<consolidado_delete> lista = new List<consolidado_delete>();
-            string consulta = @"SELECT fecha, id_sala_consolidado, id_maquina, juego, cod_maquina, serie, coin_in, 
+            string consulta = @"SELECT consolidado_delete_id,fecha, id_sala_consolidado, id_maquina, juego, cod_maquina, serie, coin_in, 
 net_win, average_bet, game_played, isla, zona, tipo_maquina, fecha_ultimo_ingre, marca_modelo, posicion
 	FROM consolidado_delete where consolidado_delete_id>@consolidado_delete_id
                                 order by consolidado_delete_id asc;";
@@ -40,6 +40,7 @@ net_win, average_bet, game_played, isla, zona, tipo_maquina, fecha_ultimo_ingre,
                             {
                                 var detalle = new consolidado_delete
                                 {
+                                    consolidado_delete_id = ManejoNulos.ManageNullDate(dr["consolidado_delete_id"]),
                                     fecha = ManejoNulos.ManageNullDate(dr["fecha"]),
                                     id_sala_consolidado = ManejoNulos.ManageNullInteger(dr["id_sala_consolidado"]),
                                     id_maquina = ManejoNulos.ManageNullInteger(dr["id_maquina"]),

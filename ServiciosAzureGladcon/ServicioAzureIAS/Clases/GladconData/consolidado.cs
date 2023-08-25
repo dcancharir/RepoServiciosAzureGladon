@@ -8,6 +8,7 @@ namespace ServicioAzureIAS.Clases.GladconData
 {
     public class consolidado
     {
+        public int consolidado_id { get; set; }
         public DateTime fecha { get; set; }
         public int id_sala_consolidado { get; set; }
         public int id_maquina { get; set; }

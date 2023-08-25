@@ -8,6 +8,7 @@ namespace ServicioAzureIAS.Clases.GladconData
 {
     public class detalle_maquina
     {
+        public int detalle_maquina_id { get; set; }
         public int id { get; set; }
         public string serie { get; set; }
         public string marca_modelo { get; set; }

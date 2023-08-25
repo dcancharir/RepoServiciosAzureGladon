@@ -20,7 +20,7 @@ namespace ServicioAzureIAS.DAL
         public List<maquinas_audit> ListarMaquinasAudit(int maquinas_audit_id)
         {
             List<maquinas_audit> lista = new List<maquinas_audit>();
-            string consulta = @"SELECT id_audit, fecha_hora, id_maquina, fecha_ultimo_ingreso, marca, cod_maquina, serie, 
+            string consulta = @"SELECT maquinas_audit_id,id_audit, fecha_hora, id_maquina, fecha_ultimo_ingreso, marca, cod_maquina, serie, 
                                         marca_modelo, isla, zona, tipo_maquina, id_sala, operacion, posicion, estado_maquina, juego
 	FROM maquinas_audit WHERE maquinas_audit_id>@maquinas_audit_id
                                 order by maquinas_audit_id asc;";
@@ -40,6 +40,7 @@ namespace ServicioAzureIAS.DAL
                             {
                                 var detalle = new maquinas_audit
                                 {
+                                    maquinas_audit_id = ManejoNulos.ManageNullInteger(dr["maquinas_audit_id"]),
                                     id_audit = ManejoNulos.ManageNullInteger(dr["id_audit"]),
                                     fecha_hora = ManejoNulos.ManageNullDate(dr["fecha_hora"]),
                                     id_maquina = ManejoNulos.ManageNullInteger(dr["id_maquina"]),
