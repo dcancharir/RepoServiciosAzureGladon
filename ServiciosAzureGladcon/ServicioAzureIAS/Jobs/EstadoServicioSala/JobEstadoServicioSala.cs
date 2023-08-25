@@ -89,125 +89,135 @@ namespace ServicioAzureIAS.Jobs.EstadoServicioSala
 
                 foreach (SalaEntidad sala in listaSalas)
                 {
-                    CheckPortHelper.TcpConnection tcpConnection = _checkPortHelper.TcpUrlMultiple(sala.UrlSalaOnline, urls);
-
-                    if (tcpConnection.IsOpen)
+                    try
                     {
-                        string url = $"{sala.UrlSalaOnline}/EstadoServicios/ConsultarServicios";
+                        CheckPortHelper.TcpConnection tcpConnection = _checkPortHelper.TcpUrlMultiple(sala.UrlSalaOnline, urls);
 
-                        object parameters = new
+                        if (tcpConnection.IsOpen)
                         {
-                            //dias = days
-                        };
+                            string url = $"{sala.UrlSalaOnline}/EstadoServicios/ConsultarServicios";
 
-                        //tcpConnection.IsVpn = true;
-
-                        if (tcpConnection.IsVpn)
-                        {
-                            url = $"{tcpConnection.Url}/servicio/VPNGenericoPost";
-
-                            parameters = new
+                            object parameters = new
                             {
-                                //dias = days,
-                                ipPrivada = $"{sala.IpPrivada}/online/EstadoServicios/ConsultarServicios"
+                                //dias = days
                             };
-                        }
 
-                        try
-                        {
-                            using (HttpClient httpClient = new HttpClient())
+                            //tcpConnection.IsVpn = true;
+
+                            if (tcpConnection.IsVpn)
                             {
-                                httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                                url = $"{tcpConnection.Url}/servicio/VPNGenericoPost";
 
-                                using (HttpResponseMessage httpResponse = httpClient.PostAsJsonAsync(url, parameters).Result)
+                                parameters = new
                                 {
-                                    if (httpResponse.IsSuccessStatusCode)
+                                    //dias = days,
+                                    ipPrivada = $"{sala.IpPrivada}/online/EstadoServicios/ConsultarServicios"
+                                };
+                            }
+
+                            try
+                            {
+                                using (HttpClient httpClient = new HttpClient())
+                                {
+                                    httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                                    using (HttpResponseMessage httpResponse = httpClient.PostAsJsonAsync(url, parameters).Result)
                                     {
-                                        ResponseEstadoServicios jsonResponse = httpResponse.Content.ReadAsAsync<ResponseEstadoServicios>().Result;
-
-                                        var data = jsonResponse.data;
-
-                                        if (Convert.ToBoolean(jsonResponse.respuesta))
+                                        if (httpResponse.IsSuccessStatusCode)
                                         {
+                                            ResponseEstadoServicios jsonResponse = httpResponse.Content.ReadAsAsync<ResponseEstadoServicios>().Result;
 
-                                            entidad.EstadoWebOnline = Convert.ToBoolean(data.estadoWebOnline);
-                                            entidad.EstadoGladconServices = Convert.ToBoolean(data.estadoGladconServices);
-                                            entidad.CodSala = sala.CodSala;
-                                            entidad.FechaRegistro = DateTime.Now;
-                                            estadoServiciosDAL.InsertEstadoServicios(entidad);
-                                            funciones.logueo("NWO:" + entidad.EstadoWebOnline + " - GS:" + entidad.EstadoGladconServices + " - Sala:" + sala.Nombre + " - Fecha:" + DateTime.Now);
+                                            var data = jsonResponse.data;
 
-                                            if (!entidad.EstadoWebOnline || !entidad.EstadoGladconServices)
+                                            if (Convert.ToBoolean(jsonResponse.respuesta))
                                             {
 
-                                                var errormensaje = "Revise el servicio en la sala " + sala.Nombre;
-                                                var titulo = "ALERTA";
-                                                var servidorKey = FirebaseKey;
-                                                List<NotificacionDispositivo> devices = new List<NotificacionDispositivo>();
-                                                devices = estadoServiciosDAL.GetDevicesToNotification(sala.CodSala);
+                                                entidad.EstadoWebOnline = Convert.ToBoolean(data.estadoWebOnline);
+                                                entidad.EstadoGladconServices = Convert.ToBoolean(data.estadoGladconServices);
+                                                entidad.CodSala = sala.CodSala;
+                                                entidad.FechaRegistro = DateTime.Now;
+                                                estadoServiciosDAL.InsertEstadoServicios(entidad);
+                                                funciones.logueo("NWO:" + entidad.EstadoWebOnline + " - GS:" + entidad.EstadoGladconServices + " - Sala:" + sala.Nombre + " - Fecha:" + DateTime.Now);
 
-                                                string[] dispositivos_ = devices.Select(x => x.id).ToArray();
-
-                                                if (!entidad.EstadoWebOnline && !entidad.EstadoGladconServices)
+                                                if (!entidad.EstadoWebOnline || !entidad.EstadoGladconServices)
                                                 {
 
-                                                    if (dispositivos_.Count() > 0)
-                                                    {
-                                                        titulo = "¡Servicio Web Online y Servicio Gladcon Services no funcionando!";
-                                                        EnvioFirebase(servidorKey, dispositivos_, errormensaje, titulo);
-                                                    }
-                                                }
-                                                else
-                                                if (!entidad.EstadoWebOnline)
-                                                {
+                                                    var errormensaje = "Revise el servicio en la sala " + sala.Nombre;
+                                                    var titulo = "ALERTA";
+                                                    var servidorKey = FirebaseKey;
+                                                    List<NotificacionDispositivo> devices = new List<NotificacionDispositivo>();
+                                                    devices = estadoServiciosDAL.GetDevicesToNotification(sala.CodSala);
 
-                                                    if (dispositivos_.Count() > 0)
-                                                    {
-                                                        titulo = "¡Servicio Web Online no funcionando!";
-                                                        EnvioFirebase(servidorKey, dispositivos_, errormensaje, titulo);
-                                                    }
-                                                }
-                                                else
-                                                if (!entidad.EstadoGladconServices)
-                                                {
+                                                    string[] dispositivos_ = devices.Select(x => x.id).ToArray();
 
-                                                    if (dispositivos_.Count() > 0)
+                                                    if (!entidad.EstadoWebOnline && !entidad.EstadoGladconServices)
                                                     {
-                                                        titulo = "¡Servicio Gladcon Services no funcionando!";
-                                                        EnvioFirebase(servidorKey, dispositivos_, errormensaje, titulo);
+
+                                                        if (dispositivos_.Count() > 0)
+                                                        {
+                                                            titulo = "¡Servicio Web Online y Servicio Gladcon Services no funcionando!";
+                                                            EnvioFirebase(servidorKey, dispositivos_, errormensaje, titulo);
+                                                        }
+                                                    }
+                                                    else
+                                                    if (!entidad.EstadoWebOnline)
+                                                    {
+
+                                                        if (dispositivos_.Count() > 0)
+                                                        {
+                                                            titulo = "¡Servicio Web Online no funcionando!";
+                                                            EnvioFirebase(servidorKey, dispositivos_, errormensaje, titulo);
+                                                        }
+                                                    }
+                                                    else
+                                                    if (!entidad.EstadoGladconServices)
+                                                    {
+
+                                                        if (dispositivos_.Count() > 0)
+                                                        {
+                                                            titulo = "¡Servicio Gladcon Services no funcionando!";
+                                                            EnvioFirebase(servidorKey, dispositivos_, errormensaje, titulo);
+                                                        }
                                                     }
                                                 }
+
+                                            }
+                                            else
+                                            {
+                                                funciones.logueo(jsonResponse.mensaje, "Error");
+                                                funciones.logueo($"{sala.Nombre} => {url} => {httpResponse.ReasonPhrase}");
+                                                funciones.logueo("TERMINADO - " + mensajeLog);
+                                                return true;
                                             }
 
-                                        } else
-                                        {
-                                            funciones.logueo(jsonResponse.mensaje, "Error");
+
                                             funciones.logueo($"{sala.Nombre} => {url} => {httpResponse.ReasonPhrase}");
-                                            funciones.logueo("TERMINADO - " + mensajeLog);
-                                            return true;
                                         }
-
-
-                                        funciones.logueo($"{sala.Nombre} => {url} => {httpResponse.ReasonPhrase}");
-                                    }
-                                    else
-                                    {
-                                        funciones.logueo($"{sala.Nombre} => {url} => {httpResponse.ReasonPhrase}", "Warn");
+                                        else
+                                        {
+                                            funciones.logueo($"{sala.Nombre} => {url} => {httpResponse.ReasonPhrase}", "Warn");
+                                        }
                                     }
                                 }
                             }
-                        }
-                        catch (Exception exception)
-                        {
-                            funciones.logueo(exception.Message.ToString(), "Error");
-                        }
-       
+                            catch (Exception exception)
+                            {
+                                funciones.logueo(exception.Message.ToString(), "Error");
+                            }
 
+
+                        }
+                        else
+                        {
+                            funciones.logueo($"{sala.Nombre} => {sala.UrlProgresivo} => No responde", "Warn");
+                        }
                     }
-                    else
+                    catch (Exception exception)
                     {
-                        funciones.logueo($"{sala.Nombre} => {sala.UrlProgresivo} => No responde", "Warn");
+                        funciones.logueo(exception.Message.ToString(), "Error");
                     }
+
+
                 }
 
 
