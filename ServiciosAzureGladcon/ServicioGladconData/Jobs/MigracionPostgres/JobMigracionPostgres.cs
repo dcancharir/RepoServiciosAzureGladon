@@ -33,16 +33,18 @@ namespace ServicioGladconData.Jobs.MigracionPostgres
         {
             Console.WriteLine("Job Iniciado Ahora");
             DateTime fechaOperacion = DateTime.Now.Date;
+            //fechaOperacion = fechaOperacion.AddDays(-21);
             MigrarData(fechaOperacion);
             return Task.CompletedTask;
         }
         public void MigrarData(DateTime fechaOperacion)
         {
-            var consolidados = _consolidadoDAL.ListarConsolidadoTodo();
-            var consolidados_delete = _consolidadoDeleteDAL.ListarConsolidadoDeleteTodo();
-            var consolidados_tmp = _consolidadoTmpDAL.ListarConsolidadoTMPTodo();
+
+            var consolidados = _consolidadoDAL.ListarConsolidadoPorFechaOperacion(fechaOperacion);
+            var consolidados_delete = _consolidadoDeleteDAL.ListarConsolidadoDeletePorFechaOperacion(fechaOperacion);
+            var consolidados_tmp = _consolidadoTmpDAL.ListarConsolidadoTMPPorFechaOperacion(fechaOperacion);
             var detalles_maquinas = _detalleMaquinaDAL.ListarDetalleMaquina();
-            var detalles_maquinas_audit = _detalleMaquinasAuditDAL.ListarDetalleMaquinaAuditTodo();
+            var detalles_maquinas_audit = _detalleMaquinasAuditDAL.ListarDetalleMaquinaAuditPorFechaOperacion(fechaOperacion);
             var maquinas = _maquinaDAL.ListarMaquina();
             var maquinas_audit = _maquinasAuditDAL.ListarMaquinasAudit();
             var salas = _salaDAL.ListarSala();

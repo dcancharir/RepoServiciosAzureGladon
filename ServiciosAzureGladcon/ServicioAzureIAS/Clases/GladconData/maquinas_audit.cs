@@ -8,6 +8,7 @@ namespace ServicioAzureIAS.Clases.GladconData
 {
     public class maquinas_audit
     {
+        public int maquinas_audit_id { get; set; }
         public int id_audit { get; set; }
         public DateTime fecha_hora { get; set; }
         public int id_maquina { get; set; }

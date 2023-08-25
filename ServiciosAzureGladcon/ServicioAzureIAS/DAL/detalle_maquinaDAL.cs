@@ -20,7 +20,7 @@ namespace ServicioAzureIAS.DAL
         public List<detalle_maquina> ListarDetalleMaquina(int detalle_maquina_id)
         {
             List<detalle_maquina> lista = new List<detalle_maquina>();
-            string consulta = @"SELECT id, serie, marca_modelo, tipo_sistema, progresivo, modelo_comercial, codigo_modelo, juego, propietario, propiedad, tipo_contrato, tipo_maquina, cod_maquina
+            string consulta = @"SELECT detalle_maquina_id,id, serie, marca_modelo, tipo_sistema, progresivo, modelo_comercial, codigo_modelo, juego, propietario, propiedad, tipo_contrato, tipo_maquina, cod_maquina
 	FROM detalle_maquina WHERE detalle_maquina_id>@detalle_maquina_id
                                 order by detalle_maquina_id asc;";
             try
@@ -39,6 +39,7 @@ namespace ServicioAzureIAS.DAL
                             {
                                 var detalle = new detalle_maquina
                                 {
+                                    detalle_maquina_id = ManejoNulos.ManageNullInteger(dr["detalle_maquina_id"]),
                                     id = ManejoNulos.ManageNullInteger(dr["id"]),
                                     serie = ManejoNulos.ManageNullStr(dr["serie"]),
                                     marca_modelo = ManejoNulos.ManageNullStr(dr["marca_modelo"]),
