@@ -12,6 +12,15 @@ namespace ServicioAzureIAS
     public class ServicioController : ApiController
     {
 
+        consolidado_deleteDAL consolidado_deleteDAL = new consolidado_deleteDAL();
+        consolidado_tmpDAL consolidado_tmpDAL = new consolidado_tmpDAL();
+        consolidadoDAL consolidadoDAL = new consolidadoDAL();
+        detalle_maquinaDAL detalle_maquinaDAL = new detalle_maquinaDAL();
+        detalle_maquinas_auditDAL detalle_maquinas_auditDAL = new detalle_maquinas_auditDAL();
+        maquinaDAL maquinaDAL = new maquinaDAL();
+        maquinas_auditDAL maquinas_auditDAL = new maquinas_auditDAL();
+        salaDAL salaDAL = new salaDAL();
+
         /// METODOS DEL SERVIDOR
         [HttpPost]
         public dynamic DevolverDatos()
@@ -31,14 +40,6 @@ namespace ServicioAzureIAS
         {
 
             bool recepcionado = true;
-            consolidado_deleteDAL consolidado_deleteDAL = new consolidado_deleteDAL();
-            consolidado_tmpDAL consolidado_tmpDAL = new consolidado_tmpDAL();
-            consolidadoDAL consolidadoDAL = new consolidadoDAL();
-            detalle_maquinaDAL detalle_maquinaDAL = new detalle_maquinaDAL();
-            detalle_maquinas_auditDAL detalle_maquinas_auditDAL = new detalle_maquinas_auditDAL();
-            maquinaDAL maquinaDAL = new maquinaDAL();
-            maquinas_auditDAL maquinas_auditDAL = new maquinas_auditDAL();
-            salaDAL salaDAL= new salaDAL();
 
             try
             {
