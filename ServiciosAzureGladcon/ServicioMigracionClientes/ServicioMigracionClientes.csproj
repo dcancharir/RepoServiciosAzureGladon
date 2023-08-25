@@ -80,6 +80,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Clases\Cliente.cs" />
+    <Compile Include="Clases\consolidado.cs" />
+    <Compile Include="Clases\consolidado_delete.cs" />
+    <Compile Include="Clases\consolidado_tmp.cs" />
+    <Compile Include="Clases\detalle_maquina.cs" />
+    <Compile Include="Clases\detalle_maquinas_audit.cs" />
+    <Compile Include="Clases\maquina.cs" />
+    <Compile Include="Clases\maquinas_audit.cs" />
+    <Compile Include="Clases\sala.cs" />
     <Compile Include="DAL\ClienteDAL.cs" />
     <Compile Include="Clases\CMP_JugadasCliente.cs" />
     <Compile Include="DAL\CMP_JugadasClienteDAL.cs" />
@@ -89,7 +97,9 @@
     <Compile Include="DAL\CMP_SesionMigracionDAL.cs" />
     <Compile Include="Clases\CMP_SesionSorteoSalaMigracion.cs" />
     <Compile Include="DAL\CMP_SesionSorteoSalaMigracionDAL.cs" />
+    <Compile Include="DAL\consolidadoDAL.cs" />
     <Compile Include="Jobs\MigracionData\JobMigracionData.cs" />
+    <Compile Include="Jobs\MigracionData\JobMigracionGladonData.cs" />
     <Compile Include="Jobs\MigracionData\JobMigracionSesiones.cs" />
     <Compile Include="Jobs\MyScheduler.cs" />
     <Compile Include="ProjectInstaller.cs">
