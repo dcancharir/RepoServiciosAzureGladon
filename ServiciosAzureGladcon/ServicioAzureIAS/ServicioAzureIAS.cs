@@ -105,7 +105,7 @@ namespace ServicioAzureIAS
             //password = ConfigurationManager.AppSettings["password"];
 
             iplocal = GetLocalIPAddress();
-            urlserviciowindows = "http://+:" + puertoserviciowindows;
+            urlserviciowindows = "http://localhost:" + puertoserviciowindows;
             //funciones.logueo("")
 
             //urlias = ConfigurationManager.AppSettings["urlIAS"];
