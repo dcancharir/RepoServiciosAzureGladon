@@ -39,7 +39,9 @@
             // 
             // serviceInstaller1
             // 
+            this.serviceInstaller1.Description = "Servicio Gladon Data";
             this.serviceInstaller1.ServiceName = "ServicioGladconData";
+            this.serviceInstaller1.StartType = System.ServiceProcess.ServiceStartMode.Automatic;
             // 
             // ProjectInstaller
             // 

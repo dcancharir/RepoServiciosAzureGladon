@@ -13,15 +13,17 @@ namespace ServicioGladconData.DAL
     public class salaDAL
     {
         private string _conexion = string.Empty;
+        private string _esquema = string.Empty;
         public salaDAL()
         {
             _conexion = ConfigurationManager.ConnectionStrings["connectionBD"].ConnectionString;
+            _esquema = ConfigurationManager.AppSettings["PGScheme"];
         }
         public List<sala> ListarSala()
         {
             List<sala> lista = new List<sala>();
-            string consulta = @"SELECT id_sala, nombre_sala, nombre_operador, departamento_sala, provincia_sala
-	FROM public.sala
+            string consulta = $@"SELECT id_sala, nombre_sala, nombre_operador, departamento_sala, provincia_sala
+	FROM {_esquema}.sala
                                 order by id_sala asc;";
             try
             {

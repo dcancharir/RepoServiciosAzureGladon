@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ServicioGladconData.Jobs.MigracionPostgres;
+using System.Configuration;
 
 namespace ServicioGladconData.Jobs
 {
@@ -13,6 +14,7 @@ namespace ServicioGladconData.Jobs
     {
         public async Task StartMigracionData()
         {
+            int minutos = ObtenerMinutos();
             //Configurar el planificador(Scheduler)
             IScheduler scheduler = await StdSchedulerFactory.GetDefaultScheduler();
             await scheduler.Start();
@@ -21,7 +23,7 @@ namespace ServicioGladconData.Jobs
             //Crear el disparador(trigger)
             ITrigger trigger = TriggerBuilder.Create()
                 .WithIdentity("TriggerMigracionPostgres", "GrupoTriggerMigracionPostgres")
-                //.WithSimpleSchedule(a => a.WithIntervalInMinutes(minutos).RepeatForever())
+                .WithSimpleSchedule(a => a.WithIntervalInMinutes(minutos).RepeatForever())
                 .StartNow()
                 //.WithSchedule(CronScheduleBuilder.DailyAtHourAndMinute(horar.Hour, horar.Minute))
                 .ForJob(job)
@@ -32,6 +34,22 @@ namespace ServicioGladconData.Jobs
             //await Task.Delay(TimeSpan.FromSeconds(1));
             ////Detener el planificador
             //await scheduler.Shutdown();
+        }
+        public int ObtenerMinutos()
+        {
+            try
+            {
+                int minutos = Convert.ToInt32(ConfigurationManager.AppSettings["RangoMinutosActivacionJob"]);
+                if (minutos <= 0)
+                {
+                    minutos = 60;
+                }
+                return minutos;
+            }
+            catch (Exception)
+            {
+                return 60;
+            }
         }
     }
 }

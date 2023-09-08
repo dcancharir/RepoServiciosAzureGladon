@@ -13,16 +13,18 @@ namespace ServicioGladconData.DAL
     public class consolidado_deleteDAL
     {
         private string _conexion = string.Empty;
+        private string _esquema = string.Empty;
         public consolidado_deleteDAL()
         {
             _conexion = ConfigurationManager.ConnectionStrings["connectionBD"].ConnectionString;
+            _esquema = ConfigurationManager.AppSettings["PGScheme"];
         }
         public List<consolidado_delete> ListarConsolidadoDeletePorFechaOperacion(DateTime fechaOperacion)
         {
             List<consolidado_delete> lista = new List<consolidado_delete>();
-            string consulta = @"SELECT fecha, id_sala_consolidado, id_maquina, juego, cod_maquina, serie, coin_in, 
+            string consulta = $@"SELECT fecha, id_sala_consolidado, id_maquina, juego, cod_maquina, serie, coin_in, 
 net_win, average_bet, game_played, isla, zona, tipo_maquina, fecha_ultimo_ingre, marca_modelo, posicion
-	FROM public.consolidado_delete where fecha=@fechaOperacion
+	FROM {_esquema}.consolidado_delete where fecha=@fechaOperacion
                                 order by fecha asc;";
             try
             {
@@ -74,9 +76,9 @@ net_win, average_bet, game_played, isla, zona, tipo_maquina, fecha_ultimo_ingre,
         public List<consolidado_delete> ListarConsolidadoDeleteTodo()
         {
             List<consolidado_delete> lista = new List<consolidado_delete>();
-            string consulta = @"SELECT fecha, id_sala_consolidado, id_maquina, juego, cod_maquina, serie, coin_in, net_win,
+            string consulta = $@"SELECT fecha, id_sala_consolidado, id_maquina, juego, cod_maquina, serie, coin_in, net_win,
 average_bet, game_played, isla, zona, tipo_maquina, fecha_ultimo_ingre, marca_modelo, posicion
-	FROM public.consolidado_delete
+	FROM {_esquema}.consolidado_delete
                                 order by fecha asc;";
             try
             {

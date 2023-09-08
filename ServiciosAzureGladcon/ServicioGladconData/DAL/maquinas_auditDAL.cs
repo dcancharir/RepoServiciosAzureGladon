@@ -13,16 +13,18 @@ namespace ServicioGladconData.DAL
     public class maquinas_auditDAL
     {
         private string _conexion = string.Empty;
+        private string _esquema = string.Empty;
         public maquinas_auditDAL()
         {
             _conexion = ConfigurationManager.ConnectionStrings["connectionBD"].ConnectionString;
+            _esquema = ConfigurationManager.AppSettings["PGScheme"];
         }
         public List<maquinas_audit> ListarMaquinasAudit()
         {
             List<maquinas_audit> lista = new List<maquinas_audit>();
-            string consulta = @"SELECT id_audit, fecha_hora, id_maquina, fecha_ultimo_ingreso, marca, cod_maquina, serie, 
+            string consulta = $@"SELECT id_audit, fecha_hora, id_maquina, fecha_ultimo_ingreso, marca, cod_maquina, serie, 
                                         marca_modelo, isla, zona, tipo_maquina, id_sala, operacion, posicion, estado_maquina, juego
-	FROM public.maquinas_audit
+	FROM {_esquema}.maquinas_audit
                                 order by id_audit asc;";
             try
             {
