@@ -2,16 +2,17 @@
 using Quartz;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ServicioGladconData.Jobs.MigracionPostgres;
-using System.Configuration;
+using ServicioServidorVPN.Jobs.MigracionData;
 
-namespace ServicioGladconData.Jobs
+namespace ServicioServidorVPN.Jobs
 {
     public class MyScheduler
     {
+        public static string nombre = "MIGRACION DATA SCHEDULER...";
         public async Task StartMigracionData()
         {
             int minutos = ObtenerMinutos();
@@ -19,10 +20,10 @@ namespace ServicioGladconData.Jobs
             IScheduler scheduler = await StdSchedulerFactory.GetDefaultScheduler();
             await scheduler.Start();
             //Crear el trabajo(job)
-            IJobDetail job = JobBuilder.Create<JobMigracionPostgres>().WithIdentity("JobMigracionPostgres", "GrupoMigracionPostgres").Build();
+            IJobDetail job = JobBuilder.Create<JobMigracionData>().WithIdentity("JobMigracionData", "GrupoMigracionData").Build();
             //Crear el disparador(trigger)
             ITrigger trigger = TriggerBuilder.Create()
-                .WithIdentity("TriggerMigracionPostgres", "GrupoTriggerMigracionPostgres")
+                .WithIdentity("TriggerMigracionData", "GrupoTriggerMigracionData")
                 .WithSimpleSchedule(a => a.WithIntervalInMinutes(minutos).RepeatForever())
                 .StartNow()
                 //.WithSchedule(CronScheduleBuilder.DailyAtHourAndMinute(horar.Hour, horar.Minute))

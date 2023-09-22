@@ -1,6 +1,6 @@
-﻿namespace ServicioGladconData
+﻿namespace ServicioServidorVPN
 {
-    partial class ServicioGladconData
+    partial class ServicioServidorVPN
     {
         /// <summary> 
         /// Variable del diseñador necesaria.
@@ -28,11 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            // 
-            // ServicioGladconData
-            // 
-            this.ServiceName = "Service1";
-
+            components = new System.ComponentModel.Container();
+            this.ServiceName = "ServicioServidorVPN";
         }
 
         #endregion

@@ -38,7 +38,6 @@ namespace ServicioGladconData.Jobs.MigracionPostgres
         }
         public void MigrarData(DateTime fechaOperacion)
         {
-            fechaOperacion = new DateTime(2023, 8, 11);
             var consolidados = _consolidadoDAL.ListarConsolidadoPorFechaOperacion(fechaOperacion);
             var consolidados_delete = _consolidadoDeleteDAL.ListarConsolidadoDeletePorFechaOperacion(fechaOperacion);
             var consolidados_tmp = _consolidadoTmpDAL.ListarConsolidadoTMPPorFechaOperacion(fechaOperacion);

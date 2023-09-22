@@ -14,15 +14,18 @@ namespace ServicioGladconData.DAL
     public  class consolidadoDAL
     {
         private string _conexion = string.Empty;
+        private string _esquema = string.Empty;
         public consolidadoDAL() {
-            _conexion = ConfigurationManager.ConnectionStrings["connectionBD"].ConnectionString;
+            _conexion = ConfigurationManager.ConnectionStrings["connectionBD"].ConnectionString; 
+            _esquema = ConfigurationManager.AppSettings["PGScheme"];
         }
         public List<consolidado> ListarConsolidadoPorFechaOperacion(DateTime fechaOperacion)
         {
             List<consolidado> lista = new List<consolidado>();
-            string consulta = @"SELECT fecha, id_sala_consolidado, id_maquina, juego, cod_maquina, serie, coin_in, net_win, average_bet, game_played, isla, zona, 
+            string consulta = $@"SELECT fecha, id_sala_consolidado, id_maquina, juego, cod_maquina, serie, coin_in, net_win, average_bet, game_played, isla, zona, 
 tipo_maquina, fecha_ultimo_ingre, marca_modelo, posicion, id_consolidad
-	FROM public.consolidado where fecha=@fechaOperacion
+	FROM 
+{_esquema}.consolidado where fecha=@fechaOperacion
                                 order by fecha asc;";
             try
             {
@@ -75,9 +78,9 @@ tipo_maquina, fecha_ultimo_ingre, marca_modelo, posicion, id_consolidad
         public List<consolidado> ListarConsolidadoTodo()
         {
             List<consolidado> lista = new List<consolidado>();
-            string consulta = @"SELECT fecha, id_sala_consolidado, id_maquina, juego, cod_maquina, serie, coin_in, net_win, average_bet, game_played, isla, zona, 
+            string consulta = $@"SELECT fecha, id_sala_consolidado, id_maquina, juego, cod_maquina, serie, coin_in, net_win, average_bet, game_played, isla, zona, 
 tipo_maquina, fecha_ultimo_ingre, marca_modelo, posicion, id_consolidad
-	FROM public.consolidado
+	FROM {_esquema}.consolidado
                                 order by fecha asc;";
             try
             {
