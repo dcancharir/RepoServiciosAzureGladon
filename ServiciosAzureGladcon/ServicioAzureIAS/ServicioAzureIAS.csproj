@@ -124,6 +124,7 @@
     <Compile Include="Jobs\EstadoServicioSala\JobEstadoServicioSala.cs" />
     <Compile Include="Jobs\MyScheduler.cs" />
     <Compile Include="Jobs\RegistroProgresivo\RP_LimpiarHistorialJob.cs" />
+    <Compile Include="Jobs\ReporteAlertaBilletero\JobReporteAlertaBilletero.cs" />
     <Compile Include="ProjectInstaller.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -131,6 +132,7 @@
       <DependentUpon>ProjectInstaller.cs</DependentUpon>
     </Compile>
     <Compile Include="Schedulers\RegistroProgresivoScheduler.cs" />
+    <Compile Include="Schedulers\ReporteAlertaBilleterosScheduler.cs" />
     <Compile Include="ServicioAzureIAS.cs">
       <SubType>Component</SubType>
     </Compile>

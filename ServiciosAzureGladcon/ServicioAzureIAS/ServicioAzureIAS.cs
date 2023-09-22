@@ -59,6 +59,7 @@ namespace ServicioAzureIAS
                 MyScheduler schedulerClass = new MyScheduler();
                 await schedulerClass.StartEstadoEnvioSalaJob();
 
+                await new ReporteAlertaBilleterosScheduler().Start_RP_ReporteAlertaBilleteros();
                 await new RegistroProgresivoScheduler().Start_RP_LimpiarHistorialJob();
             });
 
