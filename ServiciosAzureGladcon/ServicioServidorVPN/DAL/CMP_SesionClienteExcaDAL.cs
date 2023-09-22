@@ -10,42 +10,38 @@ using System.Threading.Tasks;
 
 namespace ServicioServidorVPN.DAL
 {
-    public class CMP_SesionClienteDAL
+    public class CMP_SesionClienteExcaDAL
     {
         private readonly string _conexion;
-        public CMP_SesionClienteDAL()
+        public CMP_SesionClienteExcaDAL()
         {
-            _conexion = ConfigurationManager.ConnectionStrings["conectionBd"].ConnectionString;
+            _conexion = ConfigurationManager.ConnectionStrings["conectionBdExca"].ConnectionString;
         }
-        public int GuardarSesionCliente(CMP_SesionCliente sesion)
+        public int GuardarSesionCliente(CMP_SesionClienteExca sesion)
         {
             //bool respuesta = false;
             int IdInsertado = 0;
             string consulta = @"
- declare @cantidad int = (select COUNT(*) from CMP_Sesion (nolock)  where trim(NroDocumento)=trim(@NroDocumento) and TipoDocumentoId=@TipoDocumentoId and CodSala=@CodSala)
-IF not EXISTS (SELECT * FROM [dbo].[CMP_SesionClienteMigracion] (nolock) WHERE trim(NroDocumento)=trim(@NroDocumento) and TipoDocumentoId=@TipoDocumentoId and CodSala=@CodSala)
+ declare @cantidad int = (select COUNT(*) from CMP_Sesion (nolock)  where trim(NroDocumento)=trim(@NroDocumento))
+IF not EXISTS (SELECT * FROM [dbo].[CMP_SesionClienteMigracion] (nolock) WHERE trim(NroDocumento)=trim(@NroDocumento))
 begin
     INSERT INTO [dbo].[CMP_SesionClienteMigracion]
            ([NroDocumento]
-           ,[NombreTipoDocumento]
-           ,[TipoDocumentoId]
            ,[CantidadSesiones]
            ,[NombreCliente]
            ,[Mail]
-           ,[PrimeraSesion],[CodSala])
+           ,[PrimeraSesion])
     output inserted.id
      VALUES
            (@NroDocumento
-           ,@NombreTipoDocumento
-           ,@TipoDocumentoId
            ,@cantidad
            ,@NombreCliente
            ,@Mail
-           ,@PrimeraSesion,@CodSala)
+           ,@PrimeraSesion)
 end
 else
 begin
-update [dbo].[CMP_SesionClienteMigracion] set cantidadSesiones=@cantidad WHERE trim(NroDocumento)=trim(@NroDocumento) and TipoDocumentoId=@TipoDocumentoId and CodSala=@CodSala
+update [dbo].[CMP_SesionClienteMigracion] set cantidadSesiones=@cantidad WHERE trim(NroDocumento)=trim(@NroDocumento)
 
     select 0
 end
@@ -58,12 +54,9 @@ end
                     con.Open();
                     var query = new SqlCommand(consulta, con);
                     query.Parameters.AddWithValue("@NroDocumento", ManejoNulos.ManageNullStr(sesion.NroDocumento));
-                    query.Parameters.AddWithValue("@NombreTipoDocumento", ManejoNulos.ManageNullStr(sesion.NombreTipoDocumento));
-                    query.Parameters.AddWithValue("@TipoDocumentoId", ManejoNulos.ManageNullInteger(sesion.TipoDocumentoId));
                     query.Parameters.AddWithValue("@NombreCliente", ManejoNulos.ManageNullStr(sesion.NombreCliente));
                     query.Parameters.AddWithValue("@Mail", ManejoNulos.ManageNullStr(sesion.Mail));
                     query.Parameters.AddWithValue("@PrimeraSesion", ManejoNulos.ManageNullDate(sesion.PrimeraSesion));
-                    query.Parameters.AddWithValue("@CodSala", ManejoNulos.ManageNullInteger(sesion.CodSala));
                     IdInsertado = Convert.ToInt32(query.ExecuteScalar());
                 }
             }

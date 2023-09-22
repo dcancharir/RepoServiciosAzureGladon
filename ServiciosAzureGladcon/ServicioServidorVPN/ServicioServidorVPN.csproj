@@ -77,17 +77,27 @@
   <ItemGroup>
     <Compile Include="clases\Cliente.cs" />
     <Compile Include="clases\CMP_Jugada.cs" />
+    <Compile Include="clases\CMP_JugadaExca.cs" />
     <Compile Include="clases\CMP_Sesion.cs" />
     <Compile Include="clases\CMP_SesionCliente.cs" />
+    <Compile Include="clases\CMP_SesionClienteExca.cs" />
+    <Compile Include="clases\CMP_SesionExca.cs" />
     <Compile Include="clases\CMP_SesionSorteoSala.cs" />
+    <Compile Include="clases\CMP_SesionSorteoSalaExca.cs" />
     <Compile Include="clases\CMP_SorteoSala.cs" />
+    <Compile Include="clases\CMP_SorteoSalaExca.cs" />
     <Compile Include="clases\Sala.cs" />
     <Compile Include="DAL\ClienteDAL.cs" />
     <Compile Include="DAL\CMP_JugadaDAL.cs" />
+    <Compile Include="DAL\CMP_JugadaExcaDAL.cs" />
     <Compile Include="DAL\CMP_SesionClienteDAL.cs" />
+    <Compile Include="DAL\CMP_SesionClienteExcaDAL.cs" />
     <Compile Include="DAL\CMP_SesionDAL.cs" />
+    <Compile Include="DAL\CMP_SesionExcaDAL.cs" />
     <Compile Include="DAL\CMP_SesionSorteoSalaDAL.cs" />
+    <Compile Include="DAL\CMP_SesionSorteoSalaExcaDAL.cs" />
     <Compile Include="DAL\CMP_SorteoSalaDAL.cs" />
+    <Compile Include="DAL\CMP_SorteoSalaExcaDAL.cs" />
     <Compile Include="DAL\SalaDAL.cs" />
     <Compile Include="Jobs\MigracionData\JobMigracionData.cs" />
     <Compile Include="Jobs\MyScheduler.cs" />

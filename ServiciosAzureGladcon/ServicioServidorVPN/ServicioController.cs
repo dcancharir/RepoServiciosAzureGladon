@@ -16,6 +16,14 @@ namespace ServicioServidorVPN
         private readonly CMP_JugadaDAL _jugadaDAL = new CMP_JugadaDAL();
         private readonly CMP_SorteoSalaDAL _sorteoSalaDAL = new CMP_SorteoSalaDAL();
         private readonly CMP_SesionClienteDAL _sesionClienteDAL=new CMP_SesionClienteDAL();
+
+        //Excalibur 
+        private readonly CMP_SesionExcaDAL _sesionExcaDAL = new CMP_SesionExcaDAL();
+        private readonly CMP_SesionSorteoSalaExcaDAL _sesionSorteoSalaExcaDAL = new CMP_SesionSorteoSalaExcaDAL();
+        private readonly CMP_JugadaExcaDAL _jugadaExcaDAL = new CMP_JugadaExcaDAL();
+        private readonly CMP_SorteoSalaExcaDAL _sorteoSalaExcaDAL = new CMP_SorteoSalaExcaDAL();
+        private readonly CMP_SesionClienteExcaDAL _sesionClienteExcaDAL = new CMP_SesionClienteExcaDAL();
+
         private readonly SalaDAL _salaDAL=new SalaDAL();
         [HttpPost]
         public IHttpActionResult DevolverDatos()
@@ -130,6 +138,82 @@ namespace ServicioServidorVPN
 
                 _salaDAL.GuardarSala(sala);
 
+                return Json(new { respuesta = true });
+            }
+            catch (Exception)
+            {
+
+                return Json(new { respuesta = false });
+            }
+        }
+        [HttpPost]
+        public IHttpActionResult RecepcionarDataMigracionExcaliburAnt(dynamic jsonData)
+        {
+            bool recepcionado = true;
+            List<CMP_SesionExca> listaSesiones = new List<CMP_SesionExca>();
+            List<CMP_SesionSorteoSalaExca> listaDetalles = new List<CMP_SesionSorteoSalaExca>();
+            int sesionesRegistradas = 0;
+            try
+            {
+                dynamic items = jsonData;
+                if (items.sesiones != null)
+                {
+                    listaSesiones = items.sesiones.ToObject<List<CMP_SesionExca>>();
+                }
+
+                if (items.detalles != null)
+                {
+                    listaDetalles = items.detalles.ToObject<List<CMP_SesionSorteoSalaExca>>();
+                }
+              
+                foreach (var item in listaSesiones)
+                {
+                    int registrado = _sesionExcaDAL.GuardarSesion(item);
+                    if (registrado > 0)
+                    {
+                        sesionesRegistradas++;
+                        var detallesSesion = listaDetalles.Where(x => x.SesionId == item.SesionId).ToList();
+                        foreach (var det in detallesSesion)
+                        {
+                            int detalleRegistrado = _sesionSorteoSalaExcaDAL.GuardarSesionSorteSala(det);
+
+                            var jugada = det.Jugada;
+                            jugada.JugadaId = det.JugadaId;
+                            int jugadaRegistrada = _jugadaExcaDAL.GuardarJugada(jugada);
+                        }
+                    }
+
+                }
+                if (sesionesRegistradas > 0)
+                {
+                    var cabeceras = from sesion in listaSesiones
+                                    group sesion by new
+                                    {
+                                        sesion.NroDocumento,
+                                    } into grupo
+                                    select new
+                                    {
+                                        NroDocumento = grupo.Key.NroDocumento,
+                                        CantidadSesiones = grupo.Count(),
+                                        NombreCliente = grupo.Max(s => s.NombreCliente),
+                                        Mail = grupo.Max(s => s.Mail),
+                                        ClienteIdIas = grupo.Max(s => s.ClienteIdIas),
+                                        PrimeraSesion = grupo.Min(s => s.FechaInicio),
+                                    };
+
+                    foreach (var cabecera in cabeceras)
+                    {
+                        CMP_SesionClienteExca sesionClienteInsertar = new CMP_SesionClienteExca()
+                        {
+                            NroDocumento = cabecera.NroDocumento,
+                            CantidadSesiones = cabecera.CantidadSesiones,
+                            NombreCliente = cabecera.NombreCliente,
+                            Mail = cabecera.Mail,
+                            PrimeraSesion = cabecera.PrimeraSesion,
+                        };
+                        _sesionClienteExcaDAL.GuardarSesionCliente(sesionClienteInsertar);
+                    }
+                }
                 return Json(new { respuesta = true });
             }
             catch (Exception)
