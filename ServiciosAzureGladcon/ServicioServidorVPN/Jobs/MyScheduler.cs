@@ -25,7 +25,7 @@ namespace ServicioServidorVPN.Jobs
             ITrigger trigger = TriggerBuilder.Create()
                 .WithIdentity("TriggerMigracionData", "GrupoTriggerMigracionData")
                 .WithSimpleSchedule(a => a.WithIntervalInMinutes(minutos).RepeatForever())
-                .StartNow()
+                //.StartNow()
                 //.WithSchedule(CronScheduleBuilder.DailyAtHourAndMinute(horar.Hour, horar.Minute))
                 .ForJob(job)
                 .Build();
