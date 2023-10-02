@@ -1,5 +1,6 @@
 ﻿using ServicioServidorVPN.clases;
 using ServicioServidorVPN.DAL;
+using ServicioServidorVPN.utilitarios;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -112,6 +113,7 @@ namespace ServicioServidorVPN
                                         Mail = grupo.Max(s => s.Mail),
                                         ClienteIdIas = grupo.Max(s => s.ClienteIdIas),
                                         PrimeraSesion = grupo.Min(s => s.FechaInicio),
+                                        UltimaSesion=grupo.Max(s=>s.FechaInicio)
                                     };
 
                     foreach (var cabecera in cabeceras)
@@ -125,7 +127,8 @@ namespace ServicioServidorVPN
                             NombreCliente = cabecera.NombreCliente,
                             Mail = cabecera.Mail,
                             PrimeraSesion = cabecera.PrimeraSesion,
-                            CodSala = CodSala
+                            CodSala = CodSala,
+                            UltimaSesion=cabecera.UltimaSesion
                         };
                         _sesionClienteDAL.GuardarSesionCliente(sesionClienteInsertar);
                     }
@@ -140,9 +143,9 @@ namespace ServicioServidorVPN
 
                 return Json(new { respuesta = true });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
+                funciones.logueo("ERROR  - RecepcionarDataMigracion " + ex.Message, "Error");
                 return Json(new { respuesta = false });
             }
         }
@@ -216,9 +219,9 @@ namespace ServicioServidorVPN
                 }
                 return Json(new { respuesta = true });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
+                funciones.logueo("ERROR  - RecepcionarDataMigracionExcaliburAnt " + ex.Message, "Error");
                 return Json(new { respuesta = false });
             }
         }

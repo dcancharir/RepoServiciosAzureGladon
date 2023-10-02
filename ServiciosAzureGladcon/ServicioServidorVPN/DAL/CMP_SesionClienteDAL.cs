@@ -32,7 +32,7 @@ begin
            ,[CantidadSesiones]
            ,[NombreCliente]
            ,[Mail]
-           ,[PrimeraSesion],[CodSala])
+           ,[PrimeraSesion],[CodSala],[UltimaSesion])
     output inserted.id
      VALUES
            (@NroDocumento
@@ -41,12 +41,12 @@ begin
            ,@cantidad
            ,@NombreCliente
            ,@Mail
-           ,@PrimeraSesion,@CodSala)
+           ,@PrimeraSesion,@CodSala,@UltimaSesion)
 end
 else
 begin
 update [dbo].[CMP_SesionClienteMigracion] set cantidadSesiones=@cantidad WHERE trim(NroDocumento)=trim(@NroDocumento) and TipoDocumentoId=@TipoDocumentoId and CodSala=@CodSala
-
+update [dbo].[CMP_SesionClienteMigracion] set UltimaSesion= (Select max(FechaInicio) from CMP_Sesion (nolock) where trim(NroDocumento)=trim(@NroDocumento) and TipoDocumentoId=@TipoDocumentoId and CodSala=@CodSala)
     select 0
 end
 
@@ -64,6 +64,7 @@ end
                     query.Parameters.AddWithValue("@Mail", ManejoNulos.ManageNullStr(sesion.Mail));
                     query.Parameters.AddWithValue("@PrimeraSesion", ManejoNulos.ManageNullDate(sesion.PrimeraSesion));
                     query.Parameters.AddWithValue("@CodSala", ManejoNulos.ManageNullInteger(sesion.CodSala));
+                    query.Parameters.AddWithValue("@UltimaSesion", ManejoNulos.ManageNullDate(sesion.UltimaSesion));
                     IdInsertado = Convert.ToInt32(query.ExecuteScalar());
                 }
             }

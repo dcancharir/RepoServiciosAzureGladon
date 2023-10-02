@@ -24,5 +24,6 @@ namespace ServicioServidorVPN.clases
         public string Mail { get; set; }
 
         public DateTime PrimeraSesion { get; set; }
+        public DateTime UltimaSesion { get; set; }
     }
 }

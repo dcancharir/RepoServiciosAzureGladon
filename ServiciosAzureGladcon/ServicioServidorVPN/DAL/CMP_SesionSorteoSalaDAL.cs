@@ -26,7 +26,7 @@ namespace ServicioServidorVPN.DAL
                ([CodSala],[SesionId],[SorteoId],[JugadaId],[CantidadCupones],[FechaRegistro],[NombreSorteo],[CondicionWin],[CondicionBet],[TopeCuponesxJugada],[WinCalculado],[BetCalculado],[ParametrosImpresion],[Factor],[DescartePorFactor],[SerieIni],[SerieFin])
 output inserted.SesionId             
 VALUES
-                (@CodSala,@SesionId,@SorteoId,@JugadaId,@CantidadCupones,getdate(),@NombreSorteo,@CondicionWin,@CondicionBet,@TopeCuponesxJugada,@WinCalculado,@BetCalculado,@ParametrosImpresion,@Factor,@DescartePorFactor,@SerieIni,@SerieFin);";
+                (@CodSala,@SesionId,@SorteoId,@JugadaId,@CantidadCupones,@FechaRegistro,@NombreSorteo,@CondicionWin,@CondicionBet,@TopeCuponesxJugada,@WinCalculado,@BetCalculado,@ParametrosImpresion,@Factor,@DescartePorFactor,@SerieIni,@SerieFin);";
 
             try
             {
@@ -50,6 +50,7 @@ VALUES
                     query.Parameters.AddWithValue("@DescartePorFactor", ManejoNulos.ManageNullDecimal(item.DescartePorFactor));
                     query.Parameters.AddWithValue("@SerieIni", ManejoNulos.ManageNullStr(item.SerieIni));
                     query.Parameters.AddWithValue("@SerieFin", ManejoNulos.ManageNullStr(item.SerieFin));
+                    query.Parameters.AddWithValue("@FechaRegistro", ManejoNulos.ManageNullDate(item.FechaRegistro));
                     //query.ExecuteNonQuery();
                     idInsertado = Convert.ToInt32(query.ExecuteScalar());
                     //respuesta = true;
