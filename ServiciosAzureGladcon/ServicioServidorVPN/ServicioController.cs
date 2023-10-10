@@ -26,6 +26,12 @@ namespace ServicioServidorVPN
         private readonly CMP_SesionClienteExcaDAL _sesionClienteExcaDAL = new CMP_SesionClienteExcaDAL();
 
         private readonly SalaDAL _salaDAL=new SalaDAL();
+
+        //Informacion Maquinas 
+        private readonly Asignacion_M_TDAL _asignacionMTDAL =new Asignacion_M_TDAL();
+        private readonly MarcasDAL _marcasDAL=new MarcasDAL();
+        private readonly TCM_ModeloDAL _modeloDAL=new TCM_ModeloDAL();
+
         [HttpPost]
         public IHttpActionResult DevolverDatos()
         {
@@ -222,6 +228,55 @@ namespace ServicioServidorVPN
             catch (Exception ex)
             {
                 funciones.logueo("ERROR  - RecepcionarDataMigracionExcaliburAnt " + ex.Message, "Error");
+                return Json(new { respuesta = false });
+            }
+        }
+        [HttpPost]
+        public IHttpActionResult RecepcionarDataMaquinas(dynamic jsonData)
+        {
+            List<Asignacion_M_T> listaMaquinas = new List<Asignacion_M_T>();
+            List<Marcas> listaMarcas = new List<Marcas>();
+            List<TCM_Modelo> listaModelos = new List<TCM_Modelo>();
+            int CodSala = 0;
+            try
+            {
+                dynamic items = jsonData;
+                if (items.listaMaquinas != null)
+                {
+                    listaMaquinas = items.listaMaquinas.ToObject<List<Asignacion_M_T>>();
+                }
+                if (items.listaMarcas != null)
+                {
+                    listaMarcas=items.listaMarcas.ToObject<List<Marcas>>();
+                }
+                if (items.listaModelos != null)
+                {
+                    listaModelos=items.listaModelos.ToObject<List<TCM_Modelo>>();
+                }
+                if (items.codSala != null)
+                {
+                    CodSala = items.codSala.ToObject<int>();
+                }
+                foreach(var item in listaMaquinas)
+                {
+                    item.COD_SALA = Convert.ToString(CodSala);
+                    var insertado = _asignacionMTDAL.GuardarAsignacionMT(item);
+                }
+                foreach(var item in listaModelos)
+                {
+                    item.CodSala = CodSala;
+                    var insertado=_modeloDAL.GuardarModelos(item);
+                }
+                foreach(var item in listaMarcas)
+                {
+                    item.CodSala = CodSala;
+                    var insertado=_marcasDAL.GuardarMarcas(item);
+                }
+                return Json(new { respuesta = true });
+            }
+            catch (Exception ex)
+            {
+                funciones.logueo("ERROR  - RecepcionarDataMaquinas " + ex.Message, "Error");
                 return Json(new { respuesta = false });
             }
         }

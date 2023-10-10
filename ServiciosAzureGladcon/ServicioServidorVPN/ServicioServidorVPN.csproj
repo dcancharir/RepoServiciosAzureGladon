@@ -75,6 +75,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="clases\Asignacion_M_T.cs" />
     <Compile Include="clases\Cliente.cs" />
     <Compile Include="clases\CMP_Jugada.cs" />
     <Compile Include="clases\CMP_JugadaExca.cs" />
@@ -86,7 +87,10 @@
     <Compile Include="clases\CMP_SesionSorteoSalaExca.cs" />
     <Compile Include="clases\CMP_SorteoSala.cs" />
     <Compile Include="clases\CMP_SorteoSalaExca.cs" />
+    <Compile Include="clases\Marcas.cs" />
     <Compile Include="clases\Sala.cs" />
+    <Compile Include="clases\TCM_Modelo.cs" />
+    <Compile Include="DAL\Asignacion_M_TDAL.cs" />
     <Compile Include="DAL\ClienteDAL.cs" />
     <Compile Include="DAL\CMP_JugadaDAL.cs" />
     <Compile Include="DAL\CMP_JugadaExcaDAL.cs" />
@@ -98,7 +102,9 @@
     <Compile Include="DAL\CMP_SesionSorteoSalaExcaDAL.cs" />
     <Compile Include="DAL\CMP_SorteoSalaDAL.cs" />
     <Compile Include="DAL\CMP_SorteoSalaExcaDAL.cs" />
+    <Compile Include="DAL\MarcasDAL.cs" />
     <Compile Include="DAL\SalaDAL.cs" />
+    <Compile Include="DAL\TCM_ModeloDAL.cs" />
     <Compile Include="Jobs\MigracionData\JobMigracionData.cs" />
     <Compile Include="Jobs\MyScheduler.cs" />
     <Compile Include="Program.cs" />
