@@ -1,5 +1,4 @@
-﻿using Common.Logging;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Quartz;
 using ServicioAzureIAS.Clases.EstadoServicios;
 using ServicioAzureIAS.Clases.Sala;

@@ -61,6 +61,7 @@ namespace ServicioAzureIAS
 
                 await new ReporteAlertaBilleterosScheduler().Start_RP_ReporteAlertaBilleteros();
                 await new RegistroProgresivoScheduler().Start_RP_LimpiarHistorialJob();
+                await new LimpiarLogIASScheduler().Start_LimpiarLogIAS();
             });
 
 
