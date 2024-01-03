@@ -14,6 +14,14 @@ namespace ServicioAzureIAS.Schedulers {
 
         public async Task Start_LimpiarLogIAS() {
 
+            string intervalo = string.Empty;
+            try {
+                intervalo = ConfigurationManager.AppSettings["IntervaloLimpiarLogIAS"];
+            } catch {
+                intervalo = "72";
+            }
+
+            int intervaloNumero = Convert.ToInt32(intervalo);
             IScheduler scheduler = await StdSchedulerFactory.GetDefaultScheduler();
 
             await scheduler.Start();
@@ -23,7 +31,7 @@ namespace ServicioAzureIAS.Schedulers {
             ITrigger trigger = TriggerBuilder.Create()
                 .WithIdentity("TRIGGER_limpiar_log", "GROUP_trigger_LimpiarLogIAS")
                 .WithSimpleSchedule(x => x
-                .WithIntervalInHours(72)  // Ejecutar cada 3 días(72 horas)
+                .WithIntervalInHours(intervaloNumero)  // Ejecutar cada 3 días(72 horas)
                 .RepeatForever())
                 .ForJob(jobDetail)
                 .StartNow()
