@@ -31,6 +31,25 @@ namespace ServicioAzureIAS.DAL {
 
             return true;
         }
+        public bool LimpiarLogDBRegadis() {
+            string consulta = @" USE BD_GESASISv2;
+                            ALTER DATABASE BD_GESASISv2 SET RECOVERY SIMPLE;
+                            DBCC SHRINKFILE (BD_GESASISv2_log, 1);
+                            ALTER DATABASE BD_GESASISv2 SET RECOVERY FULL";
+            try {
+                using(var con = new SqlConnection(_conexion)) {
+                    con.Open();
+                    var query = new SqlCommand(consulta, con);
+                    query.ExecuteNonQuery();
+                }
+            } catch(Exception ex) {
+                //Console.WriteLine(ex.ToString());
+                return false;
+            }
+
+            return true;
+        }
+
 
         public class FileDetail {
             public string Name { get; set; }

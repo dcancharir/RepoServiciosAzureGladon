@@ -29,14 +29,24 @@ namespace ServicioAzureIAS.Jobs.LimpiarLogIAS {
                 
                 limpiarLogDAL ter = new limpiarLogDAL();
                 bool respuesta = ter.LimpiarLogDBSeguridadPJ();
+                bool respuestaGesasis = ter.LimpiarLogDBRegadis();
 
-                if(respuesta) {
-                    funciones.logueo($"Exito - Tamaño de log reducido");
+                if(respuestaGesasis) {
+                    funciones.logueo($"Exito - Tamaño de log Regadis reducido");
                     //List<FileDetail> raa = ter.ObtenerPesoBaseDeDatos();
                     //nombre = IAS
                     //fecha = horaActual.ToShortDateString();
                 } else {
-                    funciones.logueo($"Error - No se pudo reducir log");
+                    funciones.logueo($"Error - No se pudo reducir log Regadis");
+                }
+
+                if(respuesta) {
+                    funciones.logueo($"Exito - Tamaño de log BD_SeguridadPJ reducido");
+                    //List<FileDetail> raa = ter.ObtenerPesoBaseDeDatos();
+                    //nombre = IAS
+                    //fecha = horaActual.ToShortDateString();
+                } else {
+                    funciones.logueo($"Error - No se pudo reducir log BD_SeguridadPJ");
                 }
 
             } catch(Exception exception) {
