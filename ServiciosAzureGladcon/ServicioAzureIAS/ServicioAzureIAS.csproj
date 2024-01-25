@@ -101,6 +101,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Clases\CampaniaCliente\CMP_ClienteEntidad.cs" />
     <Compile Include="Clases\EstadoServicios\EstadoServiciosDAL.cs" />
     <Compile Include="Clases\EstadoServicios\EstadoServiciosEntidad.cs" />
     <Compile Include="Clases\GladconData\consolidado.cs" />
@@ -111,8 +112,12 @@
     <Compile Include="Clases\GladconData\maquina.cs" />
     <Compile Include="Clases\GladconData\maquinas_audit.cs" />
     <Compile Include="Clases\GladconData\sala.cs" />
+    <Compile Include="Clases\Response\ResponseEntidad.cs" />
     <Compile Include="Clases\Sala\SalaDAL.cs" />
     <Compile Include="Clases\Sala\SalaEntidad.cs" />
+    <Compile Include="Clases\WhatsApp\WSP_SendMessage.cs" />
+    <Compile Include="Clases\WhatsApp\WSP_UltraMsgResponse.cs" />
+    <Compile Include="DAL\CMP_ClienteDAL.cs" />
     <Compile Include="DAL\consolidadoDAL.cs" />
     <Compile Include="DAL\consolidado_deleteDAL.cs" />
     <Compile Include="DAL\consolidado_tmpDAL.cs" />
@@ -122,6 +127,7 @@
     <Compile Include="DAL\maquinaDAL.cs" />
     <Compile Include="DAL\maquinas_auditDAL.cs" />
     <Compile Include="DAL\salaDAL.cs" />
+    <Compile Include="Jobs\CampaniaCliente\VerificarCuponesPromocionales.cs" />
     <Compile Include="Jobs\EstadoServicioSala\JobEstadoServicioSala.cs" />
     <Compile Include="Jobs\LimpiarLogIAS\LimpiarLogSeguridadPJ.cs" />
     <Compile Include="Jobs\MyScheduler.cs" />
@@ -133,6 +139,7 @@
     <Compile Include="ProjectInstaller.Designer.cs">
       <DependentUpon>ProjectInstaller.cs</DependentUpon>
     </Compile>
+    <Compile Include="Schedulers\VerificarCuponesPromocionalesScheduler.cs" />
     <Compile Include="Schedulers\LimpiarLogIASScheduler.cs" />
     <Compile Include="Schedulers\RegistroProgresivoScheduler.cs" />
     <Compile Include="Schedulers\ReporteAlertaBilleterosScheduler.cs" />
