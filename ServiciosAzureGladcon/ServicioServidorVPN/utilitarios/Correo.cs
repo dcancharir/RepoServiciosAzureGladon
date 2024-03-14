@@ -16,12 +16,11 @@ namespace ServicioServidorVPN.utilitarios
         private SmtpClient cliente;
         private MailMessage email;
        
-        private string _USER = ConfigurationManager.AppSettings["correo"];
-        private string _PASWWORD = ConfigurationManager.AppSettings["password"];
         private string _HOST = "smtp.gmail.com";
         private string _PORT = "587";
         private string _ENABLESSL = "true";
-        
+        private string _USER = "pruebaprogra2@gmail.com";
+        private string _PASWWORD = "vidtebjlyfqrlbpp";
         public Correo()
         {
 
