@@ -64,6 +64,12 @@ namespace ServicioServidorVPN
 
         protected override void OnStop()
         {
+            //enviar correo
+            string mensajeEnviar = "Se Detuvo el Servicio VPN a las : " + string.Format("{0:dd/MM/yyyy hh: mm: ss tt}", DateTime.Now);
+            Correo correo = new Correo();
+            string listaCorreosEnviar = "intranet.corporacionpj@gmail.com";
+            correo.EnviarCorreo(listaCorreosEnviar, "Servicio VPN(Data Warehouse)", mensajeEnviar);
+
             // TODO: agregar código aquí para realizar cualquier anulación necesaria para detener el servicio.
         }
         internal void Start()
@@ -132,6 +138,11 @@ namespace ServicioServidorVPN
                 funciones.logueo("**** SERVIDOR HTTP INICIADO en " + urlserviciowindows + " - LocalIP: " + iplocal, "Warn");
                 temporizadorServer.Stop();
 
+                //enviar correo
+                string mensajeEnviar = "Se Inicio el Servicio VPN a las : " + string.Format("{0:dd/MM/yyyy hh: mm: ss tt}", DateTime.Now);
+                Correo correo = new Correo();
+                string listaCorreosEnviar = "intranet.corporacionpj@gmail.com";
+                correo.EnviarCorreo(listaCorreosEnviar, "Servicio VPN(Data Warehouse)", mensajeEnviar);
             }
             catch (Exception ex)
             {

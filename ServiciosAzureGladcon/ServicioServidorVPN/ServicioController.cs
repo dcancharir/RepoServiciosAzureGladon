@@ -7,11 +7,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
+using System.Web.Http.Results;
 
 namespace ServicioServidorVPN
 {
     public class ServicioController : ApiController
     {
+        //DATAWHEREHOUSE
+        private readonly ContadoresOnlineDataWhereHouseDAL _contadoresDAL = new ContadoresOnlineDataWhereHouseDAL();
+
+
         private readonly CMP_SesionDAL _sesionDAL = new CMP_SesionDAL();
         private readonly CMP_SesionSorteoSalaDAL _sesionSorteoSalaDAL = new CMP_SesionSorteoSalaDAL();
         private readonly CMP_JugadaDAL _jugadaDAL = new CMP_JugadaDAL();
@@ -279,6 +284,25 @@ namespace ServicioServidorVPN
                 funciones.logueo("ERROR  - RecepcionarDataMaquinas " + ex.Message, "Error");
                 return Json(new { respuesta = false });
             }
+        }
+
+
+        [HttpPost]
+        public IHttpActionResult ObtenerFechaDeUltimoContadorPorCodSala(int codSala)
+        {
+            DateTime fecha = _contadoresDAL.ObtenerFechaDeUltimoContadorPorCodSala(codSala);
+            var result = new { success = true, data = fecha };
+            return Json(result);
+
+        }
+
+        [HttpPost]
+        public IHttpActionResult GuardarContadoresOnline(List<ContadoresOnline> contadoresOnline)
+        {
+            bool success = _contadoresDAL.GuarGuardarContadoresOnline(contadoresOnline);
+            string displayMessage = success ? $"{contadoresOnline.Count} contadores migrados correctamente." : "Error al migrar los Contadores.";
+            var result = new { success, displayMessage };
+            return Json(result);
         }
     }
 }

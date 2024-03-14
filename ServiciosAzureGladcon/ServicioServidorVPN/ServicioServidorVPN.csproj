@@ -39,6 +39,9 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="FastMember, Version=1.0.0.9, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\FastMember.1.0.0.11\lib\net40\FastMember.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -87,6 +90,7 @@
     <Compile Include="clases\CMP_SesionSorteoSalaExca.cs" />
     <Compile Include="clases\CMP_SorteoSala.cs" />
     <Compile Include="clases\CMP_SorteoSalaExca.cs" />
+    <Compile Include="clases\ContadoresOnline.cs" />
     <Compile Include="clases\Marcas.cs" />
     <Compile Include="clases\Sala.cs" />
     <Compile Include="clases\TCM_Modelo.cs" />
@@ -102,6 +106,7 @@
     <Compile Include="DAL\CMP_SesionSorteoSalaExcaDAL.cs" />
     <Compile Include="DAL\CMP_SorteoSalaDAL.cs" />
     <Compile Include="DAL\CMP_SorteoSalaExcaDAL.cs" />
+    <Compile Include="DAL\ContadoresOnlineDataWhereHouseDAL.cs" />
     <Compile Include="DAL\MarcasDAL.cs" />
     <Compile Include="DAL\SalaDAL.cs" />
     <Compile Include="DAL\TCM_ModeloDAL.cs" />
@@ -122,6 +127,7 @@
     <Compile Include="ServicioServidorVPN.Designer.cs">
       <DependentUpon>ServicioServidorVPN.cs</DependentUpon>
     </Compile>
+    <Compile Include="utilitarios\Correo.cs" />
     <Compile Include="utilitarios\ErrorLinea.cs" />
     <Compile Include="utilitarios\funciones.cs" />
     <Compile Include="utilitarios\ManejoNulos.cs" />
