@@ -19,7 +19,7 @@ namespace ServicioServidorVPN.DAL
         }
         public DateTime ObtenerFechaDeUltimoContadorPorCodSala(int codSala)
         {
-            DateTime fecha = DateTime.Now;
+            DateTime fecha = DateTime.Now.AddMinutes(-1);
             string consulta = @"
                 DECLARE @fechaUltima DATETIME
                 SELECT TOP 1 
