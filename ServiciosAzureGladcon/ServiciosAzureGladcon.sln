@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServicioServidorVPN", "Serv
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "ServicioServidorVPNInstaller", "ServicioServidorVPNInstaller\ServicioServidorVPNInstaller.vdproj", "{E7C970D5-C16F-46BC-916A-DE707311C152}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServicioMigracionWGDB_000", "ServicioMigracionWGDB_000\ServicioMigracionWGDB_000.csproj", "{C4FF81AC-7606-40A1-85A8-4A620114E63C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -49,6 +51,10 @@ Global
 		{701D4FA8-F8A8-41C7-A641-A740C909CE8A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E7C970D5-C16F-46BC-916A-DE707311C152}.Debug|Any CPU.ActiveCfg = Debug
 		{E7C970D5-C16F-46BC-916A-DE707311C152}.Release|Any CPU.ActiveCfg = Release
+		{C4FF81AC-7606-40A1-85A8-4A620114E63C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C4FF81AC-7606-40A1-85A8-4A620114E63C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C4FF81AC-7606-40A1-85A8-4A620114E63C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C4FF81AC-7606-40A1-85A8-4A620114E63C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

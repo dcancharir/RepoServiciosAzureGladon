@@ -1,0 +1,93 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{C4FF81AC-7606-40A1-85A8-4A620114E63C}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>ServicioMigracionWGDB_000</RootNamespace>
+    <AssemblyName>ServicioMigracionWGDB_000</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Quartz, Version=3.0.6.0, Culture=neutral, PublicKeyToken=f6b8c98a402cc8a4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Quartz.3.0.6\lib\net452\Quartz.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Remoting" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.ServiceProcess" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="dal\accounts_dal.cs" />
+    <Compile Include="dal\account_movements_dal.cs" />
+    <Compile Include="jobs\JobMigracionData.cs" />
+    <Compile Include="jobs\MyScheduler.cs" />
+    <Compile Include="models\accounts.cs" />
+    <Compile Include="models\account_movements.cs" />
+    <Compile Include="models\account_operations.cs" />
+    <Compile Include="models\account_promotions.cs" />
+    <Compile Include="models\areas.cs" />
+    <Compile Include="models\banks.cs" />
+    <Compile Include="models\cashier_sessions.cs" />
+    <Compile Include="models\general_params.cs" />
+    <Compile Include="models\gift_instances.cs" />
+    <Compile Include="models\gui_users.cs" />
+    <Compile Include="models\mobile_banks.cs" />
+    <Compile Include="models\play_sessions.cs" />
+    <Compile Include="models\promogames.cs" />
+    <Compile Include="models\promotions.cs" />
+    <Compile Include="models\terminals.cs" />
+    <Compile Include="models\venues.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ServicioMigracionWGDB_000.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ServicioMigracionWGDB_000.Designer.cs">
+      <DependentUpon>ServicioMigracionWGDB_000.cs</DependentUpon>
+    </Compile>
+    <Compile Include="utilitarios\ErrorLinea.cs" />
+    <Compile Include="utilitarios\funciones.cs" />
+    <Compile Include="utilitarios\ManejoNulos.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
