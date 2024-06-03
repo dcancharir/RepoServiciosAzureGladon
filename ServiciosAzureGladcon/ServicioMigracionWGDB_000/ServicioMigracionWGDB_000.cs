@@ -1,4 +1,5 @@
 ﻿using ServicioMigracionWGDB_000.jobs;
+using ServicioMigracionWGDB_000.utilitarios;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -22,9 +23,10 @@ namespace ServicioMigracionWGDB_000
         protected override void OnStart(string[] args)
         {
             // TODO: agregar código aquí para iniciar el servicio.
-            Console.WriteLine("el servicio se ha iniciado");
+            funciones.logueo("el servicio se ha iniciado");
             Task.Run(async () =>
             {
+                funciones.logueo("jobs iniciados");
                 MyScheduler schedulerClass = new MyScheduler();
                 await schedulerClass.StartMigrationData();
             });

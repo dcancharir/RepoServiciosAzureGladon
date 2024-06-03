@@ -1,7 +1,9 @@
 ﻿using Quartz;
 using Quartz.Impl;
+using ServicioMigracionWGDB_000.utilitarios;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +14,19 @@ namespace ServicioMigracionWGDB_000.jobs
     {
         public async Task StartMigrationData()
         {
+            //DateTime hora = DateTime.Now;
+            string horaEjecucionJob = string.Empty;
+            try
+            {
+                horaEjecucionJob = ConfigurationManager.AppSettings["HoraMigracionWGDB_000"];
+            }
+            catch
+            {
+                horaEjecucionJob = "07:00";
+            }
+
+            var hora = Convert.ToDateTime(horaEjecucionJob);
+            funciones.logueo(hora.ToString());
             //Configurar el planificador(Scheduler)
             IScheduler scheduler = await StdSchedulerFactory.GetDefaultScheduler();
             await scheduler.Start();
@@ -21,7 +36,7 @@ namespace ServicioMigracionWGDB_000.jobs
             ITrigger trigger = TriggerBuilder.Create()
                 .WithIdentity("TriggerMigracionData", "GrupoTriggerMigracionData")
                 .StartNow()
-                //.WithSchedule(CronScheduleBuilder.DailyAtHourAndMinute(horar.Hour, horar.Minute))
+                //.WithSchedule(CronScheduleBuilder.DailyAtHourAndMinute(hora.Hour, hora.Minute))
                 .ForJob(job)
                 .Build();
             //Programar el trabajo con el disparador

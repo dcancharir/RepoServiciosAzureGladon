@@ -12,11 +12,13 @@ namespace ServicioMigracionWGDB_000.dal
 {
     public class areas_dal
     {
-        private readonly string _conexion = string.Empty;
+        private readonly string _conexion_wgdb_000 = string.Empty;
+        private readonly string _conexion_wgdb_000_migration = string.Empty;
 
         public areas_dal()
         {
-            _conexion = ConfigurationManager.ConnectionStrings["connection_wgdb_000"].ConnectionString;
+            _conexion_wgdb_000 = ConfigurationManager.ConnectionStrings["connection_wgdb_000"].ConnectionString;
+            _conexion_wgdb_000_migration = ConfigurationManager.ConnectionStrings["connection_wgdb_000_migration"].ConnectionString;
         }
         public List<areas> GetAreasPaginated(long lastid, int skip, int pageSize)
         {
@@ -36,7 +38,7 @@ SELECT [ar_area_id]
   OFFSET {skip} ROWS -- Número de filas para omitir
   FETCH NEXT {pageSize} ROWS ONLY; -- Número de filas para devolver
     ";
-                using (var con = new SqlConnection(_conexion))
+                using (var con = new SqlConnection(_conexion_wgdb_000))
                 {
                     con.Open();
                     var command = new SqlCommand(query, con);
@@ -51,7 +53,7 @@ SELECT [ar_area_id]
                                     ar_area_id = ManejoNulos.ManageNullInteger(dr["ar_area_id"]),
                                     ar_name = ManejoNulos.ManageNullStr(dr["ar_name"]),
                                     ar_smoking = ManejoNulos.ManegeNullBool(dr["ar_smoking"]),
-                                    ar_timestamp = ManejoNulos.ManageNullInteger64(dr["ar_timestamp"]),
+                                    ar_timestamp = ManejoNulos.ManageNullByteArray(dr["ar_timestamp"]),
                                     ar_venue_id = ManejoNulos.ManageNullInteger(dr["ar_venue_id"]),
                                     ar_external_id = ManejoNulos.ManageNullStr(dr["ar_external_id"]),
                                 };
@@ -63,6 +65,7 @@ SELECT [ar_area_id]
             }
             catch (Exception ex)
             {
+                funciones.logueo($"Error metodo GetAreasPaginated - {ex.Message}");
                 result = new List<areas>();
             }
             return result;
@@ -79,7 +82,7 @@ where ar_area_id > @lastid
 
             try
             {
-                using (SqlConnection conecction = new SqlConnection(_conexion))
+                using (SqlConnection conecction = new SqlConnection(_conexion_wgdb_000))
                 {
                     conecction.Open();
                     SqlCommand command = new SqlCommand(query, conecction);
@@ -105,28 +108,23 @@ where ar_area_id > @lastid
             //bool respuesta = false;
             int IdInsertado = 0;
             string consulta = @"
-declare @idinserted int = 0
 INSERT INTO [dbo].[areas]
            ([ar_area_id]
            ,[ar_name]
            ,[ar_smoking]
            ,[ar_venue_id]
            ,[ar_external_id])
-output inserted.ar_area_id on @idinserted
+--output inserted.ar_area_id
      VALUES
            (@ar_area_id
            ,@ar_name
            ,@ar_smoking
            ,@ar_venue_id
            ,@ar_external_id)
-
-update [dbo].[areas] set [ar_timestamp] = @ar_timestamp
-where ar_area_id = @idinserted
-select @idinserted
                       ";
             try
             {
-                using (var con = new SqlConnection(_conexion))
+                using (var con = new SqlConnection(_conexion_wgdb_000_migration))
                 {
                     con.Open();
                     var query = new SqlCommand(consulta, con);
@@ -135,8 +133,10 @@ select @idinserted
                     query.Parameters.AddWithValue("@ar_smoking", ManejoNulos.ManegeNullBool(item.ar_smoking));
                     query.Parameters.AddWithValue("@ar_venue_id", ManejoNulos.ManageNullInteger(item.ar_venue_id));
                     query.Parameters.AddWithValue("@ar_external_id", ManejoNulos.ManageNullStr(item.ar_external_id));
-                    query.Parameters.AddWithValue("@ar_timestamp", ManejoNulos.ManageNullInteger64(item.ar_timestamp));
-                    IdInsertado = Convert.ToInt32(query.ExecuteScalar());
+                    //query.Parameters.AddWithValue("@ar_timestamp", ManejoNulos.ManageNullByteArray(item.ar_timestamp));
+                    //IdInsertado = Convert.ToInt32(query.ExecuteScalar());
+                    query.ExecuteNonQuery();
+                    IdInsertado = item.ar_area_id;
                 }
             }
             catch (Exception ex)
@@ -144,6 +144,38 @@ select @idinserted
                 IdInsertado = 0;
             }
             return IdInsertado;
+        }
+        public int GetLastIdInserted()
+        {
+            int total = 0;
+
+            string query = @"
+            select top 1 ar_area_id as lastid from 
+            [dbo].[areas]
+            order by ar_area_id desc
+";
+
+            try
+            {
+                using (SqlConnection conecction = new SqlConnection(_conexion_wgdb_000_migration))
+                {
+                    conecction.Open();
+                    SqlCommand command = new SqlCommand(query, conecction);
+                    using (SqlDataReader data = command.ExecuteReader())
+                    {
+                        if (data.Read())
+                        {
+                            total = (int)data["lastid"];
+                        }
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                total = 0;
+            }
+
+            return total;
         }
     }
 }

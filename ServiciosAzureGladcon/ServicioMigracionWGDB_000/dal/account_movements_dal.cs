@@ -3,6 +3,7 @@ using ServicioMigracionWGDB_000.utilitarios;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
@@ -12,11 +13,12 @@ namespace ServicioMigracionWGDB_000.dal
 {
     internal class account_movements_dal
     {
-        private readonly string _conexion = string.Empty;
-
+        private readonly string _conexion_wgdb_000 = string.Empty;
+        private readonly string _conexion_wgdb_000_migration = string.Empty;
         public account_movements_dal()
         {
-            _conexion = ConfigurationManager.ConnectionStrings["connection_wgdb_000"].ConnectionString;
+            _conexion_wgdb_000 = ConfigurationManager.ConnectionStrings["connection_wgdb_000"].ConnectionString;
+            _conexion_wgdb_000_migration = ConfigurationManager.ConnectionStrings["connection_wgdb_000_migration"].ConnectionString;
         }
         public List<account_movements> GetAccountMovementsPaginated(long lastid, int skip, int pageSize)
         {
@@ -53,7 +55,7 @@ SELECT [am_movement_id]
   OFFSET {skip} ROWS -- Número de filas para omitir
   FETCH NEXT {pageSize} ROWS ONLY; -- Número de filas para devolver
     ";
-                using (var con = new SqlConnection(_conexion))
+                using (var con = new SqlConnection(_conexion_wgdb_000))
                 {
                     con.Open();
                     var command = new SqlCommand(query, con);
@@ -65,7 +67,7 @@ SELECT [am_movement_id]
                             {
                                 var item = new account_movements() {
                                     am_movement_id = ManejoNulos.ManageNullInteger64(dr["am_movement_id"]),
-                                    am_play_session_id = ManejoNulos.ManageNullInteger64(dr["am_play_session_id"]),
+                                    am_play_session_id = dr["am_play_session_id"] == DBNull.Value ? null : (long?)dr["am_play_session_id"],
                                     am_account_id = ManejoNulos.ManageNullInteger64(dr["am_account_id"]),
                                     am_terminal_id = ManejoNulos.ManageNullInteger(dr["am_terminal_id"]),
                                     am_wcp_sequence_id = ManejoNulos.ManageNullInteger64(dr["am_wcp_sequence_id"]),
@@ -96,6 +98,7 @@ SELECT [am_movement_id]
             }
             catch (Exception ex)
             {
+                funciones.logueo($"Error metodo GetAccountMovementsPaginated - {ex.Message}");
                 result = new List<account_movements>();
             }
             return result;
@@ -112,7 +115,7 @@ where am_movement_id > @lastid
 
             try
             {
-                using (SqlConnection conecction = new SqlConnection(_conexion))
+                using (SqlConnection conecction = new SqlConnection(_conexion_wgdb_000))
                 {
                     conecction.Open();
                     SqlCommand command = new SqlCommand(query, conecction);
@@ -126,17 +129,18 @@ where am_movement_id > @lastid
                     }
                 }
             }
-            catch (Exception exception)
+            catch (Exception ex)
             {
+                funciones.logueo($"Error metodo GetTotalAccountMovementsForMigration - {ex.Message}");
                 total = 0;
             }
 
             return total;
         }
-        public int SaveAccountMovementss(account_movements item)
+        public long SaveAccountMovements(account_movements item)
         {
             //bool respuesta = false;
-            int IdInsertado = 0;
+            long IdInsertado = 0;
             string consulta = @"
 INSERT INTO [dbo].[account_movements]
            ([am_movement_id]
@@ -162,7 +166,7 @@ INSERT INTO [dbo].[account_movements]
            ,[am_modified_bucket_reason]
            ,[am_data_before]
            ,[am_data_after])
-output inserted.am_movement_id
+--output inserted.am_movement_id
      VALUES
            (@am_movement_id
            ,@am_play_session_id
@@ -191,7 +195,7 @@ output inserted.am_movement_id
                       ";
             try
             {
-                using (var con = new SqlConnection(_conexion))
+                using (var con = new SqlConnection(_conexion_wgdb_000_migration))
                 {
                     con.Open();
                     var query = new SqlCommand(consulta, con);
@@ -218,14 +222,50 @@ output inserted.am_movement_id
                     query.Parameters.AddWithValue("@am_modified_bucket_reason", ManejoNulos.ManageNullInteger(item.am_modified_bucket_reason));
                     query.Parameters.AddWithValue("@am_data_before", ManejoNulos.ManageNullStr(item.am_data_before));
                     query.Parameters.AddWithValue("@am_data_after", ManejoNulos.ManageNullStr(item.am_data_after));
-                    IdInsertado = Convert.ToInt32(query.ExecuteScalar());
+                    //IdInsertado = Convert.ToInt32(query.ExecuteScalar());
+                    query.ExecuteNonQuery();
+                    IdInsertado = item.am_movement_id;
                 }
             }
             catch (Exception ex)
             {
+                funciones.logueo($"Error metodo SaveAccountMovements - {ex.Message}");
                 IdInsertado = 0;
             }
             return IdInsertado;
+        }
+        public long GetLastIdInserted()
+        {
+            long total = 0;
+
+            string query = @"
+            select top 1 am_movement_id as lastid from 
+            [dbo].[account_movements]
+            order by am_movement_id desc
+";
+
+            try
+            {
+                using (SqlConnection conecction = new SqlConnection(_conexion_wgdb_000_migration))
+                {
+                    conecction.Open();
+                    SqlCommand command = new SqlCommand(query, conecction);
+                    using (SqlDataReader data = command.ExecuteReader())
+                    {
+                        if (data.Read())
+                        {
+                            total = (long)data["lastid"];
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                funciones.logueo($"Error metodo GetLastIdInserted - {ex.Message}");
+                total = 0;
+            }
+
+            return total;
         }
     }
 }

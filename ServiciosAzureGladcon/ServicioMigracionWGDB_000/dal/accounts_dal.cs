@@ -12,11 +12,13 @@ namespace ServicioMigracionWGDB_000.dal
 {
     public class accounts_dal
     {
-        private readonly string _conexion = string.Empty;
+        private readonly string _conexion_wgdb_000 = string.Empty;
+        private readonly string _conexion_wgdb_000_migration = string.Empty;
 
         public accounts_dal()
         {
-            _conexion = ConfigurationManager.ConnectionStrings["connection_wgdb_000"].ConnectionString;
+            _conexion_wgdb_000 = ConfigurationManager.ConnectionStrings["connection_wgdb_000"].ConnectionString;
+            _conexion_wgdb_000_migration = ConfigurationManager.ConnectionStrings["connection_wgdb_000_migration"].ConnectionString;
         }
         public List<accounts> GetAccountsPaginated(long lastid, int skip, int pageSize) {
             var result = new List<accounts>();
@@ -233,7 +235,7 @@ SELECT [ac_account_id]
   OFFSET {skip} ROWS -- Número de filas para omitir
   FETCH NEXT {pageSize} ROWS ONLY; -- Número de filas para devolver
     ";
-                using (var con = new SqlConnection(_conexion)) { 
+                using (var con = new SqlConnection(_conexion_wgdb_000)) { 
                     con.Open();
                     var command = new SqlCommand(query, con);
                     using (var dr = command.ExecuteReader())
@@ -472,7 +474,7 @@ where ac_account_id > @lastid
 
             try
             {
-                using (SqlConnection conecction = new SqlConnection(_conexion))
+                using (SqlConnection conecction = new SqlConnection(_conexion_wgdb_000))
                 {
                     conecction.Open();
                     SqlCommand command = new SqlCommand(query, conecction);
@@ -909,7 +911,7 @@ INSERT INTO [dbo].[accounts]
                       ";
             try
             {
-                using (var con = new SqlConnection(_conexion))
+                using (var con = new SqlConnection(_conexion_wgdb_000_migration))
                 {
                     con.Open();
                     var query = new SqlCommand(consulta, con);
@@ -1125,6 +1127,37 @@ INSERT INTO [dbo].[accounts]
                 IdInsertado = 0;
             }
             return IdInsertado;
+        }
+        public int GetLastIdInserted() {
+            int total = 0;
+
+            string query = @"
+            select top 1 ac_account_id as lastid from 
+            [dbo].[accounts]
+            order by ac_account_id desc
+";
+
+            try
+            {
+                using (SqlConnection conecction = new SqlConnection(_conexion_wgdb_000_migration))
+                {
+                    conecction.Open();
+                    SqlCommand command = new SqlCommand(query, conecction);
+                    using (SqlDataReader data = command.ExecuteReader())
+                    {
+                        if (data.Read())
+                        {
+                            total = (int)data["lastid"];
+                        }
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                total = 0;
+            }
+
+            return total;
         }
     }
 }

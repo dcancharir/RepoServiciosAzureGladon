@@ -41,7 +41,9 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
+    <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Management" />
     <Reference Include="System.Runtime.Remoting" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -60,6 +62,14 @@
     <Compile Include="dal\banks_dal.cs" />
     <Compile Include="dal\cashier_sessions_dal.cs" />
     <Compile Include="dal\general_params_dal.cs" />
+    <Compile Include="dal\gift_instances_dal.cs" />
+    <Compile Include="dal\gui_users_dal.cs" />
+    <Compile Include="dal\mobile_banks_dal.cs" />
+    <Compile Include="dal\play_sessions_dal.cs" />
+    <Compile Include="dal\promogames_dal.cs" />
+    <Compile Include="dal\promotions_dal.cs" />
+    <Compile Include="dal\terminals_dal.cs" />
+    <Compile Include="dal\venues_dal.cs" />
     <Compile Include="jobs\JobMigracionData.cs" />
     <Compile Include="jobs\MyScheduler.cs" />
     <Compile Include="models\accounts.cs" />
@@ -79,6 +89,12 @@
     <Compile Include="models\terminals.cs" />
     <Compile Include="models\venues.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="ProjectInstaller.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ProjectInstaller.Designer.cs">
+      <DependentUpon>ProjectInstaller.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServicioMigracionWGDB_000.cs">
       <SubType>Component</SubType>
@@ -94,6 +110,10 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="ProjectInstaller.resx">
+      <DependentUpon>ProjectInstaller.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -1250,5 +1250,16 @@ namespace ServicioMigracionWGDB_000.utilitarios
                 return (Guid)aValue;
             }
         }
+        public static short ManageNullShort(System.Object aValue)
+        {
+            if (Convert.IsDBNull(aValue))
+            {
+                return short.Parse("0");
+            }
+            else
+            {
+                return Convert.ToInt16(aValue);
+            }
+        }
     }
 }
