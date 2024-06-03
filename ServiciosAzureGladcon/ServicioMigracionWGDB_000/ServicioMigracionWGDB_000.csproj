@@ -54,6 +54,12 @@
   <ItemGroup>
     <Compile Include="dal\accounts_dal.cs" />
     <Compile Include="dal\account_movements_dal.cs" />
+    <Compile Include="dal\account_operations_dal.cs" />
+    <Compile Include="dal\account_promotions_dal.cs" />
+    <Compile Include="dal\areas_dal.cs" />
+    <Compile Include="dal\banks_dal.cs" />
+    <Compile Include="dal\cashier_sessions_dal.cs" />
+    <Compile Include="dal\general_params_dal.cs" />
     <Compile Include="jobs\JobMigracionData.cs" />
     <Compile Include="jobs\MyScheduler.cs" />
     <Compile Include="models\accounts.cs" />
