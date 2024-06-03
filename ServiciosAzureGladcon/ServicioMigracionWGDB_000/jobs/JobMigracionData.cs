@@ -28,7 +28,7 @@ namespace ServicioMigracionWGDB_000.jobs
             try
             {
                 var lastId = 0;
-                var totalAccountMovements = accountMovementsDal.GetTotalAccountMovementssForMigration(0);//reemplazar por el maximo id del servidor centralizado
+                var totalAccountMovements = accountMovementsDal.GetTotalAccountMovementsForMigration(0);//reemplazar por el maximo id del servidor centralizado
                 var batchCount = (totalAccountMovements + batchSize -1)/batchSize;
                 Console.WriteLine("total a migrar " + totalAccountMovements);
 
