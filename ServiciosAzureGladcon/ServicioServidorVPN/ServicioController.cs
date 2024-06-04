@@ -1,9 +1,12 @@
 ﻿using ServicioServidorVPN.clases;
 using ServicioServidorVPN.DAL;
 using ServicioServidorVPN.utilitarios;
+using ServicioServidorVPN.WGDB_000.dal;
+using ServicioServidorVPN.WGDB_000.model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -304,5 +307,553 @@ namespace ServicioServidorVPN
             var result = new { success, displayMessage };
             return Json(result);
         }
+        #region WGDB_000
+        [HttpPost]
+        public IHttpActionResult AccountMovementsGetLastId(string databaseName)
+        {
+            try
+            {
+                var accountMovementsDal = new account_movements_dal(databaseName);
+                var result = accountMovementsDal.GetLastIdInserted();
+                return Json(result);
+            }
+            catch (Exception)
+            {
+                return Json(-1);
+            }
+        }
+        [HttpPost]
+        public IHttpActionResult AccountMovementsSave(dynamic jsonData)
+        {
+            try
+            {
+                List<account_movements> models = new List<account_movements>();
+                string databaseName = string.Empty;
+                dynamic items = jsonData;
+                if (items.items != null)
+                {
+                    models = items.items.ToObject<List<account_movements>>();
+                }
+                if (items.databaseName != null)
+                {
+                    databaseName = items.databaseName.ToObject<string>();
+                }
+                var accountMovementsDal = new account_movements_dal(databaseName);
+                foreach (var item in models)
+                {
+                    var result = accountMovementsDal.SaveAccountMovements(item);
+                }
+                return Json(true);
+            }
+            catch (Exception)
+            {
+                return Json(false);
+            }
+        }
+        [HttpPost]
+        public IHttpActionResult AccountOperationsGetLastId(string databaseName)
+        {
+            try
+            {
+                var accountOperationsDal = new account_operations_dal(databaseName);
+                var result = accountOperationsDal.GetLastIdInserted();
+                return Json(result);
+            }
+            catch (Exception)
+            {
+                return Json(-1);
+            }
+        }
+        [HttpPost]
+        public IHttpActionResult AccountOperationsSave(dynamic jsonData)
+        {
+            try
+            {
+                List<account_operations> models = new List<account_operations>();
+                string databaseName = string.Empty;
+                dynamic items = jsonData;
+                if (items.items != null)
+                {
+                    models = items.items.ToObject<List<account_operations>>();
+                }
+                if (items.databaseName != null)
+                {
+                    databaseName = items.databaseName.ToObject<string>();
+                }
+                var accountOperationsDal = new account_operations_dal(databaseName);
+                foreach (var item in models)
+                {
+                    var result = accountOperationsDal.SaveAccountOperations(item);
+                }
+                return Json(true);
+            }
+            catch (Exception)
+            {
+                return Json(false);
+            }
+        }
+        [HttpPost]
+        public IHttpActionResult AccountPromotionsGetLastId(string databaseName)
+        {
+            try
+            {
+                var accountPromotionsDal = new account_promotions_dal(databaseName);
+                var result = accountPromotionsDal.GetLastIdInserted();
+                return Json(result);
+            }
+            catch (Exception)
+            {
+                return Json(-1);
+            }
+        }
+        [HttpPost]
+        public IHttpActionResult AccountPromotionsSave(dynamic jsonData)
+        {
+            try
+            {
+                List<account_promotions> models = new List<account_promotions>();
+                string databaseName = string.Empty;
+                dynamic items = jsonData;
+                if (items.items != null)
+                {
+                    models = items.items.ToObject<List<account_promotions>>();
+                }
+                if (items.databaseName != null)
+                {
+                    databaseName = items.databaseName.ToObject<string>();
+                }
+                var accountPromotionsDal = new account_promotions_dal(databaseName);
+                foreach (var item in models)
+                {
+                    var result = accountPromotionsDal.SaveAccountPromotions(item);
+                }
+                return Json(true);
+            }
+            catch (Exception)
+            {
+                return Json(false);
+            }
+        }
+        [HttpPost]
+        public IHttpActionResult AreasGetLastId(string databaseName)
+        {
+            try
+            {
+                var areasDal = new areas_dal(databaseName);
+                var result = areasDal.GetLastIdInserted();
+                return Json(result);
+            }
+            catch (Exception)
+            {
+                return Json(-1);
+            }
+        }
+        [HttpPost]
+        public IHttpActionResult AreasSave(dynamic jsonData)
+        {
+            try
+            {
+                List<areas> models = new List<areas>();
+                string databaseName = string.Empty;
+                dynamic items = jsonData;
+                if (items.items != null)
+                {
+                    models = items.items.ToObject<List<areas>>();
+                }
+                if (items.databaseName != null)
+                {
+                    databaseName = items.databaseName.ToObject<string>();
+                }
+                var areasDal = new areas_dal(databaseName);
+                foreach (var item in models)
+                {
+                    var result = areasDal.SaveAreas(item);
+                }
+                return Json(true);
+            }
+            catch (Exception)
+            {
+                return Json(false);
+            }
+        }
+        [HttpPost]
+        public IHttpActionResult BanksGetLastId(string databaseName)
+        {
+            try
+            {
+                var banksDal = new banks_dal(databaseName);
+                var result = banksDal.GetLastIdInserted();
+                return Json(result);
+            }
+            catch (Exception)
+            {
+                return Json(-1);
+            }
+        }
+        [HttpPost]
+        public IHttpActionResult BanksSave(dynamic jsonData)
+        {
+            try
+            {
+                List<banks> models = new List<banks>();
+                string databaseName = string.Empty;
+                dynamic items = jsonData;
+                if (items.items != null)
+                {
+                    models = items.items.ToObject<List<banks>>();
+                }
+                if (items.databaseName != null)
+                {
+                    databaseName = items.databaseName.ToObject<string>();
+                }
+                var banksDal = new banks_dal(databaseName);
+                foreach (var item in models)
+                {
+                    var result = banksDal.SaveBanks(item);
+                }
+                return Json(true);
+            }
+            catch (Exception)
+            {
+                return Json(false);
+            }
+        }
+        [HttpPost]
+        public IHttpActionResult CashierSesionsGetLastId(string databaseName)
+        {
+            try
+            {
+                var cashierSessionsDal = new cashier_sessions_dal(databaseName);
+                var result = cashierSessionsDal.GetLastIdInserted();
+                return Json(result);
+            }
+            catch (Exception)
+            {
+                return Json(-1);
+            }
+        }
+        [HttpPost]
+        public IHttpActionResult CashierSessionsSave(dynamic jsonData)
+        {
+            try
+            {
+                List<cashier_sessions> models = new List<cashier_sessions>();
+                string databaseName = string.Empty;
+                dynamic items = jsonData;
+                if (items.items != null)
+                {
+                    models = items.items.ToObject<List<cashier_sessions>>();
+                }
+                if (items.databaseName != null)
+                {
+                    databaseName = items.databaseName.ToObject<string>();
+                }
+                var cashierSessionsDal = new cashier_sessions_dal(databaseName);
+                foreach (var item in models)
+                {
+                    var result = cashierSessionsDal.SaveCashierSessions(item);
+                }
+                return Json(true);
+            }
+            catch (Exception)
+            {
+                return Json(false);
+            }
+        }
+        [HttpPost]
+        public IHttpActionResult GiftInstancesGetLastId(string databaseName)
+        {
+            try
+            {
+                var giftInstancesDal = new gift_instances_dal(databaseName);
+                var result = giftInstancesDal.GetLastIdInserted();
+                return Json(result);
+            }
+            catch (Exception)
+            {
+                return Json(-1);
+            }
+        }
+        [HttpPost]
+        public IHttpActionResult GiftInstancesSave(dynamic jsonData)
+        {
+            try
+            {
+                List<gift_instances> models = new List<gift_instances>();
+                string databaseName = string.Empty;
+                dynamic items = jsonData;
+                if (items.items != null)
+                {
+                    models = items.items.ToObject<List<gift_instances>>();
+                }
+                if (items.databaseName != null)
+                {
+                    databaseName = items.databaseName.ToObject<string>();
+                }
+                var giftInstancesDal = new gift_instances_dal(databaseName);
+                foreach (var item in models)
+                {
+                    var result = giftInstancesDal.SaveGiftInstances(item);
+                }
+                return Json(true);
+            }
+            catch (Exception)
+            {
+                return Json(false);
+            }
+        }
+        [HttpPost]
+        public IHttpActionResult MobileBanksGetLastId(string databaseName)
+        {
+            try
+            {
+                var mobileBanksDal = new mobile_banks_dal(databaseName);
+                var result = mobileBanksDal.GetLastIdInserted();
+                return Json(result);
+            }
+            catch (Exception)
+            {
+                return Json(-1);
+            }
+        }
+        [HttpPost]
+        public IHttpActionResult MobileBanksSave(dynamic jsonData)
+        {
+            try
+            {
+                List<mobile_banks> models = new List<mobile_banks>();
+                string databaseName = string.Empty;
+                dynamic items = jsonData;
+                if (items.items != null)
+                {
+                    models = items.items.ToObject<List<mobile_banks>>();
+                }
+                if (items.databaseName != null)
+                {
+                    databaseName = items.databaseName.ToObject<string>();
+                }
+                var mobileBanksDal = new mobile_banks_dal(databaseName);
+                foreach (var item in models)
+                {
+                    var result = mobileBanksDal.SaveMobileBanks(item);
+                }
+                return Json(true);
+            }
+            catch (Exception)
+            {
+                return Json(false);
+            }
+        }
+        [HttpPost]
+        public IHttpActionResult PlaySessionsGetLastId(string databaseName)
+        {
+            try
+            {
+                var playSessionsDal = new play_sessions_dal(databaseName);
+                var result = playSessionsDal.GetLastIdInserted();
+                return Json(result);
+            }
+            catch (Exception)
+            {
+                return Json(-1);
+            }
+        }
+        [HttpPost]
+        public IHttpActionResult PlaySessionsSave(dynamic jsonData)
+        {
+            try
+            {
+                List<play_sessions> models = new List<play_sessions>();
+                string databaseName = string.Empty;
+                dynamic items = jsonData;
+                if (items.items != null)
+                {
+                    models = items.items.ToObject<List<play_sessions>>();
+                }
+                if (items.databaseName != null)
+                {
+                    databaseName = items.databaseName.ToObject<string>();
+                }
+                var playSessionsDal = new play_sessions_dal(databaseName);
+                foreach (var item in models)
+                {
+                    var result = playSessionsDal.SavePlaySessions(item);
+                }
+                return Json(true);
+            }
+            catch (Exception)
+            {
+                return Json(false);
+            }
+        }
+        [HttpPost]
+        public IHttpActionResult PromoGamesGetLastId(string databaseName)
+        {
+            try
+            {
+                var promogamesDal = new promogames_dal(databaseName);
+                var result = promogamesDal.GetLastIdInserted();
+                return Json(result);
+            }
+            catch (Exception)
+            {
+                return Json(-1);
+            }
+        }
+        [HttpPost]
+        public IHttpActionResult PromoGamesSave(dynamic jsonData)
+        {
+            try
+            {
+                List<promogames> models = new List<promogames>();
+                string databaseName = string.Empty;
+                dynamic items = jsonData;
+                if (items.items != null)
+                {
+                    models = items.items.ToObject<List<promogames>>();
+                }
+                if (items.databaseName != null)
+                {
+                    databaseName = items.databaseName.ToObject<string>();
+                }
+                var promogamesDal = new promogames_dal(databaseName);
+                foreach (var item in models)
+                {
+                    var result = promogamesDal.SavePromoGames(item);
+                }
+                return Json(true);
+            }
+            catch (Exception)
+            {
+                return Json(false);
+            }
+        }
+        [HttpPost]
+        public IHttpActionResult PromotionsGetLastId(string databaseName)
+        {
+            try
+            {
+                var promotionsDal = new promotions_dal(databaseName);
+                var result = promotionsDal.GetLastIdInserted();
+                return Json(result);
+            }
+            catch (Exception)
+            {
+                return Json(-1);
+            }
+        }
+        [HttpPost]
+        public IHttpActionResult PromotionsSave(dynamic jsonData)
+        {
+            try
+            {
+                List<promotions> models = new List<promotions>();
+                string databaseName = string.Empty;
+                dynamic items = jsonData;
+                if (items.items != null)
+                {
+                    models = items.items.ToObject<List<promotions>>();
+                }
+                if (items.databaseName != null)
+                {
+                    databaseName = items.databaseName.ToObject<string>();
+                }
+                var promotionsDal = new promotions_dal(databaseName);
+                foreach (var item in models)
+                {
+                    var result = promotionsDal.SavePromotions(item);
+                }
+                return Json(true);
+            }
+            catch (Exception)
+            {
+                return Json(false);
+            }
+        }
+        [HttpPost]
+        public IHttpActionResult TerminalsGetLastId(string databaseName)
+        {
+            try
+            {
+                var terminalsDal = new terminals_dal(databaseName);
+                var result = terminalsDal.GetLastIdInserted();
+                return Json(result);
+            }
+            catch (Exception)
+            {
+                return Json(-1);
+            }
+        }
+        [HttpPost]
+        public IHttpActionResult TerminalsSave(dynamic jsonData)
+        {
+            try
+            {
+                List<terminals> models = new List<terminals>();
+                string databaseName = string.Empty;
+                dynamic items = jsonData;
+                if (items.items != null)
+                {
+                    models = items.items.ToObject<List<terminals>>();
+                }
+                if (items.databaseName != null)
+                {
+                    databaseName = items.databaseName.ToObject<string>();
+                }
+                var terminalsDal = new terminals_dal(databaseName);
+                foreach (var item in models)
+                {
+                    var result = terminalsDal.SaveTerminals(item);
+                }
+                return Json(true);
+            }
+            catch (Exception)
+            {
+                return Json(false);
+            }
+        }
+        [HttpPost]
+        public IHttpActionResult VenuesGetLastId(string databaseName)
+        {
+            try
+            {
+                var venuesDal = new venues_dal(databaseName);
+                var result = venuesDal.GetLastIdInserted();
+                return Json(result);
+            }
+            catch (Exception)
+            {
+                return Json(-1);
+            }
+        }
+        [HttpPost]
+        public IHttpActionResult VenuesSave(dynamic jsonData)
+        {
+            try
+            {
+                List<venues> models = new List<venues>();
+                string databaseName = string.Empty;
+                dynamic items = jsonData;
+                if (items.items != null)
+                {
+                    models = items.items.ToObject<List<venues>>();
+                }
+                if (items.databaseName != null)
+                {
+                    databaseName = items.databaseName.ToObject<string>();
+                }
+                var venuesDal = new venues_dal(databaseName);
+                foreach (var item in models)
+                {
+                    var result = venuesDal.SaveVenues(item);
+                }
+                return Json(true);
+            }
+            catch (Exception)
+            {
+                return Json(false);
+            }
+        }
+        #endregion
     }
 }

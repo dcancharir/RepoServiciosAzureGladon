@@ -63,5 +63,36 @@ SELECT [gp_group_key]
             }
             return result;
         }
+        public int GetTotalGeneralParamsForMigration()
+        {
+            int total = 0;
+
+            string query = @"
+            select count(*) as total from 
+            [dbo].[general_params]
+";
+
+            try
+            {
+                using (SqlConnection conecction = new SqlConnection(_conexion))
+                {
+                    conecction.Open();
+                    SqlCommand command = new SqlCommand(query, conecction);
+                    using (SqlDataReader data = command.ExecuteReader())
+                    {
+                        if (data.Read())
+                        {
+                            total = (int)data["total"];
+                        }
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                total = 0;
+            }
+
+            return total;
+        }
     }
 }

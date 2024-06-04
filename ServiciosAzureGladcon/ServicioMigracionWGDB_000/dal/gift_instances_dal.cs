@@ -77,7 +77,7 @@ SELECT [gin_gift_instance_id]
                                     gin_num_items = ManejoNulos.ManageNullInteger(dr["gin_num_items"]),
                                     gin_data_01 = ManejoNulos.ManageNullInteger64(dr["gin_data_01"]),
                                     gin_notification = ManejoNulos.ManageNullInteger(dr["gin_notification"]),
-                                    gin_row_version = ManejoNulos.ManageNullInteger64(dr["gin_row_version"]),
+                                    gin_row_version = ManejoNulos.ManageNullByteArray(dr["gin_row_version"]),
                                 };
                                 result.Add(item);
                             }

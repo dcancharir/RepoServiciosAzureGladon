@@ -91,7 +91,7 @@ SELECT [mb_account_id]
                                     mb_last_activity = ManejoNulos.ManageNullDate(dr["mb_last_activity"]),
                                     mb_last_terminal_id = ManejoNulos.ManageNullInteger(dr["mb_last_terminal_id"]),
                                     mb_last_terminal_name = ManejoNulos.ManageNullStr(dr["mb_last_terminal_name"]),
-                                    mb_timestamp = ManejoNulos.ManageNullInteger64(dr["mb_timestamp"]),
+                                    mb_timestamp = ManejoNulos.ManageNullByteArray(dr["mb_timestamp"]),
                                     mb_track_number = ManejoNulos.ManageNullInteger64(dr["mb_track_number"]),
                                     mb_terminal_id = ManejoNulos.ManageNullInteger(dr["mb_terminal_id"]),
                                     mb_over_cash = ManejoNulos.ManageNullDecimal(dr["mb_over_cash"]),

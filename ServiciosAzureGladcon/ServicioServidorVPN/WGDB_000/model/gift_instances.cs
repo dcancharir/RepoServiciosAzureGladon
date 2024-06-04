@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ServicioMigracionWGDB_000.models
+namespace ServicioServidorVPN.WGDB_000.model
 {
     public class gift_instances
     {

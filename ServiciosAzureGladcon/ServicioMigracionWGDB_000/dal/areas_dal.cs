@@ -33,7 +33,7 @@ SELECT [ar_area_id]
       ,[ar_venue_id]
       ,[ar_external_id]
   FROM [dbo].[areas]
-  where ar_area_id > {lastid}
+  where ar_area_id >= {lastid}
   order by ar_area_id asc
   OFFSET {skip} ROWS -- Número de filas para omitir
   FETCH NEXT {pageSize} ROWS ONLY; -- Número de filas para devolver

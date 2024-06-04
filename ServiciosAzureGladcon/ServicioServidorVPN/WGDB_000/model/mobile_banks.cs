@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ServicioMigracionWGDB_000.models
+namespace ServicioServidorVPN.WGDB_000.model
 {
     public class mobile_banks
     {
@@ -30,7 +30,7 @@ namespace ServicioMigracionWGDB_000.models
 
         public decimal mb_pending_cash { get; set; }
 
-        public string mb_pin { get; set; } 
+        public string mb_pin { get; set; }
 
         public long? mb_cashier_session_id { get; set; }
 

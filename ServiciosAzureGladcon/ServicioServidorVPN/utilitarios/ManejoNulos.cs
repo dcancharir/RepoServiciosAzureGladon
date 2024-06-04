@@ -1228,5 +1228,38 @@ namespace ServicioServidorVPN.utilitarios
             }
             return trama;
         }
+        public static byte[] ManageNullByteArray(object aValue, byte[] defaultValue = null)
+        {
+            if (aValue == null || Convert.IsDBNull(aValue))
+            {
+                return defaultValue ?? new byte[0]; // Valor por defecto o arreglo vacío si no se proporciona uno
+            }
+            else
+            {
+                return (byte[])aValue;
+            }
+        }
+        public static Guid ManageNullGuid(object aValue, Guid defaultValue = default(Guid))
+        {
+            if (aValue == null || Convert.IsDBNull(aValue))
+            {
+                return defaultValue;
+            }
+            else
+            {
+                return (Guid)aValue;
+            }
+        }
+        public static short ManageNullShort(System.Object aValue)
+        {
+            if (Convert.IsDBNull(aValue))
+            {
+                return short.Parse("0");
+            }
+            else
+            {
+                return Convert.ToInt16(aValue);
+            }
+        }
     }
 }

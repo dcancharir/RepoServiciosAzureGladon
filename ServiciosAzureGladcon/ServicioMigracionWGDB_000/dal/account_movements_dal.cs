@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace ServicioMigracionWGDB_000.dal
 {
-    internal class account_movements_dal
+    public class account_movements_dal
     {
         private readonly string _conexion_wgdb_000 = string.Empty;
         private readonly string _conexion_wgdb_000_migration = string.Empty;

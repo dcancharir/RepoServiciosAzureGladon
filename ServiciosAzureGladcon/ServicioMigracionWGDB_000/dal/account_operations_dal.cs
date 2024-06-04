@@ -231,5 +231,37 @@ output inserted.ao_operation_id
             }
             return IdInsertado;
         }
+        public int GetLastIdInserted()
+        {
+            int total = 0;
+
+            string query = @"
+            select top 1 ao_operation_id as lastid from 
+            [dbo].[account_operations]
+            order by ao_operation_id desc
+";
+
+            try
+            {
+                using (SqlConnection conecction = new SqlConnection(_conexion))
+                {
+                    conecction.Open();
+                    SqlCommand command = new SqlCommand(query, conecction);
+                    using (SqlDataReader data = command.ExecuteReader())
+                    {
+                        if (data.Read())
+                        {
+                            total = (int)data["lastid"];
+                        }
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                total = 0;
+            }
+
+            return total;
+        }
     }
 }

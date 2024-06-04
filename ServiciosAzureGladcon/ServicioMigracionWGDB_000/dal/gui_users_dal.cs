@@ -123,14 +123,13 @@ SELECT [gu_user_id]
             }
             return result;
         }
-        public int GetTotalGuiUsersForMigration(long lastid)
+        public int GetTotalGuiUsersForMigration()
         {
             int total = 0;
 
             string query = @"
             select count(*) as total from 
             [dbo].[gui_users]
-where gu_user_id > @lastid
 ";
 
             try
@@ -139,7 +138,6 @@ where gu_user_id > @lastid
                 {
                     conecction.Open();
                     SqlCommand command = new SqlCommand(query, conecction);
-                    command.Parameters.AddWithValue("@lastid", lastid);
                     using (SqlDataReader data = command.ExecuteReader())
                     {
                         if (data.Read())

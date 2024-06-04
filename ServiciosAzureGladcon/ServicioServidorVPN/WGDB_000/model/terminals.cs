@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 
-namespace ServicioMigracionWGDB_000.models
+namespace ServicioServidorVPN.WGDB_000.model
 {
     public partial class terminals
     {

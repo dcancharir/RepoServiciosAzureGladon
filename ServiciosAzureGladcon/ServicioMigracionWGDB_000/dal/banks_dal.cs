@@ -35,7 +35,7 @@ SELECT [bk_bank_id]
       ,[bk_shape_h]
       ,[bk_play_safe_distance]
   FROM [dbo].[banks]
-  where bk_bank_id > {lastid}
+  where bk_bank_id >= {lastid}
   order by bk_bank_id asc
   OFFSET {skip} ROWS -- Número de filas para omitir
   FETCH NEXT {pageSize} ROWS ONLY; -- Número de filas para devolver
@@ -55,7 +55,7 @@ SELECT [bk_bank_id]
                                     bk_bank_id = ManejoNulos.ManageNullInteger(dr["bk_bank_id"]),
                                     bk_area_id = ManejoNulos.ManageNullInteger(dr["bk_area_id"]),
                                     bk_name = ManejoNulos.ManageNullStr(dr["bk_name"]),
-                                    bk_timestamp = ManejoNulos.ManageNullInteger64(dr["bk_timestamp"]),
+                                    bk_timestamp = ManejoNulos.ManageNullByteArray(dr["bk_timestamp"]),
                                     bk_multiposition = ManejoNulos.ManegeNullBool(dr["bk_multiposition"]),
                                     bk_external_id = ManejoNulos.ManageNullStr(dr["bk_external_id"]),
                                     bk_shape_code = ManejoNulos.ManageNullStr(dr["bk_shape_code"]),
