@@ -84,5 +84,6 @@ namespace ServicioServidorVPN.WGDB_000.model
         public int? acp_num_tokens { get; set; }
         public int? acp_num_used_tokens { get; set; }
         public decimal? acp_token_reward { get; set; }
+
     }
 }

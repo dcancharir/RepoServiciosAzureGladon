@@ -25,7 +25,10 @@ namespace ServicioServidorVPN.WGDB_000.model
         public byte[] gu_password_h4 { get; set; }
         public byte[] gu_password_h5 { get; set; }
         public string gu_full_name { get; set; }
-        public long gu_timestamp { get; set; }
+        public byte[] gu_timestamp { get; set; }
+        /// <summary>
+        /// 0 - USER, 1 - SYSTEM, 10 - SUPERUSER
+        /// </summary>
         public short gu_user_type { get; set; }
         public DateTime? gu_logged_in { get; set; }
         public string gu_logon_computer { get; set; }

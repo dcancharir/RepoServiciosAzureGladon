@@ -18,7 +18,7 @@ namespace ServicioMigracionWGDB_000.dal
         {
             _conexion = ConfigurationManager.ConnectionStrings["connection_wgdb_000"].ConnectionString;
         }
-        public List<general_params> GetGeneralParamsPaginated(long lastid, int skip, int pageSize)
+        public List<general_params> GetAllGeneralParams()
         {
             var result = new List<general_params>();
             try
@@ -29,10 +29,6 @@ SELECT [gp_group_key]
       ,[gp_key_value]
       ,[gp_description]
   FROM [dbo].[general_params]
-  where gp_group_key > {lastid}
-   order by gp_group_key asc ,gp_subject_key asc
-  OFFSET {skip} ROWS -- Número de filas para omitir
-  FETCH NEXT {pageSize} ROWS ONLY; -- Número de filas para devolver
     ";
                 using (var con = new SqlConnection(_conexion))
                 {
@@ -46,10 +42,10 @@ SELECT [gp_group_key]
                             {
                                 var item = new general_params()
                                 {
-                                    gp_group_key = ManejoNulos.ManageNullStr(dr["gp_group_key"]),
-                                    gp_subject_key = ManejoNulos.ManageNullStr(dr["gp_subject_key"]),
-                                    gp_key_value = ManejoNulos.ManageNullStr(dr["gp_key_value"]),
-                                    gp_description = ManejoNulos.ManageNullStr(dr["gp_description"]),
+                                    gp_group_key = dr["gp_group_key"] == DBNull.Value ? null : (string)(dr["gp_group_key"]),
+                                    gp_subject_key = dr["gp_subject_key"] == DBNull.Value ? null : (string)(dr["gp_subject_key"]),
+                                    gp_key_value = dr["gp_key_value"] == DBNull.Value ? null : (string)(dr["gp_key_value"]),
+                                    gp_description = dr["gp_description"] == DBNull.Value ? null : (string)(dr["gp_description"]),
                                 };
                                 result.Add(item);
                             }

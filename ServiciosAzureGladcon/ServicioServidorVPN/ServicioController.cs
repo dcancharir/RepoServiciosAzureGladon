@@ -435,6 +435,48 @@ namespace ServicioServidorVPN
             }
         }
         [HttpPost]
+        public IHttpActionResult AccountsGetTotal(string databaseName)
+        {
+            try
+            {
+                var accountsDal = new accounts_dal(databaseName);
+                var result = accountsDal.GetTotalAccounts();
+                return Json(result);
+            }
+            catch (Exception)
+            {
+                return Json(-1);
+            }
+        }
+        [HttpPost]
+        public IHttpActionResult AccountsSave(dynamic jsonData)
+        {
+            try
+            {
+                List<accounts> models = new List<accounts>();
+                string databaseName = string.Empty;
+                dynamic items = jsonData;
+                if (items.items != null)
+                {
+                    models = items.items.ToObject<List<accounts>>();
+                }
+                if (items.databaseName != null)
+                {
+                    databaseName = items.databaseName.ToObject<string>();
+                }
+                var accountsDal = new accounts_dal(databaseName);
+                foreach (var item in models)
+                {
+                    var result = accountsDal.SaveAccounts(item);
+                }
+                return Json(true);
+            }
+            catch (Exception)
+            {
+                return Json(false);
+            }
+        }
+        [HttpPost]
         public IHttpActionResult AreasGetLastId(string databaseName)
         {
             try
@@ -561,6 +603,48 @@ namespace ServicioServidorVPN
             }
         }
         [HttpPost]
+        public IHttpActionResult GeneralParamsGetTotal(string databaseName)
+        {
+            try
+            {
+                var generalParamsDal = new general_params_dal(databaseName);
+                var result = generalParamsDal.GetTotalGeneralParams();
+                return Json(result);
+            }
+            catch (Exception)
+            {
+                return Json(-1);
+            }
+        }
+        [HttpPost]
+        public IHttpActionResult GeneralParamsSave(dynamic jsonData)
+        {
+            try
+            {
+                List<general_params> models = new List<general_params>();
+                string databaseName = string.Empty;
+                dynamic items = jsonData;
+                if (items.items != null)
+                {
+                    models = items.items.ToObject<List<general_params>>();
+                }
+                if (items.databaseName != null)
+                {
+                    databaseName = items.databaseName.ToObject<string>();
+                }
+                var generalParamsDal = new general_params_dal(databaseName);
+                foreach (var item in models)
+                {
+                    var result = generalParamsDal.SaveGeneralParams(item);
+                }
+                return Json(true);
+            }
+            catch (Exception)
+            {
+                return Json(false);
+            }
+        }
+        [HttpPost]
         public IHttpActionResult GiftInstancesGetLastId(string databaseName)
         {
             try
@@ -594,6 +678,48 @@ namespace ServicioServidorVPN
                 foreach (var item in models)
                 {
                     var result = giftInstancesDal.SaveGiftInstances(item);
+                }
+                return Json(true);
+            }
+            catch (Exception)
+            {
+                return Json(false);
+            }
+        }
+        [HttpPost]
+        public IHttpActionResult GuiUsersGetTotal(string databaseName)
+        {
+            try
+            {
+                var guiUsersDal = new gui_users_dal(databaseName);
+                var result = guiUsersDal.GetTotalGuiUsers();
+                return Json(result);
+            }
+            catch (Exception)
+            {
+                return Json(-1);
+            }
+        }
+        [HttpPost]
+        public IHttpActionResult GuiUsersSave(dynamic jsonData)
+        {
+            try
+            {
+                List<gui_users> models = new List<gui_users>();
+                string databaseName = string.Empty;
+                dynamic items = jsonData;
+                if (items.items != null)
+                {
+                    models = items.items.ToObject<List<gui_users>>();
+                }
+                if (items.databaseName != null)
+                {
+                    databaseName = items.databaseName.ToObject<string>();
+                }
+                var guiUsersDal = new gui_users_dal(databaseName);
+                foreach (var item in models)
+                {
+                    var result = guiUsersDal.SaveGuiUsers(item);
                 }
                 return Json(true);
             }

@@ -93,7 +93,7 @@ SELECT [gu_user_id]
                                     gu_password_h4 = ManejoNulos.ManageNullByteArray(dr["gu_password_h4"]),
                                     gu_password_h5 = ManejoNulos.ManageNullByteArray(dr["gu_password_h5"]),
                                     gu_full_name = ManejoNulos.ManageNullStr(dr["gu_full_name"]),
-                                    gu_timestamp = ManejoNulos.ManageNullInteger64(dr["gu_timestamp"]),
+                                    gu_timestamp = ManejoNulos.ManageNullByteArray(dr["gu_timestamp"]),
                                     gu_user_type = ManejoNulos.ManageNullShort(dr["gu_user_type"]),
                                     gu_logged_in = ManejoNulos.ManageNullDate(dr["gu_logged_in"]),
                                     gu_logon_computer = ManejoNulos.ManageNullStr(dr["gu_logon_computer"]),

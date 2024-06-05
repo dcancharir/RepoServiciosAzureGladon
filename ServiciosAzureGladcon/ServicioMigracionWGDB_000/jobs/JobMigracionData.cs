@@ -17,14 +17,17 @@ namespace ServicioMigracionWGDB_000.jobs
 {
     public class JobMigracionData : IJob
     {
-        int batchSize = 10;
+        int batchSize = 1000;
         private readonly account_movements_dal accountMovementsDal;
         private readonly account_operations_dal accountOperationsDal;
         private readonly account_promotions_dal accountPromotionsDal;
+        private readonly accounts_dal accountsDal;
         private readonly areas_dal areasDal;
         private readonly banks_dal banksDal;
         private readonly cashier_sessions_dal cashierSessionsDal;
+        private readonly general_params_dal generalParamsDal;
         private readonly gift_instances_dal giftInstancesDal;
+        private readonly gui_users_dal guiUsersDal;
         private readonly mobile_banks_dal mobileBanksDal;
         private readonly play_sessions_dal playSessionsDal;
         private readonly promogames_dal promogamesDal;
@@ -38,10 +41,13 @@ namespace ServicioMigracionWGDB_000.jobs
             accountMovementsDal = new account_movements_dal();
             accountOperationsDal = new account_operations_dal();
             accountPromotionsDal = new account_promotions_dal();
+            accountsDal = new accounts_dal();
             areasDal = new areas_dal();
             banksDal = new banks_dal();
             cashierSessionsDal = new cashier_sessions_dal();
+            generalParamsDal = new general_params_dal();
             giftInstancesDal = new gift_instances_dal();
+            guiUsersDal = new gui_users_dal();
             mobileBanksDal = new mobile_banks_dal();
             playSessionsDal = new play_sessions_dal();
             promogamesDal = new promogames_dal();
@@ -60,14 +66,20 @@ namespace ServicioMigracionWGDB_000.jobs
             funciones.logueo($"End AccountOperationsMigration");
             AccountPromotionsMigration();
             funciones.logueo($"End AccountPromotionsMigration");
+            AccountsMigration();
+            funciones.logueo($"End AccountsMigration");
             AreasMigration();
             funciones.logueo($"End AreasMigration");
             BanksMigration();
             funciones.logueo($"End BanksMigration");
             CashierSessionsMigration();
             funciones.logueo($"End CashierSessionsMigration");
+            GeneralParamsMigration();
+            funciones.logueo($"End GeneralParamsMigration");
             GistInstancesMigration();
             funciones.logueo($"End GistInstancesMigration");
+            GuiUsersMigration();
+            funciones.logueo($"End GuiUsersMigration");
             MobileBanksMigration(); 
             funciones.logueo($"End MobileBanksMigration");
             PlaySessionsMigration();
@@ -328,6 +340,91 @@ namespace ServicioMigracionWGDB_000.jobs
             return response;
         }
         #endregion
+        #region Accounts
+        private void AccountsMigration()
+        {
+            try
+            {
+                var totalDatawareHouse = AccountsGetTotal();
+                var totalForMigration = accountsDal.GetTotalAccountsForMigration();
+                if(totalDatawareHouse <= totalForMigration)
+                {
+                    var batchCount = (totalForMigration + batchSize - 1) / batchSize;
+                    for (int i = 0; i < batchCount; i++)
+                    {
+                        int intentos = 100;
+                        var startIndex = i * batchSize;
+                        var batch = accountsDal.GetAccountsPaginated(0, startIndex, batchSize);
+                        while (intentos > 0)
+                        {
+                            var respuestaMigracion = AccountsSave(batch);
+                            if (respuestaMigracion == true)
+                            {
+                                intentos = 0;
+                            }
+                            else
+                            {
+                                intentos--;
+                                Task.Delay(10000).Wait();
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                funciones.logueo($"Error en metodo AccountsMigration - {ex.Message}");
+            }
+        }
+        public int AccountsGetTotal()
+        {
+            int lastId = 0;
+            object oEnvio = new
+            {
+            };
+
+            using (HttpClient httpClient = new HttpClient())
+            {
+                httpClient.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+                var stringContent = new StringContent(JsonConvert.SerializeObject(oEnvio), Encoding.UTF8, "application/json");
+                using (HttpResponseMessage httpResponse = httpClient.PostAsync($"{url_datawarehouse}/Servicio/AccountsGetTotal?databaseName={database_name}", stringContent).Result)
+                {
+                    if (httpResponse.IsSuccessStatusCode)
+                    {
+                        var result = httpResponse.Content.ReadAsStringAsync().Result;
+                        var jsonResult = JsonConvert.DeserializeObject<int>(result);
+                        return jsonResult;
+                    }
+                }
+            }
+            return lastId;
+        }
+        public bool AccountsSave(List<accounts> items)
+        {
+            bool response = false;
+            object oEnvio = new
+            {
+                items = items,
+                databaseName = database_name
+            };
+
+            using (HttpClient httpClient = new HttpClient())
+            {
+                httpClient.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+                var stringContent = new StringContent(JsonConvert.SerializeObject(oEnvio), Encoding.UTF8, "application/json");
+                using (HttpResponseMessage httpResponse = httpClient.PostAsync($"{url_datawarehouse}/Servicio/AccountsSave", stringContent).Result)
+                {
+                    if (httpResponse.IsSuccessStatusCode)
+                    {
+                        var result = httpResponse.Content.ReadAsStringAsync().Result;
+                        var jsonResult = JsonConvert.DeserializeObject<bool>(result);
+                        return jsonResult;
+                    }
+                }
+            }
+            return response;
+        }
+        #endregion
         #region Areas
         private void AreasMigration()
         {
@@ -574,6 +671,93 @@ namespace ServicioMigracionWGDB_000.jobs
             return response;
         }
         #endregion
+        #region GeneralParams
+        private void GeneralParamsMigration()
+        {
+            try
+            {
+                var totalDatawareHouse = GeneralParamsGetTotal();
+                var totalForMigration = generalParamsDal.GetTotalGeneralParamsForMigration();
+                if (totalDatawareHouse <= totalForMigration)
+                {
+                    var totalGeneralParams = generalParamsDal.GetAllGeneralParams();
+
+                    var batchCount = (totalForMigration + batchSize - 1) / batchSize;
+                    for (int i = 0; i < batchCount; i++)
+                    {
+                        int intentos = 100;
+                        var startIndex = i * batchSize;
+                        var batch = totalGeneralParams.Skip(startIndex).Take(batchSize).ToList();
+                        while (intentos > 0)
+                        {
+                            var respuestaMigracion = GeneralParamsSave(batch);
+                            if (respuestaMigracion == true)
+                            {
+                                intentos = 0;
+                            }
+                            else
+                            {
+                                intentos--;
+                                Task.Delay(10000).Wait();
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                funciones.logueo($"Error en metodo AccountsMigration - {ex.Message}");
+            }
+        }
+        public int GeneralParamsGetTotal()
+        {
+            int lastId = 0;
+            object oEnvio = new
+            {
+            };
+
+            using (HttpClient httpClient = new HttpClient())
+            {
+                httpClient.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+                var stringContent = new StringContent(JsonConvert.SerializeObject(oEnvio), Encoding.UTF8, "application/json");
+                using (HttpResponseMessage httpResponse = httpClient.PostAsync($"{url_datawarehouse}/Servicio/GeneralParamsGetTotal?databaseName={database_name}", stringContent).Result)
+                {
+                    if (httpResponse.IsSuccessStatusCode)
+                    {
+                        var result = httpResponse.Content.ReadAsStringAsync().Result;
+                        var jsonResult = JsonConvert.DeserializeObject<int>(result);
+                        return jsonResult;
+                    }
+                }
+            }
+            return lastId;
+        }
+        public bool GeneralParamsSave(List<general_params> items)
+        {
+            bool response = false;
+            object oEnvio = new
+            {
+                items = items,
+                databaseName = database_name
+            };
+
+            using (HttpClient httpClient = new HttpClient())
+            {
+                httpClient.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+                var stringContent = new StringContent(JsonConvert.SerializeObject(oEnvio), Encoding.UTF8, "application/json");
+                using (HttpResponseMessage httpResponse = httpClient.PostAsync($"{url_datawarehouse}/Servicio/GeneralParamsSave", stringContent).Result)
+                {
+                    if (httpResponse.IsSuccessStatusCode)
+                    {
+                        var result = httpResponse.Content.ReadAsStringAsync().Result;
+                        var jsonResult = JsonConvert.DeserializeObject<bool>(result);
+                        return jsonResult;
+                    }
+                }
+            }
+            return response;
+        }
+        #endregion
         #region GiftInstances
         private void GistInstancesMigration()
         {
@@ -644,6 +828,91 @@ namespace ServicioMigracionWGDB_000.jobs
                 httpClient.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
                 var stringContent = new StringContent(JsonConvert.SerializeObject(oEnvio), Encoding.UTF8, "application/json");
                 using (HttpResponseMessage httpResponse = httpClient.PostAsync($"{url_datawarehouse}/Servicio/GiftInstancesSave", stringContent).Result)
+                {
+                    if (httpResponse.IsSuccessStatusCode)
+                    {
+                        var result = httpResponse.Content.ReadAsStringAsync().Result;
+                        var jsonResult = JsonConvert.DeserializeObject<bool>(result);
+                        return jsonResult;
+                    }
+                }
+            }
+            return response;
+        }
+        #endregion
+        #region GuiUsers
+        private void GuiUsersMigration()
+        {
+            try
+            {
+                var totalDatawareHouse = GuiUsersGetTotal();
+                var totalForMigration = guiUsersDal.GetTotalGuiUsersForMigration();
+                if (totalDatawareHouse <= totalForMigration)
+                {
+                    var batchCount = (totalForMigration + batchSize - 1) / batchSize;
+                    for (int i = 0; i < batchCount; i++)
+                    {
+                        int intentos = 100;
+                        var startIndex = i * batchSize;
+                        var batch = guiUsersDal.GetGuiUsersPaginated(0, startIndex, batchSize);
+                        while (intentos > 0)
+                        {
+                            var respuestaMigracion = GuiUsersSave(batch);
+                            if (respuestaMigracion == true)
+                            {
+                                intentos = 0;
+                            }
+                            else
+                            {
+                                intentos--;
+                                Task.Delay(10000).Wait();
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                funciones.logueo($"Error en metodo AccountsMigration - {ex.Message}");
+            }
+        }
+        public int GuiUsersGetTotal()
+        {
+            int lastId = 0;
+            object oEnvio = new
+            {
+            };
+
+            using (HttpClient httpClient = new HttpClient())
+            {
+                httpClient.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+                var stringContent = new StringContent(JsonConvert.SerializeObject(oEnvio), Encoding.UTF8, "application/json");
+                using (HttpResponseMessage httpResponse = httpClient.PostAsync($"{url_datawarehouse}/Servicio/GuiUsersGetTotal?databaseName={database_name}", stringContent).Result)
+                {
+                    if (httpResponse.IsSuccessStatusCode)
+                    {
+                        var result = httpResponse.Content.ReadAsStringAsync().Result;
+                        var jsonResult = JsonConvert.DeserializeObject<int>(result);
+                        return jsonResult;
+                    }
+                }
+            }
+            return lastId;
+        }
+        public bool GuiUsersSave(List<gui_users> items)
+        {
+            bool response = false;
+            object oEnvio = new
+            {
+                items = items,
+                databaseName = database_name
+            };
+
+            using (HttpClient httpClient = new HttpClient())
+            {
+                httpClient.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+                var stringContent = new StringContent(JsonConvert.SerializeObject(oEnvio), Encoding.UTF8, "application/json");
+                using (HttpResponseMessage httpResponse = httpClient.PostAsync($"{url_datawarehouse}/Servicio/GuiUsersSave", stringContent).Result)
                 {
                     if (httpResponse.IsSuccessStatusCode)
                     {

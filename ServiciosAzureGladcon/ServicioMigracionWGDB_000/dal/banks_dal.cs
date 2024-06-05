@@ -52,16 +52,16 @@ SELECT [bk_bank_id]
                             {
                                 var item = new banks()
                                 {
-                                    bk_bank_id = ManejoNulos.ManageNullInteger(dr["bk_bank_id"]),
-                                    bk_area_id = ManejoNulos.ManageNullInteger(dr["bk_area_id"]),
-                                    bk_name = ManejoNulos.ManageNullStr(dr["bk_name"]),
-                                    bk_timestamp = ManejoNulos.ManageNullByteArray(dr["bk_timestamp"]),
-                                    bk_multiposition = ManejoNulos.ManegeNullBool(dr["bk_multiposition"]),
-                                    bk_external_id = ManejoNulos.ManageNullStr(dr["bk_external_id"]),
-                                    bk_shape_code = ManejoNulos.ManageNullStr(dr["bk_shape_code"]),
-                                    bk_shape_w = ManejoNulos.ManageNullInteger(dr["bk_shape_w"]),
-                                    bk_shape_h = ManejoNulos.ManageNullInteger(dr["bk_shape_h"]),
-                                    bk_play_safe_distance = ManejoNulos.ManageNullInteger(dr["bk_play_safe_distance"]),
+                                    bk_bank_id = (int)dr["bk_bank_id"],
+                                    bk_area_id = (int)dr["bk_area_id"],
+                                    bk_name = dr["bk_name"] == DBNull.Value ? null : (string)dr["bk_name"],
+                                    bk_timestamp = dr["bk_timestamp"] == DBNull.Value ? null : (byte[])dr["bk_timestamp"],
+                                    bk_multiposition = (bool)dr["bk_multiposition"],
+                                    bk_external_id = dr["bk_external_id"] == DBNull.Value ? null : (string)dr["bk_external_id"],
+                                    bk_shape_code = dr["bk_shape_code"] == DBNull.Value ? null : (string)dr["bk_shape_code"],
+                                    bk_shape_w = dr["bk_shape_w"] == DBNull.Value ? null : (int?)dr["bk_shape_w"],
+                                    bk_shape_h = dr["bk_shape_h"] == DBNull.Value ? null : (int?)dr["bk_shape_h"],
+                                    bk_play_safe_distance = dr["bk_play_safe_distance"] == DBNull.Value ? null : (int?)dr["bk_play_safe_distance"],
                                 };
                                 result.Add(item);
                             }

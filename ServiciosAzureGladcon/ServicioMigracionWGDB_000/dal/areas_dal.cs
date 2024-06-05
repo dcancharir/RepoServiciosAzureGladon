@@ -50,12 +50,12 @@ SELECT [ar_area_id]
                             {
                                 var item = new areas()
                                 {
-                                    ar_area_id = ManejoNulos.ManageNullInteger(dr["ar_area_id"]),
-                                    ar_name = ManejoNulos.ManageNullStr(dr["ar_name"]),
-                                    ar_smoking = ManejoNulos.ManegeNullBool(dr["ar_smoking"]),
-                                    ar_timestamp = ManejoNulos.ManageNullByteArray(dr["ar_timestamp"]),
-                                    ar_venue_id = ManejoNulos.ManageNullInteger(dr["ar_venue_id"]),
-                                    ar_external_id = ManejoNulos.ManageNullStr(dr["ar_external_id"]),
+                                    ar_area_id = (int)dr["ar_area_id"],
+                                    ar_name = dr["ar_name"] == DBNull.Value ? null : (string)dr["ar_name"],
+                                    ar_smoking = (bool)dr["ar_smoking"],
+                                    ar_timestamp = dr["ar_timestamp"] == DBNull.Value ? null : (byte[])dr["ar_timestamp"],
+                                    ar_venue_id = (int)dr["ar_venue_id"],
+                                    ar_external_id = dr["ar_external_id"] == DBNull.Value ? null : (string)dr["ar_external_id"],
                                 };
                                 result.Add(item);
                             }

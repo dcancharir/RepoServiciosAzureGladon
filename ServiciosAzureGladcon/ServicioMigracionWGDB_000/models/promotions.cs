@@ -143,5 +143,6 @@ namespace ServicioMigracionWGDB_000.models
         public bool pm_include_recharge { get; set; }
         public long? pm_parent_promotion_id { get; set; }
         public bool pm_has_schedule { get; set; }
+
     }
 }

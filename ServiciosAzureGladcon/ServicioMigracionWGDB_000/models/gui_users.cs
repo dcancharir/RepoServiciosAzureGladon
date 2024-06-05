@@ -10,9 +10,9 @@ namespace ServicioMigracionWGDB_000.models
     {
         public int gu_user_id { get; set; }
         public int gu_profile_id { get; set; }
-        public string gu_username { get; set; }
+        public string gu_username { get; set; } 
         public bool gu_enabled { get; set; }
-        public byte[] gu_password { get; set; }
+        public byte[] gu_password { get; set; } 
         public DateTime gu_not_valid_before { get; set; }
         public DateTime? gu_not_valid_after { get; set; }
         public DateTime? gu_last_changed { get; set; }
@@ -25,7 +25,10 @@ namespace ServicioMigracionWGDB_000.models
         public byte[] gu_password_h4 { get; set; }
         public byte[] gu_password_h5 { get; set; }
         public string gu_full_name { get; set; }
-        public long gu_timestamp { get; set; }
+        public byte[] gu_timestamp { get; set; }
+        /// <summary>
+        /// 0 - USER, 1 - SYSTEM, 10 - SUPERUSER
+        /// </summary>
         public short gu_user_type { get; set; }
         public DateTime? gu_logged_in { get; set; }
         public string gu_logon_computer { get; set; }
