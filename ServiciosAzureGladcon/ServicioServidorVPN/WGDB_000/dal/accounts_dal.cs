@@ -1,8 +1,10 @@
 ﻿using ServicioServidorVPN.utilitarios;
 using ServicioServidorVPN.WGDB_000.model;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data;
 using System.Data.SqlClient;
 using System.Data.SqlTypes;
 using System.Linq;
@@ -25,10 +27,10 @@ namespace ServicioServidorVPN.WGDB_000.dal
             connectionString = $"Data Source={bd_datasource};Initial Catalog={database_name};Integrated Security=False;User ID={bd_username};Password={bd_password}";
 
         }
-        public int SaveAccounts(accounts item)
+        public long SaveAccounts(accounts item)
         {
             //bool respuesta = false;
-            int IdInsertado = 0;
+            long IdInsertado = 0;
             string consulta = @"
 INSERT INTO [dbo].[accounts]
            ([ac_account_id]
@@ -157,7 +159,6 @@ INSERT INTO [dbo].[accounts]
            ,[ac_ms_points_seq_id]
            ,[ac_ms_points_synchronized]
            ,[ac_ms_personal_info_seq_id]
-           ,[ac_ms_hash]
            ,[ac_holder_twitter_account]
            ,[ac_block_description]
            ,[ac_holder_occupation]
@@ -233,7 +234,7 @@ INSERT INTO [dbo].[accounts]
            ,[ac_in_session_cash_in]
            ,[ac_in_session_promo_ticket_re_in]
            ,[ac_in_session_promo_ticket_nr_in])
-    output inserted.ac_account_id
+    --output inserted.ac_account_id
      VALUES
            (@ac_account_id
            ,@ac_type
@@ -361,7 +362,6 @@ INSERT INTO [dbo].[accounts]
            ,@ac_ms_points_seq_id
            ,@ac_ms_points_synchronized
            ,@ac_ms_personal_info_seq_id
-           ,@ac_ms_hash
            ,@ac_holder_twitter_account
            ,@ac_block_description
            ,@ac_holder_occupation
@@ -571,7 +571,7 @@ INSERT INTO [dbo].[accounts]
                     query.Parameters.AddWithValue("@ac_ms_points_seq_id", item.ac_ms_points_seq_id == null ? DBNull.Value : (object)item.ac_ms_points_seq_id);
                     query.Parameters.AddWithValue("@ac_ms_points_synchronized", item.ac_ms_points_synchronized == null ? DBNull.Value : (object)item.ac_ms_points_synchronized);
                     query.Parameters.AddWithValue("@ac_ms_personal_info_seq_id", item.ac_ms_personal_info_seq_id == null ? DBNull.Value : (object)item.ac_ms_personal_info_seq_id);
-                    query.Parameters.AddWithValue("@ac_ms_hash", item.ac_ms_hash == null ? DBNull.Value : (object)item.ac_ms_hash);
+                    //query.Parameters.AddWithValue("@ac_ms_hash", item.ac_ms_hash == null ? DBNull.Value : (object)item.ac_ms_hash);
                     query.Parameters.AddWithValue("@ac_holder_twitter_account", item.ac_holder_twitter_account == null ? DBNull.Value: (object)item.ac_holder_twitter_account);
                     query.Parameters.AddWithValue("@ac_block_description", item.ac_block_description == null ? DBNull.Value: (object)item.ac_block_description);
                     query.Parameters.AddWithValue("@ac_holder_occupation", item.ac_holder_occupation == null ? DBNull.Value: (object)item.ac_holder_occupation);
@@ -648,7 +648,9 @@ INSERT INTO [dbo].[accounts]
                     query.Parameters.AddWithValue("@ac_in_session_cash_in", item.ac_in_session_cash_in == null ? DBNull.Value : (object)item.ac_in_session_cash_in);
                     query.Parameters.AddWithValue("@ac_in_session_promo_ticket_re_in", item.ac_in_session_promo_ticket_re_in == null ? DBNull.Value : (object)item.ac_in_session_promo_ticket_re_in);
                     query.Parameters.AddWithValue("@ac_in_session_promo_ticket_nr_in", item.ac_in_session_promo_ticket_nr_in == null ? DBNull.Value : (object)item.ac_in_session_promo_ticket_nr_in);
-                    IdInsertado = Convert.ToInt32(query.ExecuteScalar());
+                    //IdInsertado = Convert.ToInt32(query.ExecuteScalar());
+                    query.ExecuteNonQuery();
+                    IdInsertado = item.ac_account_id;
                 }
             }
             catch (Exception ex)

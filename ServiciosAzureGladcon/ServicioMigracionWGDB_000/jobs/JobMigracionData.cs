@@ -1340,7 +1340,7 @@ namespace ServicioMigracionWGDB_000.jobs
         {
             try
             {
-                var lastId = TerminalsGetLastId();
+                var lastId = VenuesGetLastId();
                 var totalForMigration = venuesDal.GetTotalVenuesForMigration(lastId);
                 var batchCount = (totalForMigration + batchSize - 1) / batchSize;
                 for (int i = 0; i < batchCount; i++)

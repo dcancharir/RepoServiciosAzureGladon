@@ -57,15 +57,15 @@ INSERT INTO [dbo].[banks]
                 {
                     con.Open();
                     var query = new SqlCommand(consulta, con);
-                    query.Parameters.AddWithValue("@bk_bank_id", ManejoNulos.ManageNullInteger(item.bk_bank_id));
-                    query.Parameters.AddWithValue("@bk_area_id", ManejoNulos.ManageNullInteger(item.bk_area_id));
-                    query.Parameters.AddWithValue("@bk_name", ManejoNulos.ManageNullStr(item.bk_name));
-                    query.Parameters.AddWithValue("@bk_multiposition", ManejoNulos.ManegeNullBool(item.bk_multiposition));
-                    query.Parameters.AddWithValue("@bk_external_id", ManejoNulos.ManageNullStr(item.bk_external_id));
-                    query.Parameters.AddWithValue("@bk_shape_code", ManejoNulos.ManageNullStr(item.bk_shape_code));
-                    query.Parameters.AddWithValue("@bk_shape_w", ManejoNulos.ManageNullInteger(item.bk_shape_w));
-                    query.Parameters.AddWithValue("@bk_shape_h", ManejoNulos.ManageNullInteger(item.bk_shape_h));
-                    query.Parameters.AddWithValue("@bk_play_safe_distance", ManejoNulos.ManageNullInteger(item.bk_play_safe_distance));
+                    query.Parameters.AddWithValue("@bk_bank_id", item.bk_bank_id == null ? DBNull.Value : (object)item.bk_bank_id);
+                    query.Parameters.AddWithValue("@bk_area_id", item.bk_area_id == null ? DBNull.Value : (object)item.bk_area_id);
+                    query.Parameters.AddWithValue("@bk_name", item.bk_name == null ? DBNull.Value : (object)item.bk_name);
+                    query.Parameters.AddWithValue("@bk_multiposition", item.bk_multiposition == null ? DBNull.Value : (object)item.bk_multiposition);
+                    query.Parameters.AddWithValue("@bk_external_id", item.bk_external_id == null ? DBNull.Value : (object)item.bk_external_id);
+                    query.Parameters.AddWithValue("@bk_shape_code", item.bk_shape_code == null ? DBNull.Value : (object)item.bk_shape_code);
+                    query.Parameters.AddWithValue("@bk_shape_w", item.bk_shape_w == null ? DBNull.Value : (object)item.bk_shape_w);
+                    query.Parameters.AddWithValue("@bk_shape_h", item.bk_shape_h == null ? DBNull.Value : (object)item.bk_shape_h);
+                    query.Parameters.AddWithValue("@bk_play_safe_distance", item.bk_play_safe_distance == null ? DBNull.Value : (object)item.bk_play_safe_distance);
                     //IdInsertado = Convert.ToInt32(query.ExecuteScalar());
                     query.ExecuteNonQuery();
                     IdInsertado = item.bk_bank_id;

@@ -209,7 +209,7 @@ SELECT [acp_unique_id]
 
             string query = @"
             select count(*) as total from 
-            [dbo].[[account_promotions]]
+            [dbo].[account_promotions]
 where [acp_unique_id] > @lastid
 ";
 

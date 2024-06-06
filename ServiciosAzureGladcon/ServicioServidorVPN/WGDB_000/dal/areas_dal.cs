@@ -49,11 +49,12 @@ INSERT INTO [dbo].[areas]
                 {
                     con.Open();
                     var query = new SqlCommand(consulta, con);
-                    query.Parameters.AddWithValue("@ar_area_id", ManejoNulos.ManageNullInteger(item.ar_area_id));
-                    query.Parameters.AddWithValue("@ar_name", ManejoNulos.ManageNullStr(item.ar_name));
-                    query.Parameters.AddWithValue("@ar_smoking", ManejoNulos.ManegeNullBool(item.ar_smoking));
-                    query.Parameters.AddWithValue("@ar_venue_id", ManejoNulos.ManageNullInteger(item.ar_venue_id));
-                    query.Parameters.AddWithValue("@ar_external_id", ManejoNulos.ManageNullStr(item.ar_external_id));
+                    query.Parameters.AddWithValue("@ar_area_id", item.ar_area_id == null ? DBNull.Value : (object)item.ar_area_id);
+                    query.Parameters.AddWithValue("@ar_name ", item.ar_name == null ? DBNull.Value : (object)item.ar_name);
+                    query.Parameters.AddWithValue("@ar_smoking", item.ar_smoking == null ? DBNull.Value : (object)item.ar_smoking);
+                    query.Parameters.AddWithValue("@ar_timestamp", item.ar_timestamp == null ? DBNull.Value : (object)item.ar_timestamp);
+                    query.Parameters.AddWithValue("@ar_venue_id", item.ar_venue_id == null ? DBNull.Value : (object)item.ar_venue_id);
+                    query.Parameters.AddWithValue("@ar_external_id", item.ar_external_id == null ? DBNull.Value : (object)item.ar_external_id);
                     //query.Parameters.AddWithValue("@ar_timestamp", ManejoNulos.ManageNullByteArray(item.ar_timestamp));
                     //IdInsertado = Convert.ToInt32(query.ExecuteScalar());
                     query.ExecuteNonQuery();
