@@ -24,11 +24,13 @@ namespace ServicioServidorVPN.WGDB_000.dal
             connectionString = $"Data Source={bd_datasource};Initial Catalog={database_name};Integrated Security=False;User ID={bd_username};Password={bd_password}";
 
         }
-        public long SaveMobileBanks(mobile_banks item)
+        public bool SaveMobileBanks(mobile_banks item)
         {
             //bool respuesta = false;
             long IdInsertado = 0;
             string consulta = @"
+if not exists (select mb_account_id from [dbo].[mobile_banks] where mb_account_id = @mb_account_id)
+begin
 INSERT INTO [dbo].[mobile_banks]
            ([mb_account_id]
            ,[mb_account_type]
@@ -92,6 +94,7 @@ INSERT INTO [dbo].[mobile_banks]
            ,@mb_session_status
            ,@mb_user_id
            ,@mb_lock)
+end
                       ";
             try
             {
@@ -132,18 +135,19 @@ INSERT INTO [dbo].[mobile_banks]
                     query.Parameters.AddWithValue("@mb_lock", item.mb_lock == null ? DBNull.Value : (object)item.mb_lock);
                     //IdInsertado = Convert.ToInt32(query.ExecuteScalar());
                     query.ExecuteNonQuery();
-                    IdInsertado = item.mb_account_id;
+                    //IdInsertado = item.mb_account_id;
+                    return true;
                 }
             }
             catch (Exception ex)
             {
-                IdInsertado = 0;
+                funciones.logueo($"Error metodo SaveMobileBanks - {ex.Message}");
             }
-            return IdInsertado;
+            return false;
         }
-        public int GetLastIdInserted()
+        public long GetLastIdInserted()
         {
-            int total = 0;
+            long total = 0;
 
             string query = @"
             select top 1 mb_account_id as lastid from 
@@ -161,13 +165,14 @@ INSERT INTO [dbo].[mobile_banks]
                     {
                         if (data.Read())
                         {
-                            total = (int)data["lastid"];
+                            total = ManejoNulos.ManageNullInteger64(data["lastid"]);
                         }
                     }
                 }
             }
-            catch (Exception exception)
+            catch (Exception ex)
             {
+                funciones.logueo($"Error metodo GetLastIdInserted mobile_banks_dal.cs- {ex.Message}", "Error");
                 total = 0;
             }
 

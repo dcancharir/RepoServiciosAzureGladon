@@ -20,7 +20,7 @@ namespace ServicioMigracionWGDB_000.dal
             _conexion_wgdb_000 = ConfigurationManager.ConnectionStrings["connection_wgdb_000"].ConnectionString;
             _conexion_wgdb_000_migration = ConfigurationManager.ConnectionStrings["connection_wgdb_000_migration"].ConnectionString;
         }
-        public List<accounts> GetAccountsPaginated(long lastid, int skip, int pageSize) {
+        public List<accounts> GetAllAccounts() {
             var result = new List<accounts>();
             try
             {
@@ -229,11 +229,7 @@ SELECT [ac_account_id]
       ,[ac_in_session_cash_in]
       ,[ac_in_session_promo_ticket_re_in]
       ,[ac_in_session_promo_ticket_nr_in]
-  FROM [wgdb_000].[dbo].[accounts]
-  where ac_account_id > {lastid}
-  order by ac_account_id asc
-  OFFSET {skip} ROWS -- Número de filas para omitir
-  FETCH NEXT {pageSize} ROWS ONLY; -- Número de filas para devolver
+  FROM [dbo].[accounts]
     ";
                 using (var con = new SqlConnection(_conexion_wgdb_000)) { 
                     con.Open();
@@ -462,9 +458,9 @@ SELECT [ac_account_id]
             }
             return result;
         }
-        public int GetTotalAccountsForMigration()
+        public long GetTotalAccountsForMigration()
         {
-            int total = 0;
+            long total = 0;
 
             string query = @"
             select count(*) as total from 
@@ -481,13 +477,14 @@ SELECT [ac_account_id]
                     {
                         if (data.Read())
                         {
-                            total = (int)data["total"];
+                            total = ManejoNulos.ManageNullInteger64(data["total"]);
                         }
                     }
                 }
             }
-            catch (Exception exception)
+            catch (Exception ex)
             {
+                funciones.logueo($"Error metodo GetTotalAccountsForMigration - {ex.Message}", "Error");
                 total = 0;
             }
 

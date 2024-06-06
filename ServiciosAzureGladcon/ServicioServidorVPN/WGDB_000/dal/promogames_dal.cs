@@ -24,11 +24,13 @@ namespace ServicioServidorVPN.WGDB_000.dal
             connectionString = $"Data Source={bd_datasource};Initial Catalog={database_name};Integrated Security=False;User ID={bd_username};Password={bd_password}";
 
         }
-        public long SavePromoGames(promogames item)
+        public bool SavePromoGames(promogames item)
         {
             //bool respuesta = false;
             long IdInsertado = 0;
             string consulta = @"
+if not exists (select pg_id from [dbo].[promogames] where pg_id = @pg_id)
+begin
 INSERT INTO [dbo].[promogames]
            ([pg_id]
            ,[pg_name]
@@ -86,6 +88,8 @@ INSERT INTO [dbo].[promogames]
            ,@pg_personalized_image_opened_shared
            ,@pg_personalized_image_opened_2
            ,@pg_personalized_image_opened_3)
+end
+
                       ";
             try
             {
@@ -122,18 +126,19 @@ INSERT INTO [dbo].[promogames]
                     query.Parameters.AddWithValue("@pg_personalized_image_opened_3", item.pg_personalized_image_opened_3 == null ? DBNull.Value : (object)item.pg_personalized_image_opened_3);
                     //IdInsertado = Convert.ToInt32(query.ExecuteScalar());
                     query.ExecuteNonQuery();
-                    IdInsertado = item.pg_id;
+                    //IdInsertado = item.pg_id;
+                    return true;
                 }
             }
             catch (Exception ex)
             {
-                IdInsertado = 0;
+                funciones.logueo($"Error metodo SavePromoGames - {ex.Message}");
             }
-            return IdInsertado;
+            return false;
         }
-        public int GetLastIdInserted()
+        public long GetLastIdInserted()
         {
-            int total = 0;
+            long total = 0;
 
             string query = @"
             select top 1 pg_id as lastid from 
@@ -151,13 +156,14 @@ INSERT INTO [dbo].[promogames]
                     {
                         if (data.Read())
                         {
-                            total = (int)data["lastid"];
+                            total = ManejoNulos.ManageNullInteger64(data["lastid"]);
                         }
                     }
                 }
             }
-            catch (Exception exception)
+            catch (Exception ex)
             {
+                funciones.logueo($"Error metodo GetLastIdInserted promogames_dal.cs- {ex.Message}", "Error");
                 total = 0;
             }
 

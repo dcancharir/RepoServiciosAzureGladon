@@ -24,11 +24,13 @@ namespace ServicioServidorVPN.WGDB_000.dal
             connectionString = $"Data Source={bd_datasource};Initial Catalog={database_name};Integrated Security=False;User ID={bd_username};Password={bd_password}";
 
         }
-        public int SaveGuiUsers(gui_users item)
+        public bool SaveGuiUsers(gui_users item)
         {
             //bool respuesta = false;
             int IdInsertado = 0;
             string consulta = @"
+if not exists (select gu_user_id from [dbo].[gui_users] where gu_user_id = @gu_user_id)
+begin
 INSERT INTO [dbo].[gui_users]
            ([gu_user_id]
            ,[gu_profile_id]
@@ -88,6 +90,8 @@ INSERT INTO [dbo].[gui_users]
            ,@gu_cashier_last_login
            ,@gu_intellia_roles
            ,@gu_cage_vault_id)
+end
+
                       ";
             try
             {
@@ -99,7 +103,7 @@ INSERT INTO [dbo].[gui_users]
                     query.Parameters.AddWithValue("@gu_profile_id", item.gu_profile_id == null ? DBNull.Value : (object)item.gu_profile_id);
                     query.Parameters.AddWithValue("@gu_username", item.gu_username == null ? DBNull.Value : (object)item.gu_username);
                     query.Parameters.AddWithValue("@gu_enabled", item.gu_enabled == null ? DBNull.Value : (object)item.gu_enabled);
-                    query.Parameters.AddWithValue("@gu_password", item.gu_password == null ? DBNull.Value : (object)"0x0000000000000000000000000000000000000000");
+                    query.Parameters.AddWithValue("@gu_password", item.gu_password == null ? DBNull.Value : (object)new byte[0]);
                     query.Parameters.AddWithValue("@gu_not_valid_before", item.gu_not_valid_before == null ? DBNull.Value : (object)item.gu_not_valid_before);
                     query.Parameters.AddWithValue("@gu_not_valid_after", item.gu_not_valid_after == null ? DBNull.Value : (object)item.gu_not_valid_after);
                     query.Parameters.AddWithValue("@gu_last_changed", item.gu_last_changed == null ? DBNull.Value : (object)item.gu_last_changed);
@@ -125,18 +129,19 @@ INSERT INTO [dbo].[gui_users]
                     query.Parameters.AddWithValue("@gu_cage_vault_id", item.gu_cage_vault_id == null ? DBNull.Value : (object)item.gu_cage_vault_id);
                     //IdInsertado = Convert.ToInt32(query.ExecuteScalar());
                     query.ExecuteNonQuery();
-                    IdInsertado = item.gu_user_id;
+                    //IdInsertado = item.gu_user_id;
+                    return true;
                 }
             }
             catch (Exception ex)
             {
-                IdInsertado = 0;
+                funciones.logueo($"Error metodo SaveGuiUsers - {ex.Message}");
             }
-            return IdInsertado;
+            return false;
         }
-        public int GetTotalGuiUsers()
+        public long GetTotalGuiUsers()
         {
-            int total = 0;
+            long total = 0;
 
             string query = @"
             select count(*) as total from 
@@ -153,13 +158,14 @@ INSERT INTO [dbo].[gui_users]
                     {
                         if (data.Read())
                         {
-                            total = (int)data["total"];
+                            total = ManejoNulos.ManageNullInteger64(data["total"]);
                         }
                     }
                 }
             }
-            catch (Exception exception)
+            catch (Exception ex)
             {
+                funciones.logueo($"Error metodo GetLastIdInserted gui_users_dal.cs- {ex.Message}", "Error");
                 total = 0;
             }
 

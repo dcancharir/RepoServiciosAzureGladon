@@ -59,9 +59,9 @@ SELECT [gp_group_key]
             }
             return result;
         }
-        public int GetTotalGeneralParamsForMigration()
+        public long GetTotalGeneralParamsForMigration()
         {
-            int total = 0;
+            long total = 0;
 
             string query = @"
             select count(*) as total from 
@@ -78,13 +78,14 @@ SELECT [gp_group_key]
                     {
                         if (data.Read())
                         {
-                            total = (int)data["total"];
+                            total = ManejoNulos.ManageNullInteger64(data["total"]);
                         }
                     }
                 }
             }
-            catch (Exception exception)
+            catch (Exception ex)
             {
+                funciones.logueo($"Error metodo GetTotalGeneralParamsForMigration - {ex.Message}", "Error");
                 total = 0;
             }
 

@@ -1,4 +1,5 @@
-﻿using ServicioServidorVPN.WGDB_000.model;
+﻿using ServicioServidorVPN.utilitarios;
+using ServicioServidorVPN.WGDB_000.model;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -29,6 +30,8 @@ namespace ServicioServidorVPN.WGDB_000.dal
             bool respuesta = false;
             //int IdInsertado = 0;
             string consulta = @"
+if not exists (select top 1 * from [dbo].[general_params] where gp_group_key = @gp_group_key and gp_subject_key = @gp_subject_key)
+begin
 INSERT INTO [dbo].[general_params]
            ([gp_group_key]
            ,[gp_subject_key]
@@ -39,6 +42,8 @@ INSERT INTO [dbo].[general_params]
            ,@gp_subject_key
            ,@gp_key_value
            ,@gp_description)
+end
+
                       ";
             try
             {
@@ -58,13 +63,14 @@ INSERT INTO [dbo].[general_params]
             }
             catch (Exception ex)
             {
+                funciones.logueo($"Error metodo SaveGeneralParams - {ex.Message}");
                 respuesta = false;
             }
             return respuesta;
         }
-        public int GetTotalGeneralParams()
+        public long GetTotalGeneralParams()
         {
-            int total = 0;
+            long total = 0;
 
             string query = @"
             select count(*) as total from 
@@ -81,13 +87,14 @@ INSERT INTO [dbo].[general_params]
                     {
                         if (data.Read())
                         {
-                            total = (int)data["total"];
+                            total = ManejoNulos.ManageNullInteger64(data["total"]);
                         }
                     }
                 }
             }
-            catch (Exception exception)
+            catch (Exception ex)
             {
+                funciones.logueo($"Error metodo GetLastIdInserted general_params_dal.cs- {ex.Message}", "Error");
                 total = 0;
             }
 

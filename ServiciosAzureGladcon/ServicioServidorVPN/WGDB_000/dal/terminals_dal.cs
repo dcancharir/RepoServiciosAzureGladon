@@ -24,11 +24,13 @@ namespace ServicioServidorVPN.WGDB_000.dal
             connectionString = $"Data Source={bd_datasource};Initial Catalog={database_name};Integrated Security=False;User ID={bd_username};Password={bd_password}";
 
         }
-        public int SaveTerminals(terminals item)
+        public bool SaveTerminals(terminals item)
         {
             //bool respuesta = false;
             int IdInsertado = 0;
             string consulta = @"
+if not exists (select te_terminal_id from [dbo].[terminals] where te_terminal_id = @te_terminal_id)
+begin
 INSERT INTO [dbo].[terminals]
            ([te_terminal_id]
            ,[te_type]
@@ -252,6 +254,8 @@ INSERT INTO [dbo].[terminals]
            ,@te_COLLECTION_TYPE
            ,@te_external_request_id
            ,@te_ONLY_REDEEMABLE)
+end
+
                       ";
             try
             {
@@ -374,18 +378,19 @@ INSERT INTO [dbo].[terminals]
                     query.Parameters.AddWithValue("@TE_ONLY_REDEEMABLE", item.TE_ONLY_REDEEMABLE == null ? DBNull.Value : (object)item.TE_ONLY_REDEEMABLE);
                     //IdInsertado = Convert.ToInt32(query.ExecuteScalar());
                     query.ExecuteNonQuery();
-                    IdInsertado = item.te_terminal_id;
+                    //IdInsertado = item.te_terminal_id;
+                    return true;
                 }
             }
             catch (Exception ex)
             {
-                IdInsertado = 0;
+                funciones.logueo($"Error metodo SaveTerminals - {ex.Message}");
             }
-            return IdInsertado;
+            return false;
         }
-        public int GetLastIdInserted()
+        public long GetLastIdInserted()
         {
-            int total = 0;
+            long total = 0;
 
             string query = @"
             select top 1 te_terminal_id as lastid from 
@@ -403,13 +408,14 @@ INSERT INTO [dbo].[terminals]
                     {
                         if (data.Read())
                         {
-                            total = (int)data["lastid"];
+                            total = ManejoNulos.ManageNullInteger64(data["lastid"]);
                         }
                     }
                 }
             }
-            catch (Exception exception)
+            catch (Exception ex)
             {
+                funciones.logueo($"Error metodo GetLastIdInserted terminals_dal.cs - {ex.Message}", "Error");
                 total = 0;
             }
 

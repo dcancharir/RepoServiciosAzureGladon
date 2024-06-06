@@ -24,11 +24,12 @@ namespace ServicioServidorVPN.WGDB_000.dal
             connectionString = $"Data Source={bd_datasource};Initial Catalog={database_name};Integrated Security=False;User ID={bd_username};Password={bd_password}";
 
         }
-        public long SaveAccountMovements(account_movements item)
+        public bool SaveAccountMovements(account_movements item)
         {
             //bool respuesta = false;
-            long IdInsertado = 0;
             string consulta = @"
+if not exists (select am_movement_id from [dbo].[account_movements] where am_movement_id = @am_movement_id)
+begin
 INSERT INTO [dbo].[account_movements]
            ([am_movement_id]
            ,[am_play_session_id]
@@ -78,6 +79,8 @@ INSERT INTO [dbo].[account_movements]
            ,@am_modified_bucket_reason
            ,@am_data_before
            ,@am_data_after)
+end
+
 
                       ";
             try
@@ -111,15 +114,15 @@ INSERT INTO [dbo].[account_movements]
                     query.Parameters.AddWithValue("@am_data_after", item.am_data_after == null ? DBNull.Value : (object)item.am_data_after);
                     //IdInsertado = Convert.ToInt32(query.ExecuteScalar());
                     query.ExecuteNonQuery();
-                    IdInsertado = item.am_movement_id;
+                    //IdInsertado = item.am_movement_id;
+                    return true;
                 }
             }
             catch (Exception ex)
             {
                 funciones.logueo($"Error metodo SaveAccountMovements - {ex.Message}");
-                IdInsertado = 0;
             }
-            return IdInsertado;
+            return false;
         }
         public long GetLastIdInserted()
         {
@@ -141,14 +144,14 @@ INSERT INTO [dbo].[account_movements]
                     {
                         if (data.Read())
                         {
-                            total = (long)data["lastid"];
+                            total = ManejoNulos.ManageNullInteger64(data["lastid"]);
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                funciones.logueo($"Error metodo GetLastIdInserted - {ex.Message}");
+                funciones.logueo($"Error metodo GetLastIdInserted account_movements_dal.cs- {ex.Message}", "Error");
                 total = -1;
             }
 

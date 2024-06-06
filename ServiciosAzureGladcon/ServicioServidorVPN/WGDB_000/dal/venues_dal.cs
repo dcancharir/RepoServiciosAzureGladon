@@ -24,11 +24,13 @@ namespace ServicioServidorVPN.WGDB_000.dal
             connectionString = $"Data Source={bd_datasource};Initial Catalog={database_name};Integrated Security=False;User ID={bd_username};Password={bd_password}";
 
         }
-        public int SaveVenues(venues item)
+        public bool SaveVenues(venues item)
         {
             //bool respuesta = false;
             int IdInsertado = 0;
             string consulta = @"
+if not exists (select ve_venue_id from [dbo].[venues] where ve_venue_id = @ve_venue_id)
+begin
 INSERT INTO [dbo].[venues]
            ([ve_venue_id]
            ,[ve_external_venue_id]
@@ -72,6 +74,8 @@ INSERT INTO [dbo].[venues]
            ,@ve_dbversion
            ,@ve_db_description
            ,@ve_db_update)
+end
+
                       ";
             try
             {
@@ -101,18 +105,19 @@ INSERT INTO [dbo].[venues]
                     query.Parameters.AddWithValue("@ve_db_update", item.ve_db_update == null ? DBNull.Value : (object)item.ve_db_update);
                     //IdInsertado = Convert.ToInt32(query.ExecuteScalar());
                     query.ExecuteNonQuery();
-                    IdInsertado = item.ve_venue_id;
+                    //IdInsertado = item.ve_venue_id;
+                    return true;
                 }
             }
             catch (Exception ex)
             {
-                IdInsertado = 0;
+                funciones.logueo($"Error metodo SaveVenues - {ex.Message}");
             }
-            return IdInsertado;
+            return false;
         }
-        public int GetLastIdInserted()
+        public long GetLastIdInserted()
         {
-            int total = 0;
+            long total = 0;
 
             string query = @"
             select top 1 ve_venue_id as lastid from 
@@ -130,13 +135,14 @@ INSERT INTO [dbo].[venues]
                     {
                         if (data.Read())
                         {
-                            total = (int)data["lastid"];
+                            total = ManejoNulos.ManageNullInteger64(data["lastid"]);
                         }
                     }
                 }
             }
-            catch (Exception exception)
+            catch (Exception ex)
             {
+                funciones.logueo($"Error metodo GetLastIdInserted venues_dal.cs - {ex.Message}", "Error");
                 total = 0;
             }
 

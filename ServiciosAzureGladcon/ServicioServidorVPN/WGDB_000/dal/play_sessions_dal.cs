@@ -24,11 +24,13 @@ namespace ServicioServidorVPN.WGDB_000.dal
             connectionString = $"Data Source={bd_datasource};Initial Catalog={database_name};Integrated Security=False;User ID={bd_username};Password={bd_password}";
 
         }
-        public long SavePlaySessions(play_sessions item)
+        public bool SavePlaySessions(play_sessions item)
         {
             //bool respuesta = false;
             long IdInsertado = 0;
             string consulta = @"
+if not exists (select ps_play_session_id from [dbo].[play_sessions] where ps_play_session_id = @ps_play_session_id)
+begin
 INSERT INTO [dbo].[play_sessions]
            ([ps_play_session_id]
            ,[ps_account_id]
@@ -176,6 +178,8 @@ INSERT INTO [dbo].[play_sessions]
            ,@ps_cash_in_coins
            ,@ps_cash_in_bills
            ,@ps_original_account)
+end
+
                       ";
             try
             {
@@ -262,18 +266,19 @@ INSERT INTO [dbo].[play_sessions]
                     query.Parameters.AddWithValue("@ps_original_account", item.ps_original_account == null ? DBNull.Value : (object)item.ps_original_account);
                     //IdInsertado = Convert.ToInt32(query.ExecuteScalar());
                     query.ExecuteNonQuery();
-                    IdInsertado = item.ps_play_session_id;
+                    //IdInsertado = item.ps_play_session_id;
+                    return true;
                 }
             }
             catch (Exception ex)
             {
-                IdInsertado = 0;
+                funciones.logueo($"Error metodo SavePlaySessions - {ex.Message}");
             }
-            return IdInsertado;
+            return false;
         }
-        public int GetLastIdInserted()
+        public long GetLastIdInserted()
         {
-            int total = 0;
+            long total = 0;
 
             string query = @"
             select top 1 ps_play_session_id as lastid from 
@@ -291,13 +296,14 @@ INSERT INTO [dbo].[play_sessions]
                     {
                         if (data.Read())
                         {
-                            total = (int)data["lastid"];
+                            total = ManejoNulos.ManageNullInteger64(data["lastid"]);
                         }
                     }
                 }
             }
-            catch (Exception exception)
+            catch (Exception ex)
             {
+                funciones.logueo($"Error metodo GetLastIdInserted play_sessions_dal.cs- {ex.Message}", "Error");
                 total = 0;
             }
 

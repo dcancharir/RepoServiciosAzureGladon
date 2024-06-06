@@ -18,7 +18,7 @@ namespace ServicioMigracionWGDB_000.dal
         {
             _conexion = ConfigurationManager.ConnectionStrings["connection_wgdb_000"].ConnectionString;
         }
-        public List<gui_users> GetGuiUsersPaginated(long lastid, int skip, int pageSize)
+        public List<gui_users> GetAllGuiUsers()
         {
             var result = new List<gui_users>();
             try
@@ -59,10 +59,6 @@ SELECT [gu_user_id]
       ,[gu_intellia_roles]
       ,[gu_cage_vault_id]
   FROM [dbo].[gui_users]
-  where gu_user_id > {lastid}
-  order by gu_user_id asc
-  OFFSET {skip} ROWS -- Número de filas para omitir
-  FETCH NEXT {pageSize} ROWS ONLY; -- Número de filas para devolver
     ";
                 using (var con = new SqlConnection(_conexion))
                 {
@@ -123,9 +119,9 @@ SELECT [gu_user_id]
             }
             return result;
         }
-        public int GetTotalGuiUsersForMigration()
+        public long GetTotalGuiUsersForMigration()
         {
-            int total = 0;
+            long total = 0;
 
             string query = @"
             select count(*) as total from 
@@ -142,13 +138,14 @@ SELECT [gu_user_id]
                     {
                         if (data.Read())
                         {
-                            total = ManejoNulos.ManageNullInteger(data["total"]);
+                            total = ManejoNulos.ManageNullInteger64(data["total"]);
                         }
                     }
                 }
             }
-            catch (Exception exception)
+            catch (Exception ex)
             {
+                funciones.logueo($"Error metodo GetTotalGuiUsersForMigration - {ex.Message}", "Error");
                 total = 0;
             }
 

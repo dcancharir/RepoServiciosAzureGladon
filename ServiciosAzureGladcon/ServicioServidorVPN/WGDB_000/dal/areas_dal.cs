@@ -24,11 +24,13 @@ namespace ServicioServidorVPN.WGDB_000.dal
             connectionString = $"Data Source={bd_datasource};Initial Catalog={database_name};Integrated Security=False;User ID={bd_username};Password={bd_password}";
 
         }
-        public int SaveAreas(areas item)
+        public bool SaveAreas(areas item)
         {
             //bool respuesta = false;
             int IdInsertado = 0;
             string consulta = @"
+if not exists (select ar_area_id from [dbo].[areas] where ar_area_id = @ar_area_id)
+begin
 INSERT INTO [dbo].[areas]
            ([ar_area_id]
            ,[ar_name]
@@ -42,6 +44,8 @@ INSERT INTO [dbo].[areas]
            ,@ar_smoking
            ,@ar_venue_id
            ,@ar_external_id)
+end
+
                       ";
             try
             {
@@ -58,18 +62,19 @@ INSERT INTO [dbo].[areas]
                     //query.Parameters.AddWithValue("@ar_timestamp", ManejoNulos.ManageNullByteArray(item.ar_timestamp));
                     //IdInsertado = Convert.ToInt32(query.ExecuteScalar());
                     query.ExecuteNonQuery();
-                    IdInsertado = item.ar_area_id;
+                    //IdInsertado = item.ar_area_id;
+                    return true;
                 }
             }
             catch (Exception ex)
             {
-                IdInsertado = 0;
+                funciones.logueo($"Error metodo SaveAreas - {ex.Message}");
             }
-            return IdInsertado;
+            return false;
         }
-        public int GetLastIdInserted()
+        public long GetLastIdInserted()
         {
-            int total = 0;
+            long total = 0;
 
             string query = @"
             select top 1 ar_area_id as lastid from 
@@ -87,13 +92,14 @@ INSERT INTO [dbo].[areas]
                     {
                         if (data.Read())
                         {
-                            total = (int)data["lastid"];
+                            total = ManejoNulos.ManageNullInteger64(data["lastid"]);
                         }
                     }
                 }
             }
-            catch (Exception exception)
+            catch (Exception ex)
             {
+                funciones.logueo($"Error metodo GetLastIdInserted areas_dal.cs- {ex.Message}", "Error");
                 total = 0;
             }
 

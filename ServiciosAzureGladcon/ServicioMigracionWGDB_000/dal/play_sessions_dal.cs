@@ -211,9 +211,9 @@ SELECT [ps_play_session_id]
             }
             return result;
         }
-        public int GetTotalPlaySessionsForMigration(long lastid)
+        public long GetTotalPlaySessionsForMigration(long lastid)
         {
-            int total = 0;
+            long total = 0;
 
             string query = @"
             select count(*) as total from 
@@ -232,13 +232,14 @@ where ps_play_session_id > @lastid
                     {
                         if (data.Read())
                         {
-                            total = ManejoNulos.ManageNullInteger(data["total"]);
+                            total = ManejoNulos.ManageNullInteger64(data["total"]);
                         }
                     }
                 }
             }
-            catch (Exception exception)
+            catch (Exception ex)
             {
+                funciones.logueo($"Error metodo GetTotalPlaySessionsForMigration - {ex.Message}", "Error");
                 total = 0;
             }
 

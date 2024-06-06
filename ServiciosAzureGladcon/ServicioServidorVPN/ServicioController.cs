@@ -6,6 +6,7 @@ using ServicioServidorVPN.WGDB_000.model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -338,12 +339,22 @@ namespace ServicioServidorVPN
                 {
                     databaseName = items.databaseName.ToObject<string>();
                 }
+                models = models.OrderBy(x => x.am_account_id).ToList();
+                var total = models.Count;
+                var counter = 0;
                 var accountMovementsDal = new account_movements_dal(databaseName);
                 foreach (var item in models)
                 {
                     var result = accountMovementsDal.SaveAccountMovements(item);
+                    if(result == true)
+                    {
+                        counter++;
+                    }
                 }
-                return Json(true);
+                if(counter == total) 
+                    return Json(true);
+                else 
+                    return Json(false);
             }
             catch (Exception)
             {
@@ -380,12 +391,23 @@ namespace ServicioServidorVPN
                 {
                     databaseName = items.databaseName.ToObject<string>();
                 }
+                models = models.OrderBy(x => x.ao_account_id).ToList();
+                var total = models.Count;
+                var counter = 0;
+
                 var accountOperationsDal = new account_operations_dal(databaseName);
                 foreach (var item in models)
                 {
                     var result = accountOperationsDal.SaveAccountOperations(item);
+                    if(result == true)
+                    {
+                        counter++;
+                    }
                 }
-                return Json(true);
+                if(counter == total)
+                    return Json(true);
+                else
+                    return Json(false);
             }
             catch (Exception)
             {
@@ -422,12 +444,22 @@ namespace ServicioServidorVPN
                 {
                     databaseName = items.databaseName.ToObject<string>();
                 }
+                models = models.OrderBy(x => x.acp_account_id).ToList();
+                var total = models.Count;
+                var counter = 0;
                 var accountPromotionsDal = new account_promotions_dal(databaseName);
                 foreach (var item in models)
                 {
                     var result = accountPromotionsDal.SaveAccountPromotions(item);
+                    if(result == true)
+                    {
+                        counter++;
+                    }
                 }
-                return Json(true);
+                if(counter == total)
+                    return Json(true);
+                else
+                    return Json(false);
             }
             catch (Exception)
             {
@@ -464,12 +496,21 @@ namespace ServicioServidorVPN
                 {
                     databaseName = items.databaseName.ToObject<string>();
                 }
+                var total = models.Count;
+                var counter = 0;
                 var accountsDal = new accounts_dal(databaseName);
                 foreach (var item in models)
                 {
                     var result = accountsDal.SaveAccounts(item);
+                    if(result == true)
+                    {
+                        counter++;
+                    }
                 }
-                return Json(true);
+                if(counter == total)
+                    return Json(true);
+                else
+                    return Json(false);
             }
             catch (Exception)
             {
@@ -506,12 +547,22 @@ namespace ServicioServidorVPN
                 {
                     databaseName = items.databaseName.ToObject<string>();
                 }
+                models = models.OrderBy(x => x.ar_area_id).ToList();
+                var total = models.Count;
+                var counter = 0;
                 var areasDal = new areas_dal(databaseName);
                 foreach (var item in models)
                 {
                     var result = areasDal.SaveAreas(item);
+                    if(result == true)
+                    {
+                        counter++;
+                    }
                 }
-                return Json(true);
+                if(counter == total)
+                    return Json(true);
+                else
+                    return Json(false);
             }
             catch (Exception)
             {
@@ -548,12 +599,22 @@ namespace ServicioServidorVPN
                 {
                     databaseName = items.databaseName.ToObject<string>();
                 }
+                models = models.OrderBy(x => x.bk_bank_id).ToList();
+                var total = models.Count;
+                var counter = 0;
                 var banksDal = new banks_dal(databaseName);
                 foreach (var item in models)
                 {
                     var result = banksDal.SaveBanks(item);
+                    if(result == true)
+                    {
+                        counter++;
+                    }
                 }
-                return Json(true);
+                if(counter == total)
+                    return Json(true);
+                else
+                    return Json(false);
             }
             catch (Exception)
             {
@@ -561,7 +622,7 @@ namespace ServicioServidorVPN
             }
         }
         [HttpPost]
-        public IHttpActionResult CashierSesionsGetLastId(string databaseName)
+        public IHttpActionResult CashierSessionsGetLastId(string databaseName)
         {
             try
             {
@@ -590,12 +651,22 @@ namespace ServicioServidorVPN
                 {
                     databaseName = items.databaseName.ToObject<string>();
                 }
+                models = models.OrderBy(x => x.cs_session_id).ToList();
+                var total = models.Count;
+                var counter = 0;
                 var cashierSessionsDal = new cashier_sessions_dal(databaseName);
                 foreach (var item in models)
                 {
                     var result = cashierSessionsDal.SaveCashierSessions(item);
+                    if(result == true)
+                    {
+                        counter++;
+                    }
                 }
-                return Json(true);
+                if(counter == total)
+                    return Json(true);
+                else
+                    return Json(false);
             }
             catch (Exception)
             {
@@ -632,12 +703,22 @@ namespace ServicioServidorVPN
                 {
                     databaseName = items.databaseName.ToObject<string>();
                 }
+                var total = models.Count;
+                var counter = 0;
+
                 var generalParamsDal = new general_params_dal(databaseName);
                 foreach (var item in models)
                 {
                     var result = generalParamsDal.SaveGeneralParams(item);
+                    if(result == true)
+                    {
+                        counter++;
+                    }
                 }
-                return Json(true);
+                if(counter == total)
+                    return Json(true);
+                else
+                    return Json(false);
             }
             catch (Exception)
             {
@@ -674,12 +755,22 @@ namespace ServicioServidorVPN
                 {
                     databaseName = items.databaseName.ToObject<string>();
                 }
+                models = models.OrderBy(x => x.gin_gift_instance_id).ToList();
+                var total = models.Count;
+                var counter = 0;
                 var giftInstancesDal = new gift_instances_dal(databaseName);
                 foreach (var item in models)
                 {
                     var result = giftInstancesDal.SaveGiftInstances(item);
+                    if(result == true)
+                    {
+                        counter++;
+                    }
                 }
-                return Json(true);
+                if(counter == total)
+                    return Json(true);
+                else
+                    return Json(false);
             }
             catch (Exception)
             {
@@ -716,12 +807,22 @@ namespace ServicioServidorVPN
                 {
                     databaseName = items.databaseName.ToObject<string>();
                 }
+                var total = models.Count;
+                var counter = 0;
                 var guiUsersDal = new gui_users_dal(databaseName);
                 foreach (var item in models)
                 {
                     var result = guiUsersDal.SaveGuiUsers(item);
+                    if(result == true)
+                    {
+                        counter++;
+                    }
+
                 }
-                return Json(true);
+                if(counter == total)
+                    return Json(true);
+                else
+                    return Json(false);
             }
             catch (Exception)
             {
@@ -758,12 +859,23 @@ namespace ServicioServidorVPN
                 {
                     databaseName = items.databaseName.ToObject<string>();
                 }
+                models = models.OrderBy(x => x.mb_account_id).ToList();
+                var total = models.Count;
+                var counter = 0;
+
                 var mobileBanksDal = new mobile_banks_dal(databaseName);
                 foreach (var item in models)
                 {
                     var result = mobileBanksDal.SaveMobileBanks(item);
+                    if(result == true)
+                    {
+                        counter++;
+                    }
                 }
-                return Json(true);
+                if(counter == total)
+                    return Json(true);
+                else
+                    return Json(false);
             }
             catch (Exception)
             {
@@ -800,12 +912,22 @@ namespace ServicioServidorVPN
                 {
                     databaseName = items.databaseName.ToObject<string>();
                 }
+                models = models.OrderBy(x => x.ps_play_session_id).ToList();
+                var total = models.Count;
+                var counter = 0;
                 var playSessionsDal = new play_sessions_dal(databaseName);
                 foreach (var item in models)
                 {
                     var result = playSessionsDal.SavePlaySessions(item);
+                    if(result == true)
+                    {
+                        counter++;
+                    }
                 }
-                return Json(true);
+                if(counter == total)
+                    return Json(true);
+                else
+                    return Json(false);
             }
             catch (Exception)
             {
@@ -842,12 +964,22 @@ namespace ServicioServidorVPN
                 {
                     databaseName = items.databaseName.ToObject<string>();
                 }
+                models = models.OrderBy(x => x.pg_id).ToList();
+                var total = models.Count;
+                var counter = 0;
                 var promogamesDal = new promogames_dal(databaseName);
                 foreach (var item in models)
                 {
                     var result = promogamesDal.SavePromoGames(item);
+                    if(result == true)
+                    {
+                        counter++;
+                    }
                 }
-                return Json(true);
+                if(counter == total)
+                    return Json(true);
+                else
+                    return Json(false);
             }
             catch (Exception)
             {
@@ -884,12 +1016,22 @@ namespace ServicioServidorVPN
                 {
                     databaseName = items.databaseName.ToObject<string>();
                 }
+                models = models.OrderBy(x=>x.pm_promotion_id).ToList();
+                var total = models.Count;
+                var counter = 0;
                 var promotionsDal = new promotions_dal(databaseName);
                 foreach (var item in models)
                 {
                     var result = promotionsDal.SavePromotions(item);
+                    if(result == true)
+                    {
+                        counter++;
+                    }
                 }
-                return Json(true);
+                if(counter == total)
+                    return Json(true);
+                else
+                    return Json(false);
             }
             catch (Exception)
             {
@@ -926,12 +1068,22 @@ namespace ServicioServidorVPN
                 {
                     databaseName = items.databaseName.ToObject<string>();
                 }
+                models = models.OrderBy(x => x.te_terminal_id).ToList();
+                var total = models.Count;
+                var counter = 0;
                 var terminalsDal = new terminals_dal(databaseName);
                 foreach (var item in models)
                 {
                     var result = terminalsDal.SaveTerminals(item);
+                    if(result == true)
+                    {
+                        counter++;
+                    }
                 }
-                return Json(true);
+                if(counter == total)
+                    return Json(true);
+                else
+                    return Json(false);
             }
             catch (Exception)
             {
@@ -968,12 +1120,23 @@ namespace ServicioServidorVPN
                 {
                     databaseName = items.databaseName.ToObject<string>();
                 }
+                models = models.OrderBy(x => x.ve_venue_id).ToList();
+                var total = models.Count;
+                var counter = 0;
                 var venuesDal = new venues_dal(databaseName);
                 foreach (var item in models)
                 {
                     var result = venuesDal.SaveVenues(item);
+                    if(result == true)
+                    {
+                        counter++;
+                    }
                 }
-                return Json(true);
+
+                if(counter == total)
+                    return Json(true);
+                else
+                    return Json(false);
             }
             catch (Exception)
             {

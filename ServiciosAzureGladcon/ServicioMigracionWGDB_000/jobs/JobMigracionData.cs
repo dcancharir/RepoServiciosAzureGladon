@@ -18,6 +18,7 @@ namespace ServicioMigracionWGDB_000.jobs
     public class JobMigracionData : IJob
     {
         int batchSize = 1000;
+        long maximo = 2000;
         private readonly account_movements_dal accountMovementsDal;
         private readonly account_operations_dal accountOperationsDal;
         private readonly account_promotions_dal accountPromotionsDal;
@@ -60,38 +61,54 @@ namespace ServicioMigracionWGDB_000.jobs
         }
         public Task Execute(IJobExecutionContext context)
         {
-            AccountMovementsMigration();
-            funciones.logueo($"End AccountMovementsMigration");
-            AccountOperationsMigration();
-            funciones.logueo($"End AccountOperationsMigration");
-            AccountPromotionsMigration();
-            funciones.logueo($"End AccountPromotionsMigration");
-            AccountsMigration();
-            funciones.logueo($"End AccountsMigration");
-            AreasMigration();
-            funciones.logueo($"End AreasMigration");
-            BanksMigration();
-            funciones.logueo($"End BanksMigration");
-            CashierSessionsMigration();
-            funciones.logueo($"End CashierSessionsMigration");
-            GeneralParamsMigration();
-            funciones.logueo($"End GeneralParamsMigration");
-            GistInstancesMigration();
-            funciones.logueo($"End GistInstancesMigration");
-            GuiUsersMigration();
-            funciones.logueo($"End GuiUsersMigration");
-            MobileBanksMigration(); 
-            funciones.logueo($"End MobileBanksMigration");
-            PlaySessionsMigration();
-            funciones.logueo($"End PlaySessionsMigration");
             PromoGamesMigration();
             funciones.logueo($"End PromoGamesMigration");
-            PromotionsMigration();
-            funciones.logueo($"End PromotionsMigration");
-            TerminalsMigration();
-            funciones.logueo($"End TerminalsMigration");
+
             VenuesMigration();
             funciones.logueo($"End VenuesMigration");
+
+            AreasMigration();
+            funciones.logueo($"End AreasMigration");
+
+            BanksMigration();
+            funciones.logueo($"End BanksMigration");
+
+            GuiUsersMigration();
+            funciones.logueo($"End GuiUsersMigration");
+
+            TerminalsMigration();
+            funciones.logueo($"End TerminalsMigration");
+
+            MobileBanksMigration();
+            funciones.logueo($"End MobileBanksMigration");
+
+            PromotionsMigration();
+            funciones.logueo($"End PromotionsMigration");
+
+            GeneralParamsMigration();
+            funciones.logueo($"End GeneralParamsMigration");
+
+            GiftInstancesMigration();
+            funciones.logueo($"End GistInstancesMigration");
+
+            AccountsMigration();
+            funciones.logueo($"End AccountsMigration");
+
+            CashierSessionsMigration();
+            funciones.logueo($"End CashierSessionsMigration");
+
+            AccountPromotionsMigration();
+            funciones.logueo($"End AccountPromotionsMigration");
+
+            PlaySessionsMigration();
+            funciones.logueo($"End PlaySessionsMigration");
+
+            AccountOperationsMigration();
+            funciones.logueo($"End AccountOperationsMigration");
+
+            AccountMovementsMigration();
+            funciones.logueo($"End AccountMovementsMigration");
+
             return Task.CompletedTask;
         }
         #region AccountMovementsMigration
@@ -101,7 +118,15 @@ namespace ServicioMigracionWGDB_000.jobs
             {
                 var lastId = AccountMovementsGetLastId();
                 var totalForMigration = accountMovementsDal.GetTotalAccountMovementsForMigration(lastId);
+                
                 var batchCount = (totalForMigration + batchSize - 1) / batchSize;
+                string logMessage = $@"
+    AccountMovementsMigration()
+    lastId = {lastId}
+    totalForMigration = {totalForMigration}
+    batchCount = {batchCount}
+";
+                funciones.logueo(logMessage);
                 for (int i = 0; i < batchCount; i++)
                 {
                     int intentos = 100;
@@ -127,9 +152,9 @@ namespace ServicioMigracionWGDB_000.jobs
                 funciones.logueo($"Error en metodo AccountsMigration - {ex.Message}");
             }
         }
-        public int AccountMovementsGetLastId()
+        public long AccountMovementsGetLastId()
         {
-            int lastId = 0;
+            long lastId = 0;
             object oEnvio = new
             {
             };
@@ -143,7 +168,7 @@ namespace ServicioMigracionWGDB_000.jobs
                     if (httpResponse.IsSuccessStatusCode)
                     {
                         var result = httpResponse.Content.ReadAsStringAsync().Result;
-                        var jsonResult = JsonConvert.DeserializeObject<int>(result);
+                        var jsonResult = JsonConvert.DeserializeObject<long>(result);
                         return jsonResult;
                     }
                 }
@@ -183,7 +208,16 @@ namespace ServicioMigracionWGDB_000.jobs
             {
                 var lastId = AccountOperationsGetLastId();
                 var totalForMigration = accountOperationsDal.GetTotalAccountOperationsForMigration(lastId);
+                
+
                 var batchCount = (totalForMigration + batchSize - 1) / batchSize;
+                string logMessage = $@"
+    AccountOperationsMigration()
+    lastId = {lastId}
+    totalForMigration = {totalForMigration}
+    batchCount = {batchCount}
+";
+                funciones.logueo(logMessage);
                 for (int i = 0; i < batchCount; i++)
                 {
                     int intentos = 100;
@@ -209,9 +243,9 @@ namespace ServicioMigracionWGDB_000.jobs
                 funciones.logueo($"Error en metodo AccountOperationsMigration - {ex.Message}");
             }
         }
-        public int AccountOperationsGetLastId()
+        public long AccountOperationsGetLastId()
         {
-            int lastId = 0;
+            long lastId = 0;
             object oEnvio = new
             {
             };
@@ -225,7 +259,7 @@ namespace ServicioMigracionWGDB_000.jobs
                     if (httpResponse.IsSuccessStatusCode)
                     {
                         var result = httpResponse.Content.ReadAsStringAsync().Result;
-                        var jsonResult = JsonConvert.DeserializeObject<int>(result);
+                        var jsonResult = JsonConvert.DeserializeObject<long>(result);
                         return jsonResult;
                     }
                 }
@@ -265,7 +299,16 @@ namespace ServicioMigracionWGDB_000.jobs
             {
                 var lastId = AccountPromotionsGetLastId();
                 var totalForMigration = accountPromotionsDal.GetTotalAccountPromotionsForMigration(lastId);
+                
+
                 var batchCount = (totalForMigration+ batchSize - 1) / batchSize;
+                string logMessage = $@"
+    AccountPromotionsMigration()
+    lastId = {lastId}
+    totalForMigration = {totalForMigration}
+    batchCount = {batchCount}
+";
+                funciones.logueo(logMessage);
                 for (int i = 0; i < batchCount; i++)
                 {
                     int intentos = 100;
@@ -291,9 +334,9 @@ namespace ServicioMigracionWGDB_000.jobs
                 funciones.logueo($"Error en metodo AccountPromotionsMigration - {ex.Message}");
             }
         }
-        public int AccountPromotionsGetLastId()
+        public long AccountPromotionsGetLastId()
         {
-            int lastId = 0;
+            long lastId = 0;
             object oEnvio = new
             {
             };
@@ -307,7 +350,7 @@ namespace ServicioMigracionWGDB_000.jobs
                     if (httpResponse.IsSuccessStatusCode)
                     {
                         var result = httpResponse.Content.ReadAsStringAsync().Result;
-                        var jsonResult = JsonConvert.DeserializeObject<int>(result);
+                        var jsonResult = JsonConvert.DeserializeObject<long>(result);
                         return jsonResult;
                     }
                 }
@@ -347,14 +390,23 @@ namespace ServicioMigracionWGDB_000.jobs
             {
                 var totalDatawareHouse = AccountsGetTotal();
                 var totalForMigration = accountsDal.GetTotalAccountsForMigration();
+                
+
+                string logMessage = $@"
+    AccountsMigration()
+    totalDataWareHouse = {totalDatawareHouse}
+    totalForMigration = {totalForMigration}
+";
+                funciones.logueo(logMessage);
                 if(totalDatawareHouse <= totalForMigration)
                 {
+                    var totalAccounts = accountsDal.GetAllAccounts();
                     var batchCount = (totalForMigration + batchSize - 1) / batchSize;
                     for (int i = 0; i < batchCount; i++)
                     {
                         int intentos = 100;
                         var startIndex = i * batchSize;
-                        var batch = accountsDal.GetAccountsPaginated(0, startIndex, batchSize);
+                        var batch = totalAccounts.Skip(startIndex).Take(batchSize).ToList();
                         while (intentos > 0)
                         {
                             var respuestaMigracion = AccountsSave(batch);
@@ -376,9 +428,9 @@ namespace ServicioMigracionWGDB_000.jobs
                 funciones.logueo($"Error en metodo AccountsMigration - {ex.Message}");
             }
         }
-        public int AccountsGetTotal()
+        public long AccountsGetTotal()
         {
-            int lastId = 0;
+            long lastId = 0;
             object oEnvio = new
             {
             };
@@ -392,7 +444,7 @@ namespace ServicioMigracionWGDB_000.jobs
                     if (httpResponse.IsSuccessStatusCode)
                     {
                         var result = httpResponse.Content.ReadAsStringAsync().Result;
-                        var jsonResult = JsonConvert.DeserializeObject<int>(result);
+                        var jsonResult = JsonConvert.DeserializeObject<long>(result);
                         return jsonResult;
                     }
                 }
@@ -432,7 +484,16 @@ namespace ServicioMigracionWGDB_000.jobs
             {
                 var lastId = AreasGetLastId();
                 var totalForMigration = areasDal.GetTotalAreasForMigration(lastId);
+                
+
                 var batchCount = (totalForMigration + batchSize - 1) / batchSize;
+                string logMessage = $@"
+    AreasMigration()
+    lastId = {lastId}
+    totalForMigration = {totalForMigration}
+    batchCount = {batchCount}
+";
+                funciones.logueo(logMessage);
                 for (int i = 0; i < batchCount; i++)
                 {
                     int intentos = 100;
@@ -458,9 +519,9 @@ namespace ServicioMigracionWGDB_000.jobs
                 funciones.logueo($"Error en metodo AreasMigration - {ex.Message}");
             }
         }
-        public int AreasGetLastId()
+        public long AreasGetLastId()
         {
-            int lastId = 0;
+            long lastId = 0;
             object oEnvio = new
             {
             };
@@ -474,7 +535,7 @@ namespace ServicioMigracionWGDB_000.jobs
                     if (httpResponse.IsSuccessStatusCode)
                     {
                         var result = httpResponse.Content.ReadAsStringAsync().Result;
-                        var jsonResult = JsonConvert.DeserializeObject<int>(result);
+                        var jsonResult = JsonConvert.DeserializeObject<long>(result);
                         return jsonResult;
                     }
                 }
@@ -514,7 +575,16 @@ namespace ServicioMigracionWGDB_000.jobs
             {
                 var lastId = BanksGetLastId();
                 var totalForMigration = banksDal.GetTotalBanksForMigration(lastId);
+                
+
                 var batchCount = (totalForMigration + batchSize - 1) / batchSize;
+                string logMessage = $@"
+    BanksMigration()
+    lastId = {lastId}
+    totalForMigration = {totalForMigration}
+    batchCount = {batchCount}
+";
+                funciones.logueo(logMessage);
                 for (int i = 0; i < batchCount; i++)
                 {
                     int intentos = 100;
@@ -540,9 +610,9 @@ namespace ServicioMigracionWGDB_000.jobs
                 funciones.logueo($"Error en metodo BanksMigration - {ex.Message}");
             }
         }
-        public int BanksGetLastId()
+        public long BanksGetLastId()
         {
-            int lastId = 0;
+            long lastId = 0;
             object oEnvio = new
             {
             };
@@ -556,7 +626,7 @@ namespace ServicioMigracionWGDB_000.jobs
                     if (httpResponse.IsSuccessStatusCode)
                     {
                         var result = httpResponse.Content.ReadAsStringAsync().Result;
-                        var jsonResult = JsonConvert.DeserializeObject<int>(result);
+                        var jsonResult = JsonConvert.DeserializeObject<long>(result);
                         return jsonResult;
                     }
                 }
@@ -596,7 +666,16 @@ namespace ServicioMigracionWGDB_000.jobs
             {
                 var lastId = CashierSessionsGetLastId();
                 var totalForMigration = cashierSessionsDal.GetTotalCashierSessionsForMigration(lastId);
+                
+
                 var batchCount = (totalForMigration + batchSize - 1) / batchSize;
+                string logMessage = $@"
+    CashierSessionsMigration()
+    lastId = {lastId}
+    totalForMigration = {totalForMigration}
+    batchCount = {batchCount}
+";
+                funciones.logueo(logMessage);
                 for (int i = 0; i < batchCount; i++)
                 {
                     int intentos = 100;
@@ -622,9 +701,9 @@ namespace ServicioMigracionWGDB_000.jobs
                 funciones.logueo($"Error en metodo CashierSessionsMigration - {ex.Message}");
             }
         }
-        public int CashierSessionsGetLastId()
+        public long CashierSessionsGetLastId()
         {
-            int lastId = 0;
+            long lastId = 0;
             object oEnvio = new
             {
             };
@@ -638,7 +717,7 @@ namespace ServicioMigracionWGDB_000.jobs
                     if (httpResponse.IsSuccessStatusCode)
                     {
                         var result = httpResponse.Content.ReadAsStringAsync().Result;
-                        var jsonResult = JsonConvert.DeserializeObject<int>(result);
+                        var jsonResult = JsonConvert.DeserializeObject<long>(result);
                         return jsonResult;
                     }
                 }
@@ -678,6 +757,14 @@ namespace ServicioMigracionWGDB_000.jobs
             {
                 var totalDatawareHouse = GeneralParamsGetTotal();
                 var totalForMigration = generalParamsDal.GetTotalGeneralParamsForMigration();
+                
+
+                string logMessage = $@"
+    GeneralParamsMigration()
+    totalDatawareHouse = {totalDatawareHouse}
+    totalForMigration = {totalForMigration}
+";
+                funciones.logueo(logMessage);
                 if (totalDatawareHouse <= totalForMigration)
                 {
                     var totalGeneralParams = generalParamsDal.GetAllGeneralParams();
@@ -709,9 +796,9 @@ namespace ServicioMigracionWGDB_000.jobs
                 funciones.logueo($"Error en metodo AccountsMigration - {ex.Message}");
             }
         }
-        public int GeneralParamsGetTotal()
+        public long GeneralParamsGetTotal()
         {
-            int lastId = 0;
+            long lastId = 0;
             object oEnvio = new
             {
             };
@@ -725,7 +812,7 @@ namespace ServicioMigracionWGDB_000.jobs
                     if (httpResponse.IsSuccessStatusCode)
                     {
                         var result = httpResponse.Content.ReadAsStringAsync().Result;
-                        var jsonResult = JsonConvert.DeserializeObject<int>(result);
+                        var jsonResult = JsonConvert.DeserializeObject<long>(result);
                         return jsonResult;
                     }
                 }
@@ -759,13 +846,22 @@ namespace ServicioMigracionWGDB_000.jobs
         }
         #endregion
         #region GiftInstances
-        private void GistInstancesMigration()
+        private void GiftInstancesMigration()
         {
             try
             {
                 var lastId = GiftInstancesGetLastId();
                 var totalForMigration = giftInstancesDal.GetTotalGiftInstancesForMigration(lastId);
+                
+
                 var batchCount = (totalForMigration + batchSize - 1) / batchSize;
+                string logMessage = $@"
+    GiftInstancesMigration()
+    lastId = {lastId}
+    totalForMigration = {totalForMigration}
+    batchCount = {batchCount}
+";
+                funciones.logueo(logMessage);
                 for (int i = 0; i < batchCount; i++)
                 {
                     int intentos = 100;
@@ -791,9 +887,9 @@ namespace ServicioMigracionWGDB_000.jobs
                 funciones.logueo($"Error en metodo GistInstancesMigration - {ex.Message}");
             }
         }
-        public int GiftInstancesGetLastId()
+        public long GiftInstancesGetLastId()
         {
-            int lastId = 0;
+            long lastId = 0;
             object oEnvio = new
             {
             };
@@ -807,7 +903,7 @@ namespace ServicioMigracionWGDB_000.jobs
                     if (httpResponse.IsSuccessStatusCode)
                     {
                         var result = httpResponse.Content.ReadAsStringAsync().Result;
-                        var jsonResult = JsonConvert.DeserializeObject<int>(result);
+                        var jsonResult = JsonConvert.DeserializeObject<long>(result);
                         return jsonResult;
                     }
                 }
@@ -847,14 +943,23 @@ namespace ServicioMigracionWGDB_000.jobs
             {
                 var totalDatawareHouse = GuiUsersGetTotal();
                 var totalForMigration = guiUsersDal.GetTotalGuiUsersForMigration();
+                
+
+                string logMessage = $@"
+    GuiUsersMigration()
+    totalDatawareHouse = {totalDatawareHouse}
+    totalForMigration = {totalForMigration}
+";
+                funciones.logueo(logMessage);
                 if (totalDatawareHouse <= totalForMigration)
                 {
+                    var totalGuiUsers = guiUsersDal.GetAllGuiUsers();
                     var batchCount = (totalForMigration + batchSize - 1) / batchSize;
                     for (int i = 0; i < batchCount; i++)
                     {
                         int intentos = 100;
                         var startIndex = i * batchSize;
-                        var batch = guiUsersDal.GetGuiUsersPaginated(0, startIndex, batchSize);
+                        var batch = totalGuiUsers.Skip(startIndex).Take(batchSize).ToList();
                         while (intentos > 0)
                         {
                             var respuestaMigracion = GuiUsersSave(batch);
@@ -876,9 +981,9 @@ namespace ServicioMigracionWGDB_000.jobs
                 funciones.logueo($"Error en metodo AccountsMigration - {ex.Message}");
             }
         }
-        public int GuiUsersGetTotal()
+        public long GuiUsersGetTotal()
         {
-            int lastId = 0;
+            long lastId = 0;
             object oEnvio = new
             {
             };
@@ -892,7 +997,7 @@ namespace ServicioMigracionWGDB_000.jobs
                     if (httpResponse.IsSuccessStatusCode)
                     {
                         var result = httpResponse.Content.ReadAsStringAsync().Result;
-                        var jsonResult = JsonConvert.DeserializeObject<int>(result);
+                        var jsonResult = JsonConvert.DeserializeObject<long>(result);
                         return jsonResult;
                     }
                 }
@@ -932,7 +1037,16 @@ namespace ServicioMigracionWGDB_000.jobs
             {
                 var lastId = MobileBanksGetLastId();
                 var totalForMigration = mobileBanksDal.GetTotalMobileBanksForMigration(lastId);
+                
+
                 var batchCount = (totalForMigration + batchSize - 1) / batchSize;
+                string logMessage = $@"
+    MobileBanksMigration()
+    lastId = {lastId}
+    totalForMigration = {totalForMigration}
+    batchCount = {batchCount}
+";
+                funciones.logueo(logMessage);
                 for (int i = 0; i < batchCount; i++)
                 {
                     int intentos = 100;
@@ -958,9 +1072,9 @@ namespace ServicioMigracionWGDB_000.jobs
                 funciones.logueo($"Error en metodo MobileBanksMigration - {ex.Message}");
             }
         }
-        public int MobileBanksGetLastId()
+        public long MobileBanksGetLastId()
         {
-            int lastId = 0;
+            long lastId = 0;
             object oEnvio = new
             {
             };
@@ -974,7 +1088,7 @@ namespace ServicioMigracionWGDB_000.jobs
                     if (httpResponse.IsSuccessStatusCode)
                     {
                         var result = httpResponse.Content.ReadAsStringAsync().Result;
-                        var jsonResult = JsonConvert.DeserializeObject<int>(result);
+                        var jsonResult = JsonConvert.DeserializeObject<long>(result);
                         return jsonResult;
                     }
                 }
@@ -1014,7 +1128,16 @@ namespace ServicioMigracionWGDB_000.jobs
             {
                 var lastId = PlaySessionsGetLastId();
                 var totalForMigration = playSessionsDal.GetTotalPlaySessionsForMigration(lastId);
+                
+
                 var batchCount = (totalForMigration + batchSize - 1) / batchSize;
+                string logMessage = $@"
+    PlaySessionsMigration()
+    lastId = {lastId}
+    totalForMigration = {totalForMigration}
+    batchCount = {batchCount}
+";
+                funciones.logueo(logMessage);
                 for (int i = 0; i < batchCount; i++)
                 {
                     int intentos = 100;
@@ -1040,9 +1163,9 @@ namespace ServicioMigracionWGDB_000.jobs
                 funciones.logueo($"Error en metodo PlaySessionsMigration - {ex.Message}");
             }
         }
-        public int PlaySessionsGetLastId()
+        public long PlaySessionsGetLastId()
         {
-            int lastId = 0;
+            long lastId = 0;
             object oEnvio = new
             {
             };
@@ -1056,7 +1179,7 @@ namespace ServicioMigracionWGDB_000.jobs
                     if (httpResponse.IsSuccessStatusCode)
                     {
                         var result = httpResponse.Content.ReadAsStringAsync().Result;
-                        var jsonResult = JsonConvert.DeserializeObject<int>(result);
+                        var jsonResult = JsonConvert.DeserializeObject<long>(result);
                         return jsonResult;
                     }
                 }
@@ -1096,7 +1219,16 @@ namespace ServicioMigracionWGDB_000.jobs
             {
                 var lastId = PromoGamesGetLastId();
                 var totalForMigration = promogamesDal.GetTotalPromogamesForMigration(lastId);
+                
+
                 var batchCount = (totalForMigration + batchSize - 1) / batchSize;
+                string logMessage = $@"
+    PromoGamesMigration()
+    lastId = {lastId}
+    totalForMigration = {totalForMigration}
+    batchCount = {batchCount}
+";
+                funciones.logueo(logMessage);
                 for (int i = 0; i < batchCount; i++)
                 {
                     int intentos = 100;
@@ -1122,9 +1254,9 @@ namespace ServicioMigracionWGDB_000.jobs
                 funciones.logueo($"Error en metodo PromoGamesMigration - {ex.Message}");
             }
         }
-        public int PromoGamesGetLastId()
+        public long PromoGamesGetLastId()
         {
-            int lastId = 0;
+            long lastId = 0;
             object oEnvio = new
             {
             };
@@ -1138,7 +1270,7 @@ namespace ServicioMigracionWGDB_000.jobs
                     if (httpResponse.IsSuccessStatusCode)
                     {
                         var result = httpResponse.Content.ReadAsStringAsync().Result;
-                        var jsonResult = JsonConvert.DeserializeObject<int>(result);
+                        var jsonResult = JsonConvert.DeserializeObject<long>(result);
                         return jsonResult;
                     }
                 }
@@ -1178,7 +1310,16 @@ namespace ServicioMigracionWGDB_000.jobs
             {
                 var lastId = PromotionsGetLastId();
                 var totalForMigration = promotionsDal.GetTotalPromotionsForMigration(lastId);
+                
+
                 var batchCount = (totalForMigration + batchSize - 1) / batchSize;
+                string logMessage = $@"
+    PromotionsGetLastId()
+    lastId = {lastId}
+    totalForMigration = {totalForMigration}
+    batchCount = {batchCount}
+";
+                funciones.logueo(logMessage);
                 for (int i = 0; i < batchCount; i++)
                 {
                     int intentos = 100;
@@ -1204,9 +1345,9 @@ namespace ServicioMigracionWGDB_000.jobs
                 funciones.logueo($"Error en metodo PromotionsMigration - {ex.Message}");
             }
         }
-        public int PromotionsGetLastId()
+        public long PromotionsGetLastId()
         {
-            int lastId = 0;
+            long lastId = 0;
             object oEnvio = new
             {
             };
@@ -1220,7 +1361,7 @@ namespace ServicioMigracionWGDB_000.jobs
                     if (httpResponse.IsSuccessStatusCode)
                     {
                         var result = httpResponse.Content.ReadAsStringAsync().Result;
-                        var jsonResult = JsonConvert.DeserializeObject<int>(result);
+                        var jsonResult = JsonConvert.DeserializeObject<long>(result);
                         return jsonResult;
                     }
                 }
@@ -1260,7 +1401,16 @@ namespace ServicioMigracionWGDB_000.jobs
             {
                 var lastId = TerminalsGetLastId();
                 var totalForMigration = terminalsDal.GetTotalTerminalsForMigration(lastId);
+                
+
                 var batchCount = (totalForMigration + batchSize - 1) / batchSize;
+                string logMessage = $@"
+    TerminalsMigration()
+    lastId = {lastId}
+    totalForMigration = {totalForMigration}
+    batchCount = {batchCount}
+";
+                funciones.logueo(logMessage);
                 for (int i = 0; i < batchCount; i++)
                 {
                     int intentos = 100;
@@ -1286,9 +1436,9 @@ namespace ServicioMigracionWGDB_000.jobs
                 funciones.logueo($"Error en metodo TerminalsMigration - {ex.Message}");
             }
         }
-        public int TerminalsGetLastId()
+        public long TerminalsGetLastId()
         {
-            int lastId = 0;
+            long lastId = 0;
             object oEnvio = new
             {
             };
@@ -1302,7 +1452,7 @@ namespace ServicioMigracionWGDB_000.jobs
                     if (httpResponse.IsSuccessStatusCode)
                     {
                         var result = httpResponse.Content.ReadAsStringAsync().Result;
-                        var jsonResult = JsonConvert.DeserializeObject<int>(result);
+                        var jsonResult = JsonConvert.DeserializeObject<long>(result);
                         return jsonResult;
                     }
                 }
@@ -1342,7 +1492,16 @@ namespace ServicioMigracionWGDB_000.jobs
             {
                 var lastId = VenuesGetLastId();
                 var totalForMigration = venuesDal.GetTotalVenuesForMigration(lastId);
+                
+
                 var batchCount = (totalForMigration + batchSize - 1) / batchSize;
+                string logMessage = $@"
+    VenuesMigration()
+    lastId = {lastId}
+    totalForMigration = {totalForMigration}
+    batchCount = {batchCount}
+";
+                funciones.logueo(logMessage);
                 for (int i = 0; i < batchCount; i++)
                 {
                     int intentos = 100;
@@ -1368,9 +1527,9 @@ namespace ServicioMigracionWGDB_000.jobs
                 funciones.logueo($"Error en metodo VenuesMigration - {ex.Message}");
             }
         }
-        public int VenuesGetLastId()
+        public long VenuesGetLastId()
         {
-            int lastId = 0;
+            long lastId = 0;
             object oEnvio = new
             {
             };
@@ -1384,7 +1543,7 @@ namespace ServicioMigracionWGDB_000.jobs
                     if (httpResponse.IsSuccessStatusCode)
                     {
                         var result = httpResponse.Content.ReadAsStringAsync().Result;
-                        var jsonResult = JsonConvert.DeserializeObject<int>(result);
+                        var jsonResult = JsonConvert.DeserializeObject<long>(result);
                         return jsonResult;
                     }
                 }

@@ -103,9 +103,9 @@ SELECT [am_movement_id]
             }
             return result;
         }
-        public int GetTotalAccountMovementsForMigration(long lastid)
+        public long GetTotalAccountMovementsForMigration(long lastid)
         {
-            int total = 0;
+            long total = 0;
 
             string query = @"
             select count(*) as total from 
@@ -124,14 +124,14 @@ where am_movement_id > @lastid
                     {
                         if (data.Read())
                         {
-                            total = ManejoNulos.ManageNullInteger(data["total"]);
+                            total = ManejoNulos.ManageNullInteger64(data["total"]);
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                funciones.logueo($"Error metodo GetTotalAccountMovementsForMigration - {ex.Message}");
+                funciones.logueo($"Error metodo GetTotalAccountMovementsForMigration - {ex.Message}", "Error");
                 total = 0;
             }
 

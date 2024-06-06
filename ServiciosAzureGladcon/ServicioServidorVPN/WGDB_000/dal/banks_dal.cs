@@ -24,11 +24,13 @@ namespace ServicioServidorVPN.WGDB_000.dal
             connectionString = $"Data Source={bd_datasource};Initial Catalog={database_name};Integrated Security=False;User ID={bd_username};Password={bd_password}";
 
         }
-        public int SaveBanks(banks item)
+        public bool SaveBanks(banks item)
         {
             //bool respuesta = false;
             int IdInsertado = 0;
             string consulta = @"
+if not exists (select bk_bank_id from [dbo].[banks] where bk_bank_id = @bk_bank_id)
+begin
 INSERT INTO [dbo].[banks]
            ([bk_bank_id]
            ,[bk_area_id]
@@ -50,6 +52,8 @@ INSERT INTO [dbo].[banks]
            ,@bk_shape_w
            ,@bk_shape_h
            ,@bk_play_safe_distance)
+end
+
                       ";
             try
             {
@@ -68,18 +72,19 @@ INSERT INTO [dbo].[banks]
                     query.Parameters.AddWithValue("@bk_play_safe_distance", item.bk_play_safe_distance == null ? DBNull.Value : (object)item.bk_play_safe_distance);
                     //IdInsertado = Convert.ToInt32(query.ExecuteScalar());
                     query.ExecuteNonQuery();
-                    IdInsertado = item.bk_bank_id;
+                    //IdInsertado = item.bk_bank_id;
+                    return true;
                 }
             }
             catch (Exception ex)
             {
-                IdInsertado = 0;
+                funciones.logueo($"Error metodo SaveBanks - {ex.Message}");
             }
-            return IdInsertado;
+            return false;
         }
-        public int GetLastIdInserted()
+        public long GetLastIdInserted()
         {
-            int total = 0;
+            long total = 0;
 
             string query = @"
             select top 1 bk_bank_id as lastid from 
@@ -97,13 +102,14 @@ INSERT INTO [dbo].[banks]
                     {
                         if (data.Read())
                         {
-                            total = (int)data["lastid"];
+                            total = ManejoNulos.ManageNullInteger64(data["lastid"]);
                         }
                     }
                 }
             }
-            catch (Exception exception)
+            catch (Exception ex)
             {
+                funciones.logueo($"Error metodo GetLastIdInserted banks_dal.cs- {ex.Message}", "Error");
                 total = 0;
             }
 

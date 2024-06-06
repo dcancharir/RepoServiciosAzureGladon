@@ -103,9 +103,9 @@ SELECT [cs_session_id]
             }
             return result;
         }
-        public int GetTotalCashierSessionsForMigration(long lastid)
+        public long GetTotalCashierSessionsForMigration(long lastid)
         {
-            int total = 0;
+            long total = 0;
 
             string query = @"
             select count(*) as total from 
@@ -124,13 +124,14 @@ where cs_session_id > @lastid
                     {
                         if (data.Read())
                         {
-                            total = ManejoNulos.ManageNullInteger(data["total"]);
+                            total = ManejoNulos.ManageNullInteger64(data["total"]);
                         }
                     }
                 }
             }
-            catch (Exception exception)
+            catch (Exception ex)
             {
+                funciones.logueo($"Error metodo GetTotalCashierSessionsForMigration - {ex.Message}", "Error");
                 total = 0;
             }
 
