@@ -35,8 +35,8 @@ namespace ServicioMigracionWGDB_000.jobs
             //Crear el disparador(trigger)
             ITrigger trigger = TriggerBuilder.Create()
                 .WithIdentity("TriggerMigracionData", "GrupoTriggerMigracionData")
-                .StartNow()
-                //.WithSchedule(CronScheduleBuilder.DailyAtHourAndMinute(hora.Hour, hora.Minute))
+                //.StartNow()
+                .WithSchedule(CronScheduleBuilder.DailyAtHourAndMinute(hora.Hour, hora.Minute))
                 .ForJob(job)
                 .Build();
             //Programar el trabajo con el disparador

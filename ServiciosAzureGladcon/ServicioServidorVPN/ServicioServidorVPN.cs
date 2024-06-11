@@ -45,11 +45,10 @@ namespace ServicioServidorVPN
         {
             //funciones.logueo("El servicio se ha iniciado");
 
-            //Task.Run(async () =>
-            //{
-            //    MyScheduler schedulerClass = new MyScheduler();
-            //    await schedulerClass.StartMigracionData();
-            //});
+            Task.Run(async () => {
+                MyScheduler schedulerClass = new MyScheduler();
+                await schedulerClass.StartMigracionData();
+            });
             //funciones.logueo("Jobs iniciados");
 
             //temporizador Servers
