@@ -40,16 +40,16 @@ namespace ServicioAzureIAS.DAL {
 	                cc.fechaExpiracionCodigo AS FechaExpiracionCodigo,
 	                cc.fechaCanjeoCodigo AS FechaCanjeoCodigo,
 	                cc.codigoExpirado AS CodigoExpirado,
-	                ac.SalaId AS CodSala,
-	                COALESCE(NULLIF(ac.[codigoPais], ''), '51') AS CodigoPais,
-	                ac.[Celular1] AS NumeroCelular,
+	                s.CodSala AS CodSala,
+	                COALESCE(NULLIF(cc.codigoPais, ''), '51') AS CodigoPais,
+	                cc.NumeroCelular AS NumeroCelular,
 	                s.Nombre AS NombreSala
                 FROM
 	                CMP_Cliente AS cc
+				INNER JOIN
+                    CMP_Campaña AS cca ON cca.id=cc.campania_id
                 INNER JOIN
-                    AST_Cliente AS ac ON cc.cliente_id=ac.Id
-                INNER JOIN
-                    Sala AS s ON s.CodSala = ac.SalaId
+                    Sala AS s ON s.CodSala = cca.sala_id
                 WHERE
 	                codigoCanjeado = 0 AND
 	                codigoExpirado = 0 AND
@@ -92,7 +92,7 @@ namespace ServicioAzureIAS.DAL {
             return lista;
         }
 
-        public int MarcarComoCuponesComoExpirado(List<long> ids) {
+        public int MarcarCuponesComoExpirado(List<long> ids) {
             if(ids.Count == 0) {
                 funciones.logueo($"Intento de marcar cupones como expirados, pero no hay ni un cupon para actualizar, {DateTime.Now}", "Warn");
                 return 0;

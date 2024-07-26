@@ -24,7 +24,7 @@ namespace ServicioAzureIAS.Jobs.CampaniaCliente {
                 return;
             }
 
-            int cuponesRenovados = cmpClienteDal.MarcarComoCuponesComoExpirado(cuponesExpirados.Select(x => x.id).ToList());
+            int cuponesRenovados = cmpClienteDal.MarcarCuponesComoExpirado(cuponesExpirados.Select(x => x.id).ToList());
 
             if(cuponesRenovados > 0) {
                 foreach(var cuponExpirado in cuponesExpirados) {
