@@ -1,59 +1,65 @@
-﻿using System.Collections.Generic;
-using System;
-using System.Configuration;
-using System.Data.SqlClient;
+﻿using Newtonsoft.Json;
 using ServicioAzureIAS.Clases.CampaniaCliente;
-using ServicioAzureIAS.utilitarios;
-using System.Net.Http;
-using System.Management.Instrumentation;
 using ServicioAzureIAS.Clases.Response;
 using ServicioAzureIAS.Clases.WhatsApp;
-using System.Security.Policy;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
+using ServicioAzureIAS.utilitarios;
+using System;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Data.SqlClient;
+using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace ServicioAzureIAS.DAL {
     public class CMP_ClienteDAL {
-        private readonly int _diasExtraCodigoPromocional;
         private readonly string _conexion = string.Empty;
         private readonly HttpClient _httpClient;
 
         public CMP_ClienteDAL() {
-            _diasExtraCodigoPromocional = Convert.ToInt32(ConfigurationManager.AppSettings["DiasExtraCodigoPromocional"]);
             _conexion = ConfigurationManager.ConnectionStrings["conectionBdSeguridad"].ConnectionString;
             _httpClient = new HttpClient();
             _httpClient.BaseAddress = new Uri(ConfigurationManager.AppSettings["UrlIAS"]);
         }
 
-        public List<CMP_ClienteEntidad> ObtenerCuponesExpirados() {
+        public List<CMP_ClienteEntidad> ObtenerCodigosExpirados() {
             List<CMP_ClienteEntidad> lista = new List<CMP_ClienteEntidad>();
             string consulta = @"
                 SELECT
-	                cc.id AS ID,
-	                cc.cliente_id AS ClienteId,
-	                cc.campania_id AS CampaniaId,
-	                cc.fecha_reg AS FechaRegistro,
-	                cc.codigo AS CodigoPromocional,
-	                cc.codigoCanjeado AS CodigoCanjeado,
-	                cc.fechaGeneracionCodigo AS FechaGeneracionCodigo,
-	                cc.fechaExpiracionCodigo AS FechaExpiracionCodigo,
-	                cc.fechaCanjeoCodigo AS FechaCanjeoCodigo,
-	                cc.codigoExpirado AS CodigoExpirado,
-	                s.CodSala AS CodSala,
-	                COALESCE(NULLIF(cc.codigoPais, ''), '51') AS CodigoPais,
-	                cc.NumeroCelular AS NumeroCelular,
-	                s.Nombre AS NombreSala
+                    cc.id AS ID,
+                    cc.cliente_id AS ClienteId,
+                    cc.campania_id AS CampaniaId,
+                    cc.fecha_reg AS FechaRegistro,
+                    cc.codigo AS CodigoPromocional,
+                    cc.codigoCanjeado AS CodigoCanjeado,
+                    cc.fechaGeneracionCodigo AS FechaGeneracionCodigo,
+                    cc.fechaExpiracionCodigo AS FechaExpiracionCodigo,
+                    cc.fechaCanjeoCodigo AS FechaCanjeoCodigo,
+                    cc.codigoExpirado AS CodigoExpirado,
+                    s.CodSala AS CodSala,
+                    COALESCE(NULLIF(cc.codigoPais, ''), '51') AS CodigoPais,
+                    cc.NumeroCelular AS NumeroCelular,
+                    s.Nombre AS NombreSala,
+                    cca.codigoSeReactiva,
+                    cca.mensajeWhatsAppReactivacion,
+                    cca.duracionCodigoDias,
+                    cca.duracionCodigoHoras,
+                    cca.duracionReactivacionCodigoDias,
+                    cca.duracionReactivacionCodigoHoras,
+	                astc.Nombre as NombreCliente,
+	                astc.NombreCompleto AS NombreCompletoCliente
                 FROM
-	                CMP_Cliente AS cc
-				INNER JOIN
+                    CMP_Cliente AS cc
+                INNER JOIN
+                    AST_Cliente AS astc ON astc.Id=cc.cliente_id
+                INNER JOIN
                     CMP_Campaña AS cca ON cca.id=cc.campania_id
                 INNER JOIN
                     Sala AS s ON s.CodSala = cca.sala_id
                 WHERE
-	                codigoCanjeado = 0 AND
-	                codigoExpirado = 0 AND
-	                CONVERT(date, GETDATE()) > fechaExpiracionCodigo
+                    codigoCanjeado = 0 AND
+                    codigoExpirado = 0 AND
+                    CONVERT(datetime, GETDATE()) > fechaExpiracionCodigo
             ";
             try {
                 using(var con = new SqlConnection(_conexion)) {
@@ -78,23 +84,31 @@ namespace ServicioAzureIAS.DAL {
                                     CodigoPais = ManejoNulos.ManageNullStr(dr["CodigoPais"]),
                                     NumeroCelular = ManejoNulos.ManageNullStr(dr["NumeroCelular"]),
                                     NombreSala = ManejoNulos.ManageNullStr(dr["NombreSala"]),
+                                    CodigoSeReactiva = ManejoNulos.ManegeNullBool(dr["codigoSeReactiva"]),
+                                    MensajeWhatsAppReactivacion = ManejoNulos.ManageNullStr(dr["mensajeWhatsAppReactivacion"]),
+                                    DuracionCodigoDias = ManejoNulos.ManageNullInteger(dr["duracionCodigoDias"]),
+                                    DuracionCodigoHoras = ManejoNulos.ManageNullInteger(dr["duracionCodigoHoras"]),
+                                    DuracionReactivacionCodigoDias = ManejoNulos.ManageNullInteger(dr["duracionReactivacionCodigoDias"]),
+                                    DuracionReactivacionCodigoHoras = ManejoNulos.ManageNullInteger(dr["duracionReactivacionCodigoHoras"]),
+                                    Nombre = ManejoNulos.ManageNullStr(dr["NombreCliente"]),
+                                    NombreCompleto = ManejoNulos.ManageNullStr(dr["NombreCompletoCliente"]),
                                 };
                                 lista.Add(detalle);
                             }
                         }
                     }
                 }
-                funciones.logueo($"{lista.Count} cupones expirados, listos para marcar como expirados y renovar fecha de expiración. {DateTime.Now}");
+                funciones.logueo($"{lista.Count} codigos expirados, listos para marcar como expirados y renovar fecha de expiración. {DateTime.Now}");
             } catch(Exception ex) {
-                funciones.logueo($"Error al intentar obtener cupones expirados, {DateTime.Now}\n{ex.Message}", "Error");
+                funciones.logueo($"Error al intentar obtener codigos expirados, {DateTime.Now}\n{ex.Message}", "Error");
                 lista = new List<CMP_ClienteEntidad>();
             }
             return lista;
         }
 
-        public int MarcarCuponesComoExpirado(List<long> ids) {
+        public int MarcarCodigosComoExpirado(List<long> ids) {
             if(ids.Count == 0) {
-                funciones.logueo($"Intento de marcar cupones como expirados, pero no hay ni un cupon para actualizar, {DateTime.Now}", "Warn");
+                funciones.logueo($"Intento de marcar codigos como expirados, pero no hay ni un codigo para actualizar, {DateTime.Now}", "Warn");
                 return 0;
             }
 
@@ -102,15 +116,14 @@ namespace ServicioAzureIAS.DAL {
             int filasAfectadas = 0;
             string consulta = $@"
                 UPDATE
-	                CMP_Cliente
+                    CMP_Cliente
                 SET
-	                codigoExpirado = 1,
-	                fechaExpiracionCodigo = DATEADD(DAY, @diasExtraCodigoPromocional, fechaExpiracionCodigo)
+                    codigoExpirado = 1
                 WHERE
-	                codigoCanjeado = 0 AND
-	                codigoExpirado = 0 AND
-	                CONVERT(date, GETDATE()) > fechaExpiracionCodigo AND
-	                id IN ({idsStr})
+                    codigoCanjeado = 0 AND
+                    codigoExpirado = 0 AND
+                    CONVERT(datetime, GETDATE()) > fechaExpiracionCodigo AND
+                    id IN ({idsStr})
 
                 SELECT @@ROWCOUNT
             ";
@@ -118,12 +131,49 @@ namespace ServicioAzureIAS.DAL {
                 using(var con = new SqlConnection(_conexion)) {
                     con.Open();
                     var query = new SqlCommand(consulta, con);
-                    query.Parameters.AddWithValue("@diasExtraCodigoPromocional", _diasExtraCodigoPromocional);
                     filasAfectadas = Convert.ToInt32(query.ExecuteScalar());
                 }
-                funciones.logueo($"{filasAfectadas} cupones marcados como expirados y renovados: {idsStr}. {DateTime.Now}");
+                funciones.logueo($"{filasAfectadas} codigos marcados como expirados: {idsStr}. {DateTime.Now}");
             } catch(Exception ex) {
-                funciones.logueo($"Error al intentar marcar los cupones como expirados, {DateTime.Now}\n{ex.Message}", "Error");
+                funciones.logueo($"Error al intentar marcar los codigos como expirados, {DateTime.Now}\n{ex.Message}", "Error");
+                filasAfectadas = 0;
+            }
+            return filasAfectadas;
+        }
+
+        public int MarcarCodigosComoExpiradoConReactivacion(List<long> ids, int diasExtraCodigoPromocional, int horasExtraCodigoPromocional) {
+            if(ids.Count == 0) {
+                funciones.logueo($"Intento de marcar codigos como expirados con renovacion, pero no hay ni un codigo para actualizar, {DateTime.Now}", "Warn");
+                return 0;
+            }
+
+            string idsStr = string.Join(",", ids);
+            int filasAfectadas = 0;
+            string consulta = $@"
+                UPDATE
+                    CMP_Cliente
+                SET
+                    codigoExpirado = 1,
+                    fechaExpiracionCodigo = DATEADD(HOUR, @horasExtraCodigoPromocional, DATEADD(DAY, @diasExtraCodigoPromocional, fechaExpiracionCodigo))
+                WHERE
+                    codigoCanjeado = 0 AND
+                    codigoExpirado = 0 AND
+                    CONVERT(datetime, GETDATE()) > fechaExpiracionCodigo AND
+                    id IN ({idsStr})
+
+                SELECT @@ROWCOUNT
+            ";
+            try {
+                using(var con = new SqlConnection(_conexion)) {
+                    con.Open();
+                    var query = new SqlCommand(consulta, con);
+                    query.Parameters.AddWithValue("@diasExtraCodigoPromocional", diasExtraCodigoPromocional);
+                    query.Parameters.AddWithValue("@horasExtraCodigoPromocional", horasExtraCodigoPromocional);
+                    filasAfectadas = Convert.ToInt32(query.ExecuteScalar());
+                }
+                funciones.logueo($"{filasAfectadas} codigos marcados como expirados y reactivados: {idsStr}. {DateTime.Now}");
+            } catch(Exception ex) {
+                funciones.logueo($"Error al intentar marcar los codigos como expirados y reactivados, {DateTime.Now}\n{ex.Message}", "Error");
                 filasAfectadas = 0;
             }
             return filasAfectadas;
@@ -139,10 +189,10 @@ namespace ServicioAzureIAS.DAL {
                 var responseServer = await _httpClient.PostAsync(url, contentRequest);
                 var content = await responseServer.Content.ReadAsStringAsync();
                 response = JsonConvert.DeserializeObject<ResponseEntidad<WSP_UltraMsgResponse>>(content);
-                string message = response.success ? $"Mensaje enviado correctamente por whatsapp a cliente con cupon expirado, {DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss")}\nCodSala: {sendMessage.CodSala}\nNumero: {sendMessage.PhoneNumber}\nMensaje: {sendMessage.Message}" : response.displayMessage;
+                string message = response.success ? $"Mensaje enviado correctamente por whatsapp a cliente con codigo expirado, {DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss")}\nCodSala: {sendMessage.CodSala}\nNumero: {sendMessage.PhoneNumber}\nMensaje: {sendMessage.Message}" : response.displayMessage;
                 funciones.logueo(message);
             } catch(Exception ex) {
-                funciones.logueo($"Error al enviar mensaje por whatsapp a cliente con cupon expirado, {DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss")}\nCodSala: {sendMessage.CodSala}\nNumero: {sendMessage.PhoneNumber}\nMensaje: {sendMessage.Message}\nError Message: {ex.Message}","Error");
+                funciones.logueo($"Error al enviar mensaje por whatsapp a cliente con codigo expirado, {DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss")}\nCodSala: {sendMessage.CodSala}\nNumero: {sendMessage.PhoneNumber}\nMensaje: {sendMessage.Message}\nError Message: {ex.Message}", "Error");
             }
             return response;
         }

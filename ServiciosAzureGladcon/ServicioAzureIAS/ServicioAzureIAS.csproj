@@ -137,7 +137,7 @@
     <Compile Include="DAL\maquinas_auditDAL.cs" />
     <Compile Include="DAL\Mincetur\MinceturDAL.cs" />
     <Compile Include="DAL\salaDAL.cs" />
-    <Compile Include="Jobs\CampaniaCliente\VerificarCuponesPromocionales.cs" />
+    <Compile Include="Jobs\CampaniaCliente\VerificarCodigosPromocionales.cs" />
     <Compile Include="Jobs\EstadoServicioSala\JobEstadoServicioSala.cs" />
     <Compile Include="Jobs\LimpiarLogIAS\LimpiarLogSeguridadPJ.cs" />
     <Compile Include="Jobs\ControlAccesoLudopata\SincronizarLudopatasMincetur.cs" />
@@ -151,7 +151,7 @@
       <DependentUpon>ProjectInstaller.cs</DependentUpon>
     </Compile>
     <Compile Include="Schedulers\ActualizarLudopatasScheduler.cs" />
-    <Compile Include="Schedulers\VerificarCuponesPromocionalesScheduler.cs" />
+    <Compile Include="Schedulers\VerificarCodigosPromocionalesScheduler.cs" />
     <Compile Include="Schedulers\LimpiarLogIASScheduler.cs" />
     <Compile Include="Schedulers\RegistroProgresivoScheduler.cs" />
     <Compile Include="Schedulers\ReporteAlertaBilleterosScheduler.cs" />

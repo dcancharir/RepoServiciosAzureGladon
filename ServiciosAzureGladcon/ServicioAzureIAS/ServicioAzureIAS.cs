@@ -54,7 +54,7 @@ namespace ServicioAzureIAS {
                 await new ReporteAlertaBilleterosScheduler().Start_RP_ReporteAlertaBilleteros();
                 await new RegistroProgresivoScheduler().Start_RP_LimpiarHistorialJob();
                 await new LimpiarLogIASScheduler().Start_LimpiarLogIAS();
-                await new VerificarCuponesPromocionalesScheduler().Start_VerificacionCupones();
+                await new VerificarCodigosPromocionalesScheduler().Start_VerificacionCodigos();
                 await new ActualizarLudopatasScheduler().Start_ActualizarLudopatas();
             });
 
