@@ -41,6 +41,12 @@ namespace ServicioServidorVPN
         private readonly MarcasDAL _marcasDAL=new MarcasDAL();
         private readonly TCM_ModeloDAL _modeloDAL=new TCM_ModeloDAL();
 
+        //Nuevo Sorteos
+        private readonly SorteoSalaDAL _nuevoSorteoSalaDAL = new SorteoSalaDAL();
+        private readonly SesionDAL _nuevoSesionDAL = new SesionDAL();
+        private readonly SesionSorteoSalaDAL _nuevoSesionSorteoSalaDAL = new SesionSorteoSalaDAL();
+        private readonly JugadaDAL _nuevoJugadaDAL = new JugadaDAL();
+
         [HttpPost]
         public IHttpActionResult DevolverDatos()
         {
@@ -1144,5 +1150,123 @@ namespace ServicioServidorVPN
             }
         }
         #endregion
+        [HttpPost]
+        public IHttpActionResult NuevoRecepcionarDataMigracion(dynamic jsonData)
+        {
+
+
+            bool recepcionado = true;
+            List<Sesion> listaSesiones = new List<Sesion>();
+            List<SesionSorteoSala> listaDetalles = new List<SesionSorteoSala>();
+            List<SorteoSala> listaSorteos = new List<SorteoSala>();
+            int CodSala = 0;
+            string NombreSala = string.Empty;
+            int sesionesRegistradas = 0;
+            try
+            {
+                dynamic items = jsonData;
+                if(items.codSala != null)
+                {
+                    CodSala = items.codSala.ToObject<int>();
+                }
+                if(items.sesiones != null)
+                {
+                    listaSesiones = items.sesiones.ToObject<List<Sesion>>();
+                }
+
+                if(items.detalles != null)
+                {
+                    listaDetalles = items.detalles.ToObject<List<SesionSorteoSala>>();
+                }
+                if(items.nombreSala != null)
+                {
+                    NombreSala = items.nombreSala.ToObject<string>();
+                }
+                if(items.sorteosActivos != null)
+                {
+                    listaSorteos = items.sorteosActivos.ToObject<List<SorteoSala>>();
+                }
+                foreach(var item in listaSesiones)
+                {
+                    item.CodSala = CodSala;
+                    int registrado = _nuevoSesionDAL.GuardarSesion(item);
+                    if(registrado > 0)
+                    {
+                        sesionesRegistradas++;
+                        var detallesSesion = listaDetalles.Where(x => x.SesionId == item.SesionId).ToList();
+                        foreach(var det in detallesSesion)
+                        {
+                            det.CodSala = CodSala;
+                            int detalleRegistrado = _nuevoSesionSorteoSalaDAL.GuardarSesionSorteSala(det);
+
+                            var jugada = det.Jugada;
+                            jugada.JugadaId = det.JugadaId;
+                            jugada.CodSala = CodSala;
+                            int jugadaRegistrada = _nuevoJugadaDAL.GuardarJugada(jugada);
+                        }
+                    }
+
+                }
+                foreach(var item in listaSorteos)
+                {
+                    item.CodSala = CodSala;
+                    int registrado = _nuevoSorteoSalaDAL.GuardarSorteoSala(item);
+                }
+
+                if(sesionesRegistradas > 0)
+                {
+                    var cabeceras = from sesion in listaSesiones
+                                    group sesion by new
+                                    {
+                                        sesion.NroDocumento,
+                                        sesion.NombreTipoDocumento,
+                                        sesion.TipoDocumentoId
+                                    } into grupo
+                                    select new
+                                    {
+                                        NroDocumento = grupo.Key.NroDocumento,
+                                        nombretipodocumento = grupo.Key.NombreTipoDocumento,
+                                        tipodocumentoid = grupo.Key.TipoDocumentoId,
+                                        CantidadSesiones = grupo.Count(),
+                                        NombreCliente = grupo.Max(s => s.NombreCliente),
+                                        Mail = grupo.Max(s => s.Mail),
+                                        ClienteIdIas = grupo.Max(s => s.ClienteIdIas),
+                                        PrimeraSesion = grupo.Min(s => s.FechaInicio),
+                                        UltimaSesion = grupo.Max(s => s.FechaInicio)
+                                    };
+
+                    foreach(var cabecera in cabeceras)
+                    {
+                        CMP_SesionCliente sesionClienteInsertar = new CMP_SesionCliente()
+                        {
+                            NroDocumento = cabecera.NroDocumento,
+                            NombreTipoDocumento = cabecera.nombretipodocumento,
+                            TipoDocumentoId = cabecera.tipodocumentoid,
+                            CantidadSesiones = cabecera.CantidadSesiones,
+                            NombreCliente = cabecera.NombreCliente,
+                            Mail = cabecera.Mail,
+                            PrimeraSesion = Convert.ToDateTime(cabecera.PrimeraSesion),
+                            CodSala = CodSala,
+                            UltimaSesion = Convert.ToDateTime(cabecera.UltimaSesion)
+                        };
+                        _sesionClienteDAL.GuardarSesionCliente(sesionClienteInsertar);
+                    }
+                }
+
+                Sala sala = new Sala()
+                {
+                    CodSala = CodSala,
+                    Nombre = NombreSala
+                };
+
+                _salaDAL.GuardarSala(sala);
+
+                return Json(new { respuesta = true });
+            } catch(Exception ex)
+            {
+                funciones.logueo("ERROR  - RecepcionarDataMigracion " + ex.Message, "Error");
+                return Json(new { respuesta = false });
+            }
+        }
     }
 }
