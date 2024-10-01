@@ -1213,45 +1213,45 @@ namespace ServicioServidorVPN
                     int registrado = _nuevoSorteoSalaDAL.GuardarSorteoSala(item);
                 }
 
-                if(sesionesRegistradas > 0)
-                {
-                    var cabeceras = from sesion in listaSesiones
-                                    group sesion by new
-                                    {
-                                        sesion.NroDocumento,
-                                        sesion.NombreTipoDocumento,
-                                        sesion.TipoDocumentoId
-                                    } into grupo
-                                    select new
-                                    {
-                                        NroDocumento = grupo.Key.NroDocumento,
-                                        nombretipodocumento = grupo.Key.NombreTipoDocumento,
-                                        tipodocumentoid = grupo.Key.TipoDocumentoId,
-                                        CantidadSesiones = grupo.Count(),
-                                        NombreCliente = grupo.Max(s => s.NombreCliente),
-                                        Mail = grupo.Max(s => s.Mail),
-                                        ClienteIdIas = grupo.Max(s => s.ClienteIdIas),
-                                        PrimeraSesion = grupo.Min(s => s.FechaInicio),
-                                        UltimaSesion = grupo.Max(s => s.FechaInicio)
-                                    };
+                //if(sesionesRegistradas > 0)
+                //{
+                //    var cabeceras = from sesion in listaSesiones
+                //                    group sesion by new
+                //                    {
+                //                        sesion.NroDocumento,
+                //                        sesion.NombreTipoDocumento,
+                //                        sesion.TipoDocumentoId
+                //                    } into grupo
+                //                    select new
+                //                    {
+                //                        NroDocumento = grupo.Key.NroDocumento,
+                //                        nombretipodocumento = grupo.Key.NombreTipoDocumento,
+                //                        tipodocumentoid = grupo.Key.TipoDocumentoId,
+                //                        CantidadSesiones = grupo.Count(),
+                //                        NombreCliente = grupo.Max(s => s.NombreCliente),
+                //                        Mail = grupo.Max(s => s.Mail),
+                //                        ClienteIdIas = grupo.Max(s => s.ClienteIdIas),
+                //                        PrimeraSesion = grupo.Min(s => s.FechaInicio),
+                //                        UltimaSesion = grupo.Max(s => s.FechaInicio)
+                //                    };
 
-                    foreach(var cabecera in cabeceras)
-                    {
-                        CMP_SesionCliente sesionClienteInsertar = new CMP_SesionCliente()
-                        {
-                            NroDocumento = cabecera.NroDocumento,
-                            NombreTipoDocumento = cabecera.nombretipodocumento,
-                            TipoDocumentoId = cabecera.tipodocumentoid,
-                            CantidadSesiones = cabecera.CantidadSesiones,
-                            NombreCliente = cabecera.NombreCliente,
-                            Mail = cabecera.Mail,
-                            PrimeraSesion = Convert.ToDateTime(cabecera.PrimeraSesion),
-                            CodSala = CodSala,
-                            UltimaSesion = Convert.ToDateTime(cabecera.UltimaSesion)
-                        };
-                        _sesionClienteDAL.GuardarSesionCliente(sesionClienteInsertar);
-                    }
-                }
+                //    foreach(var cabecera in cabeceras)
+                //    {
+                //        CMP_SesionCliente sesionClienteInsertar = new CMP_SesionCliente()
+                //        {
+                //            NroDocumento = cabecera.NroDocumento,
+                //            NombreTipoDocumento = cabecera.nombretipodocumento,
+                //            TipoDocumentoId = cabecera.tipodocumentoid,
+                //            CantidadSesiones = cabecera.CantidadSesiones,
+                //            NombreCliente = cabecera.NombreCliente,
+                //            Mail = cabecera.Mail,
+                //            PrimeraSesion = Convert.ToDateTime(cabecera.PrimeraSesion),
+                //            CodSala = CodSala,
+                //            UltimaSesion = Convert.ToDateTime(cabecera.UltimaSesion)
+                //        };
+                //        _sesionClienteDAL.GuardarSesionCliente(sesionClienteInsertar);
+                //    }
+                //}
 
                 Sala sala = new Sala()
                 {
