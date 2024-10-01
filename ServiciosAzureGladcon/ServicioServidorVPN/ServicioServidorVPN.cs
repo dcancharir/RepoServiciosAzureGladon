@@ -43,13 +43,13 @@ namespace ServicioServidorVPN
 
         protected override void OnStart(string[] args)
         {
-            //funciones.logueo("El servicio se ha iniciado");
+            funciones.logueo("El servicio se ha iniciado");
 
             Task.Run(async () => {
                 MyScheduler schedulerClass = new MyScheduler();
                 await schedulerClass.StartMigracionData();
             });
-            //funciones.logueo("Jobs iniciados");
+            funciones.logueo("Jobs iniciados");
 
             //temporizador Servers
             temporizadorServer.Elapsed += new ElapsedEventHandler(timerfuncionServer);
