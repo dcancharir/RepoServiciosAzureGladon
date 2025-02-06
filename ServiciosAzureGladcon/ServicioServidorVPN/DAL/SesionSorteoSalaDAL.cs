@@ -3,6 +3,7 @@ using ServicioServidorVPN.utilitarios;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
@@ -59,5 +60,87 @@ VALUES
             }
             return idInsertado;
         }
+        public bool GuardarSesionSorteSalaBulk(List<SesionSorteoSala> items) {
+            bool respuesta = false;
+
+
+            try {
+                // Crear DataTable con la estructura exacta de la tabla
+                DataTable dataTable = new DataTable();
+                dataTable.Columns.Add("SesionId", typeof(long));
+                dataTable.Columns.Add("SorteoId", typeof(long));
+                dataTable.Columns.Add("JugadaId", typeof(long));
+                dataTable.Columns.Add("CodSala", typeof(int));
+                dataTable.Columns.Add("CantidadCupones", typeof(int));
+                dataTable.Columns.Add("FechaRegistro", typeof(DateTime));
+                dataTable.Columns.Add("SerieIni", typeof(string));
+                dataTable.Columns.Add("SerieFin", typeof(string));
+                dataTable.Columns.Add("NombreSorteo", typeof(string));
+                dataTable.Columns.Add("CondicionWin", typeof(decimal));
+                dataTable.Columns.Add("WinCalculado", typeof(decimal));
+                dataTable.Columns.Add("CondicionBet", typeof(decimal));
+                dataTable.Columns.Add("BetCalculado", typeof(decimal));
+                dataTable.Columns.Add("TopeCuponesxJugada", typeof(int));
+                dataTable.Columns.Add("ParametrosImpresion", typeof(string));
+                dataTable.Columns.Add("Factor", typeof(decimal));
+                dataTable.Columns.Add("DescartePorFactor", typeof(decimal));
+
+                // Llenar el DataTable con los datos
+                foreach (var item in items) {
+                    dataTable.Rows.Add(
+                        item.SesionId,
+                        item.SorteoId,
+                        item.JugadaId,
+                        item.CodSala,
+                        item.CantidadCupones,
+                        item.FechaRegistro ?? (object)DBNull.Value,
+                        string.IsNullOrEmpty(item.SerieIni) ? (object)DBNull.Value : item.SerieIni,
+                        string.IsNullOrEmpty(item.SerieFin) ? (object)DBNull.Value : item.SerieFin,
+                        string.IsNullOrEmpty(item.NombreSorteo) ? (object)DBNull.Value : item.NombreSorteo,
+                        Convert.ToDecimal(item.CondicionWin),
+                        Convert.ToDecimal(item.WinCalculado),
+                        Convert.ToDecimal(item.CondicionBet),
+                        Convert.ToDecimal(item.BetCalculado),
+                        item.TopeCuponesxJugada ?? (object)DBNull.Value,
+                        string.IsNullOrEmpty(item.ParametrosImpresion) ? (object)DBNull.Value : item.ParametrosImpresion,
+                        Convert.ToDecimal(item.Factor),
+                        Convert.ToDecimal(item.DescartePorFactor)
+                    );
+                }
+
+                using (SqlConnection connection = new SqlConnection(_conexion)) {
+                    connection.Open();
+
+                    using (SqlBulkCopy bulkCopy = new SqlBulkCopy(connection)) {
+                        // Configurar el destino y mapeos
+                        bulkCopy.DestinationTableName = "SesionSorteoSala";
+
+                        // Mapear todas las columnas
+                        foreach (DataColumn column in dataTable.Columns) {
+                            bulkCopy.ColumnMappings.Add(column.ColumnName, column.ColumnName);
+                        }
+
+                        //// Configurar opciones de rendimiento
+                        bulkCopy.BatchSize = 5000;
+                        bulkCopy.BulkCopyTimeout = 120; // 2 minutos
+
+                        try {
+                            bulkCopy.WriteToServer(dataTable);
+                        }
+                        catch (Exception ex) {
+                            throw new Exception($"Error en el bulk insert de SesionSorteoSala: {ex.Message}", ex);
+                        }
+                    }
+                }
+                respuesta = true;
+            }
+            catch (Exception ex) {
+                funciones.logueo($"Error metodo GuardarSesionSorteSalaBulk() {ex.Message}");
+                respuesta = false;
+            }
+            return respuesta;
+        }
+
+
     }
 }

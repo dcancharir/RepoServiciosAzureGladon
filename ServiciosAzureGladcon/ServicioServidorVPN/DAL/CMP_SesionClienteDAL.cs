@@ -46,7 +46,7 @@ end
 else
 begin
 update [dbo].[CMP_SesionClienteMigracion] set cantidadSesiones=@cantidad WHERE trim(NroDocumento)=trim(@NroDocumento) and TipoDocumentoId=@TipoDocumentoId and CodSala=@CodSala
-update [dbo].[CMP_SesionClienteMigracion] set UltimaSesion= (Select max(FechaInicio) from CMP_Sesion (nolock) where trim(NroDocumento)=trim(@NroDocumento) and TipoDocumentoId=@TipoDocumentoId and CodSala=@CodSala)
+update [dbo].[CMP_SesionClienteMigracion] set UltimaSesion=@UltimaSesion WHERE trim(NroDocumento)=trim(@NroDocumento) and TipoDocumentoId=@TipoDocumentoId and CodSala=@CodSala
     select 0
 end
 
