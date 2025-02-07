@@ -5,6 +5,7 @@ using System;
 using System.Configuration;
 using System.IO;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ServicioAzureIAS.Service {
@@ -14,6 +15,7 @@ namespace ServicioAzureIAS.Service {
 
         public MinceturService() {
             HttpClient = new HttpClient();
+            HttpClient.Timeout = Timeout.InfiniteTimeSpan;
             UriLudopatasMincetur = ConfigurationManager.AppSettings["UriLudopatasMincetur"];
         }
 
@@ -26,7 +28,13 @@ namespace ServicioAzureIAS.Service {
                 string contentResponse = await responseServer.Content.ReadAsStringAsync();
                 response = JsonConvert.DeserializeObject<ResponseMinceturLudopata>(contentResponse) ?? new ResponseMinceturLudopata();
             } catch(Exception ex) {
-                funciones.logueo("Error al obtener padron de ludopatas de MINCETUR: " + ex.Message);
+                string errorDetail = $"Error al obtener padrón de ludópatas de MINCETUR.\n" +
+                                     $"URL: {url}\n" +
+                                     $"Credencial: {credencial}\n" +
+                                     $"Mensaje: {ex.Message}\n" +
+                                     $"InnerException: {ex.InnerException?.Message}\n" +
+                                     $"StackTrace: {ex.StackTrace}";
+                funciones.logueo(errorDetail);
                 response = new ResponseMinceturLudopata();
             }
 
