@@ -50,6 +50,7 @@ namespace ServicioAzureIAS {
             funciones.logueo("El servicio se ha iniciado");
 
             Task.Run(async () => {
+                await new SincronizarBukScheduler().Start_SincronizarBuk();
                 await new MyScheduler().StartEstadoEnvioSalaJob();
                 await new ReporteAlertaBilleterosScheduler().Start_RP_ReporteAlertaBilleteros();
                 await new RegistroProgresivoScheduler().Start_RP_LimpiarHistorialJob();

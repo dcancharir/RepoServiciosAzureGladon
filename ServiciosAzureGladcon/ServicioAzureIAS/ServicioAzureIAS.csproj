@@ -101,6 +101,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Clases\BUK\BUK_Cargo.cs" />
+    <Compile Include="Clases\BUK\BUK_Empleado.cs" />
+    <Compile Include="Clases\BUK\BUK_EquivalenciaEmpresa.cs" />
+    <Compile Include="Clases\BUK\BUK_HistorialCambiosEmpleado.cs" />
     <Compile Include="Clases\CampaniaCliente\CMP_ClienteEntidad.cs" />
     <Compile Include="Clases\Email\Destinatario.cs" />
     <Compile Include="Clases\Email\SmtpClientSingleton.cs" />
@@ -124,6 +128,10 @@
     <Compile Include="Clases\Sala\SalaEntidad.cs" />
     <Compile Include="Clases\WhatsApp\WSP_SendMessage.cs" />
     <Compile Include="Clases\WhatsApp\WSP_UltraMsgResponse.cs" />
+    <Compile Include="DAL\BUK\BUK_CargoDAL.cs" />
+    <Compile Include="DAL\BUK\BUK_EmpleadoDAL.cs" />
+    <Compile Include="DAL\BUK\BUK_EquivalenciaEmpresaDAL.cs" />
+    <Compile Include="DAL\BUK\BUK_HistorialCambiosEmpleadoDAL.cs" />
     <Compile Include="DAL\ControlAcceso\LudopataDAL.cs" />
     <Compile Include="DAL\CMP_ClienteDAL.cs" />
     <Compile Include="DAL\consolidadoDAL.cs" />
@@ -137,6 +145,7 @@
     <Compile Include="DAL\maquinas_auditDAL.cs" />
     <Compile Include="DAL\Mincetur\MinceturDAL.cs" />
     <Compile Include="DAL\salaDAL.cs" />
+    <Compile Include="Jobs\BUK\JobSincronizarBuk.cs" />
     <Compile Include="Jobs\CampaniaCliente\VerificarCodigosPromocionales.cs" />
     <Compile Include="Jobs\EstadoServicioSala\JobEstadoServicioSala.cs" />
     <Compile Include="Jobs\LimpiarLogIAS\LimpiarLogSeguridadPJ.cs" />
@@ -151,6 +160,7 @@
       <DependentUpon>ProjectInstaller.cs</DependentUpon>
     </Compile>
     <Compile Include="Schedulers\ActualizarLudopatasScheduler.cs" />
+    <Compile Include="Schedulers\SincronizarBukScheduler.cs" />
     <Compile Include="Schedulers\VerificarCodigosPromocionalesScheduler.cs" />
     <Compile Include="Schedulers\LimpiarLogIASScheduler.cs" />
     <Compile Include="Schedulers\RegistroProgresivoScheduler.cs" />
@@ -166,6 +176,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServicioController.cs" />
+    <Compile Include="utilitarios\BUK_Response.cs" />
     <Compile Include="utilitarios\CheckPortHelper.cs" />
     <Compile Include="utilitarios\ErrorLinea.cs" />
     <Compile Include="utilitarios\funciones.cs" />
