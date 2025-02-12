@@ -22,7 +22,7 @@ namespace ServicioServidorVPN.DAL
             //bool respuesta = false;
             int IdInsertado = 0;
             string consulta = @"
-IF not EXISTS (SELECT * FROM [dbo].[CMP_Sesion] (nolock) WHERE SesionId=@SesionId and CodSala=@CodSala)
+IF not EXISTS (SELECT 1 FROM [dbo].[CMP_Sesion] (nolock) WHERE SesionId=@SesionId and CodSala=@CodSala)
 begin
     INSERT INTO [dbo].[CMP_Sesion]
            ([SesionId],[CodSala],[CodMaquina]
@@ -45,7 +45,7 @@ end
 else
 
 begin
-    select 0
+    select -1
 end
 
                       ";

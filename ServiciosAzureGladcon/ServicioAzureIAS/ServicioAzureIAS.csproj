@@ -118,6 +118,7 @@
     <Compile Include="Clases\GladconData\maquina.cs" />
     <Compile Include="Clases\GladconData\maquinas_audit.cs" />
     <Compile Include="Clases\GladconData\sala.cs" />
+    <Compile Include="Clases\Ludopata\HistorialLudopata.cs" />
     <Compile Include="Clases\Ludopata\Ludopata.cs" />
     <Compile Include="Clases\Ludopata\ContactoLudopata.cs" />
     <Compile Include="Clases\Mincetur\CredencialMincetur.cs" />
@@ -128,6 +129,7 @@
     <Compile Include="Clases\Sala\SalaEntidad.cs" />
     <Compile Include="Clases\WhatsApp\WSP_SendMessage.cs" />
     <Compile Include="Clases\WhatsApp\WSP_UltraMsgResponse.cs" />
+    <Compile Include="DAL\ControlAcceso\HistorialLudopataDAL.cs" />
     <Compile Include="DAL\BUK\BUK_CargoDAL.cs" />
     <Compile Include="DAL\BUK\BUK_EmpleadoDAL.cs" />
     <Compile Include="DAL\BUK\BUK_EquivalenciaEmpresaDAL.cs" />

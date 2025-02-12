@@ -71,6 +71,9 @@ namespace ServicioServidorVPN
                 {
                     CodSala = items.codSala.ToObject<int>();
                 }
+                if (CodSala == 0) {
+                    return Json(new { respuesta = false });
+                }
                 if (items.sesiones != null)
                 {
                     listaSesiones= items.sesiones.ToObject<List<CMP_Sesion>>();
@@ -88,10 +91,15 @@ namespace ServicioServidorVPN
                 {
                     listaSorteos = items.sorteosActivos.ToObject<List<CMP_SorteoSala>>();
                 }
+              
                 foreach (var item in listaSesiones)
                 {
                     item.CodSala = CodSala;
                     int registrado = _sesionDAL.GuardarSesion(item);
+                    if(registrado == -1) {
+                        sesionesRegistradas++;
+                        continue;
+                    }
                     if (registrado > 0)
                     {
                         sesionesRegistradas++;
@@ -114,7 +122,9 @@ namespace ServicioServidorVPN
                     item.CodSala = CodSala;
                     int registrado = _sorteoSalaDAL.GuardarSorteoSala(item);
                 }
-
+                if(sesionesRegistradas != listaSesiones.Count) {
+                    return Json(new { respuesta = false });
+                }
                 if (sesionesRegistradas > 0)
                 {
                     var cabeceras = from sesion in listaSesiones
@@ -1151,7 +1161,7 @@ namespace ServicioServidorVPN
         }
         #endregion
         [HttpPost]
-        public IHttpActionResult NuevoRecepcionarDataMigracion(dynamic jsonData)
+        public IHttpActionResult NuevoRecepcionarDataMigracion2(dynamic jsonData)
         {
 
 
@@ -1268,5 +1278,120 @@ namespace ServicioServidorVPN
                 return Json(new { respuesta = false });
             }
         }
+        [HttpPost]
+        public IHttpActionResult NuevoRecepcionarDataMigracion(dynamic jsonData) {
+            bool respuesta = false;
+            List<Sesion> listaSesiones = new List<Sesion>();
+            List<SesionSorteoSala> listaDetalles = new List<SesionSorteoSala>();
+            List<SorteoSala> listaSorteos = new List<SorteoSala>();
+            int CodSala = 0;
+            string NombreSala = string.Empty;
+            int sesionesRegistradas = 0;
+            try {
+                dynamic items = jsonData;
+                if (items.codSala != null) {
+                    CodSala = items.codSala.ToObject<int>();
+                }
+                if (CodSala == 0) {
+                    return Json(new { respuesta = false });
+                }
+                if (items.sesiones != null) {
+                    listaSesiones = items.sesiones.ToObject<List<Sesion>>();
+                }
+
+                if (items.detalles != null) {
+                    listaDetalles = items.detalles.ToObject<List<SesionSorteoSala>>();
+                }
+                if (items.nombreSala != null) {
+                    NombreSala = items.nombreSala.ToObject<string>();
+                }
+                if (items.sorteosActivos != null) {
+                    listaSorteos = items.sorteosActivos.ToObject<List<SorteoSala>>();
+                }
+                foreach (var item in listaSesiones) {
+                    item.CodSala = CodSala;
+                    var existeSesion = _nuevoSesionDAL.ExisteSesion(item.SesionId, CodSala);
+                    if(existeSesion == 1) {
+                        //La sesion se encuentra en base de datos de dw, borrar la data y volverla a insertar
+                        _nuevoSesionDAL.EliminarTodoPorSesionYSala(item.SesionId, CodSala);
+                    }
+                    int registrado = _nuevoSesionDAL.GuardarSesionSiNoExiste(item);
+                    if (registrado > 0) {
+                   
+                        var detalles = listaDetalles.Where(x => x.SesionId == item.SesionId).ToList();
+
+                        foreach(var det in detalles) {
+                            det.Jugada.JugadaId = det.JugadaId;
+                            det.Jugada.CodSala = CodSala;
+                            det.CodSala = CodSala;
+                        }
+
+                        //var detallesSesion = detalles.Select(x=>new SesionSorteoSala {
+                        //    SesionId = x.SesionId,
+                        //    SorteoId = x.SorteoId,
+                        //    JugadaId = x.JugadaId,
+                        //    CantidadCupones = x.CantidadCupones,
+                        //    FechaRegistro = x.FechaRegistro,
+                        //    SerieIni = x.SerieIni,
+                        //    SerieFin = x.SerieFin,
+                        //    NombreSorteo = x.NombreSorteo,
+                        //    CondicionWin = x.CondicionWin,
+                        //    WinCalculado = x.WinCalculado,
+                        //    CondicionBet = x.CondicionBet,
+                        //    BetCalculado = x.BetCalculado,
+                        //    TopeCuponesxJugada = x.TopeCuponesxJugada,
+                        //    ParametrosImpresion = x.ParametrosImpresion,
+                        //    Factor = x.Factor,
+                        //    DescartePorFactor = x.DescartePorFactor,
+                        //    CodSala = CodSala
+                        //}).ToList();
+
+                        bool respuestaSesionSorteoSala = _nuevoSesionSorteoSalaDAL.GuardarSesionSorteSalaBulk(detalles);
+                        if(respuestaSesionSorteoSala == false) {
+                            _nuevoSesionDAL.EliminarTodoPorSesionYSala(item.SesionId, CodSala);
+                            continue;
+                        }
+
+                        var jugadas = detalles.Select(x => x.Jugada).ToList();
+
+                        // Eliminar duplicados basándose en JugadaId (dejando el primero de cada duplicado)
+                        var jugadasSinDuplicados = jugadas
+                            .GroupBy(j => j.JugadaId)
+                            .Select(g => g.First()) // Selecciona el primer elemento de cada grupo
+                            .ToList();
+
+                        bool respuestaJugadas = _nuevoJugadaDAL.GuardarJugadaBulk(jugadasSinDuplicados);
+                        if (respuestaJugadas == false) {
+                            _nuevoSesionDAL.EliminarTodoPorSesionYSala(item.SesionId, CodSala);
+                            continue;
+                        }
+                        sesionesRegistradas++;
+                    }
+                
+                }
+                foreach (var item in listaSorteos) {
+                    item.CodSala = CodSala;
+                    int registrado = _nuevoSorteoSalaDAL.GuardarSorteoSala(item);
+                }
+
+                Sala sala = new Sala() {
+                    CodSala = CodSala,
+                    Nombre = NombreSala
+                };
+
+                _salaDAL.GuardarSala(sala);
+                if(sesionesRegistradas == listaSesiones.Count) {
+                    respuesta = true;
+                }
+
+                return Json(new { respuesta =respuesta });
+            }
+            catch (Exception ex) {
+                funciones.logueo("ERROR  - RecepcionarDataMigracion " + ex.Message, "Error");
+                return Json(new { respuesta = respuesta });
+            }
+        }
     }
 }
+
+

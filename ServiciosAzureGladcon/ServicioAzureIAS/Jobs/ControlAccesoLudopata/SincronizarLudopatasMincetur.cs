@@ -3,6 +3,7 @@ using ServicioAzureIAS.Clases.Email;
 using ServicioAzureIAS.Clases.Ludopata;
 using ServicioAzureIAS.Clases.Mincetur;
 using ServicioAzureIAS.ControlAcceso.CAL;
+using ServicioAzureIAS.DAL.ControlAcceso;
 using ServicioAzureIAS.DAL.Email;
 using ServicioAzureIAS.DAL.Mincetur;
 using ServicioAzureIAS.Service;
@@ -16,6 +17,7 @@ using System.Threading.Tasks;
 namespace ServicioAzureIAS.Jobs.ControlAccesoLudopata {
     public class SincronizarLudopatasMincetur : IJob {
         private readonly LudopataDAL ludopataDAL;
+        private readonly HistorialLudopataDAL historialLudopataDAL;
         private readonly MinceturDAL minceturDAL;
         private readonly DestinatarioDAL destinatarioDAL;
         private readonly MinceturService minceturService;
@@ -27,10 +29,16 @@ namespace ServicioAzureIAS.Jobs.ControlAccesoLudopata {
             destinatarioDAL = new DestinatarioDAL();
             minceturService = new MinceturService();
             emailService = new EmailService();
+            historialLudopataDAL = new HistorialLudopataDAL();
         }
 
         public async Task Execute(IJobExecutionContext context) {
             List<CredencialMincetur> credenciales = minceturDAL.ObtenerCredencialesMinceturActivas();
+            if(credenciales.Count == 0) {
+                funciones.logueo("No hay credenciales para la búsqueda de ludópatas en MINCETUR.");
+                return;
+            }
+
             ResponseMinceturLudopata responseMincetur = new ResponseMinceturLudopata();
 
             foreach(CredencialMincetur credencial in credenciales) {
@@ -131,6 +139,12 @@ namespace ServicioAzureIAS.Jobs.ControlAccesoLudopata {
                         ludopataDAL.ModificarFechaEnvioCorreo(idInsertado, fechaActual);
                         ludopatasEnvioCorreo.Add(ludopata);
                     }
+                    HistorialLudopata historialLudopata = new HistorialLudopata {
+                        IdLudopata = idInsertado,
+                        TipoMovimiento = TipomovimientoHistorialLudopata.Entra,
+                        TipoRegistro = TipoRegistroHistorialLudopata.Automatico
+                    };
+                    historialLudopataDAL.InsertarHistorialLudopata(historialLudopata);
                 }
             }
             await emailService.SendEmailAsync(destinatarios, "Servicio de Sincronización de Ludopatas - IAS - MINCETUR", CrearBodyParaCorreoLudopata(ludopatasEnvioCorreo, fechaActual), true);
@@ -158,23 +172,43 @@ namespace ServicioAzureIAS.Jobs.ControlAccesoLudopata {
             int activadosCorrectamente = 0;
             foreach(Ludopata ludopata in ludopatasActivar) {
                 int idModificado = ludopataDAL.ModificarEstadoLudopata(true, ludopata.LudopataID);
-                activadosCorrectamente += idModificado > 0 ? 1 : 0;
+                bool seModifico = idModificado > 0;
+                activadosCorrectamente += seModifico ? 1 : 0;
+                if(seModifico) {
+                    HistorialLudopata historialLudopata = new HistorialLudopata {
+                        IdLudopata = idModificado,
+                        TipoMovimiento = TipomovimientoHistorialLudopata.Entra,
+                        TipoRegistro = TipoRegistroHistorialLudopata.Automatico
+                    };
+                    historialLudopataDAL.InsertarHistorialLudopata(historialLudopata);
+                }
             }
 
             Console.WriteLine("Desactivando ...");
             int desactivadosCorrectamente = 0;
             foreach(Ludopata ludopata in ludopatasDesactivar) {
                 int idModificado = ludopataDAL.ModificarEstadoLudopata(false, ludopata.LudopataID);
-                desactivadosCorrectamente += idModificado > 0 ? 1 : 0;
+                bool seModifico = idModificado > 0;
+                desactivadosCorrectamente += seModifico ? 1 : 0;
+                if(seModifico) {
+                    HistorialLudopata historialLudopata = new HistorialLudopata {
+                        IdLudopata = idModificado,
+                        TipoMovimiento = TipomovimientoHistorialLudopata.Sale,
+                        TipoRegistro = TipoRegistroHistorialLudopata.Automatico
+                    };
+                    historialLudopataDAL.InsertarHistorialLudopata(historialLudopata);
+                }
             }
 
-            funciones.logueo($"Ludopatas Crear Contacto: {contactoCreadoModificadoCorrectamente}/{ludopataCrearContactoModificar.Count}");
-            funciones.logueo($"Ludopatas Insertados: {insertadosCorrectamente}/{ludopatasInsertar.Count}");
-            funciones.logueo($"Correos Enviados de los insertados: {ludopatasEnvioCorreo.Count}");
-            funciones.logueo($"Ludopatas Modificados: {modificadosCorrectamente}/{ludopatasModificar.Count}");
-            funciones.logueo($"Ludopatas Activados: {activadosCorrectamente}/{ludopatasActivar.Count}");
-            funciones.logueo($"Ludopatas Desactivados: {desactivadosCorrectamente}/{ludopatasDesactivar.Count}");
-            funciones.logueo($"Ludopatas sin Acción: {ludopatasSinAccion.Count}");
+            funciones.logueo($@"
+                Ludópatas Crear Contacto: {contactoCreadoModificadoCorrectamente}/{ludopataCrearContactoModificar.Count}
+                Ludópatas Insertados: {insertadosCorrectamente}/{ludopatasInsertar.Count}
+                Correos Enviados de los insertados: {ludopatasEnvioCorreo.Count}
+                Ludópatas Modificados: {modificadosCorrectamente}/{ludopatasModificar.Count}
+                Ludópatas Activados: {activadosCorrectamente}/{ludopatasActivar.Count}
+                Ludópatas Desactivados: {desactivadosCorrectamente}/{ludopatasDesactivar.Count}
+                Ludópatas sin Acción: {ludopatasSinAccion.Count}
+            ");
         }
 
         public Ludopata CrearLudopata(LudopataMincetur ludopataMincetur, Ludopata ludopataLocal, DateTime fechaActual) {
