@@ -16,6 +16,7 @@ using ServicioServidorVPN.utilitarios;
 using System.Web.Http.Cors;
 using System.Web.Http;
 using ServicioServidorVPN.Jobs;
+using ServicioServidorVPN.Jobs.Clientes;
 
 namespace ServicioServidorVPN
 {
@@ -48,6 +49,11 @@ namespace ServicioServidorVPN
             Task.Run(async () => {
                 MyScheduler schedulerClass = new MyScheduler();
                 await schedulerClass.StartMigracionData();
+            });
+
+            Task.Run(async () => {
+                MigracionIngresoClientesSalaScheduler scheduler = new MigracionIngresoClientesSalaScheduler();
+                await scheduler.Start();
             });
             funciones.logueo("Jobs iniciados");
 
