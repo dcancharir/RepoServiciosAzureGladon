@@ -57,6 +57,7 @@ namespace ServicioAzureIAS {
                 await new LimpiarLogIASScheduler().Start_LimpiarLogIAS();
                 await new VerificarCodigosPromocionalesScheduler().Start_VerificacionCodigos();
                 await new ActualizarLudopatasScheduler().Start_ActualizarLudopatas();
+                await new SincronizarInformacionBukGestorProyectosScheduler().Start_SincronizarInformacionBukGestorProyectos();
             });
 
             //temporizador Servers

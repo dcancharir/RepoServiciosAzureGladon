@@ -110,6 +110,10 @@
     <Compile Include="Clases\Email\SmtpClientSingleton.cs" />
     <Compile Include="Clases\EstadoServicios\EstadoServiciosDAL.cs" />
     <Compile Include="Clases\EstadoServicios\EstadoServiciosEntidad.cs" />
+    <Compile Include="Clases\GestioProyectos\Area.cs" />
+    <Compile Include="Clases\GestioProyectos\Empleado.cs" />
+    <Compile Include="Clases\GestioProyectos\Empresa.cs" />
+    <Compile Include="Clases\GestioProyectos\Usuario.cs" />
     <Compile Include="Clases\GladconData\consolidado.cs" />
     <Compile Include="Clases\GladconData\consolidado_delete.cs" />
     <Compile Include="Clases\GladconData\consolidado_tmp.cs" />
@@ -142,6 +146,10 @@
     <Compile Include="DAL\Email\DestinatarioDAL.cs" />
     <Compile Include="DAL\detalle_maquinaDAL.cs" />
     <Compile Include="DAL\detalle_maquinas_auditDAL.cs" />
+    <Compile Include="DAL\GestionProyectos\AreaDAL.cs" />
+    <Compile Include="DAL\GestionProyectos\EmpresaDAL.cs" />
+    <Compile Include="DAL\GestionProyectos\EmpleadoDAL.cs" />
+    <Compile Include="DAL\GestionProyectos\UsuarioDAL.cs" />
     <Compile Include="DAL\limpiarLogDAL.cs" />
     <Compile Include="DAL\maquinaDAL.cs" />
     <Compile Include="DAL\maquinas_auditDAL.cs" />
@@ -150,6 +158,7 @@
     <Compile Include="Jobs\BUK\JobSincronizarBuk.cs" />
     <Compile Include="Jobs\CampaniaCliente\VerificarCodigosPromocionales.cs" />
     <Compile Include="Jobs\EstadoServicioSala\JobEstadoServicioSala.cs" />
+    <Compile Include="Jobs\GestionProyectos\SincronizarInformacionBukGestorProyectos.cs" />
     <Compile Include="Jobs\LimpiarLogIAS\LimpiarLogSeguridadPJ.cs" />
     <Compile Include="Jobs\ControlAccesoLudopata\SincronizarLudopatasMincetur.cs" />
     <Compile Include="Jobs\MyScheduler.cs" />
@@ -163,10 +172,12 @@
     </Compile>
     <Compile Include="Schedulers\ActualizarLudopatasScheduler.cs" />
     <Compile Include="Schedulers\SincronizarBukScheduler.cs" />
+    <Compile Include="Schedulers\SincronizarInformacionBukGestorProyectosScheduler.cs" />
     <Compile Include="Schedulers\VerificarCodigosPromocionalesScheduler.cs" />
     <Compile Include="Schedulers\LimpiarLogIASScheduler.cs" />
     <Compile Include="Schedulers\RegistroProgresivoScheduler.cs" />
     <Compile Include="Schedulers\ReporteAlertaBilleterosScheduler.cs" />
+    <Compile Include="Service\GestorBukService.cs" />
     <Compile Include="Service\EmailService.cs" />
     <Compile Include="Service\MinceturService.cs" />
     <Compile Include="ServicioAzureIAS.cs">
