@@ -1,4 +1,5 @@
 ﻿using Quartz;
+using ServicioAzureIAS.Clases.Enum;
 using ServicioAzureIAS.Clases.GestioProyectos;
 using ServicioAzureIAS.DAL.GestionProyectos;
 using ServicioAzureIAS.Service;
@@ -24,12 +25,10 @@ namespace ServicioAzureIAS.Jobs.GestionProyectos {
         }
 
         public async Task Execute(IJobExecutionContext context) {
-
-            var empresasBD = await empresaDAL.ObtenerEmpresas();
+            var empresasBD = await empresaDAL.ObtenerEmpresas(BaseDatosEnum.TasklyFlowDyD);
             var empresasApi = await gestorBukService.ObtenerEmpresaDesdeApi();
-            var areasBD = await areaDAL.ObtenerAreas();
-            var empleadosBD = await empleadoDAL.ObtenerEmpleados();
-
+            var areasBD = await areaDAL.ObtenerAreas(BaseDatosEnum.TasklyFlowDyD);
+            var empleadosBD = await empleadoDAL.ObtenerEmpleados(BaseDatosEnum.TasklyFlowDyD);
 
             #region empresas
             foreach(var empresaApi in empresasApi) {
@@ -43,10 +42,10 @@ namespace ServicioAzureIAS.Jobs.GestionProyectos {
                 };
                 if(empresaLocal != null) {
                     if(empresaLocal.isDifferentEmpresaAPi(empresaApi)) {
-                        await empresaDAL.ActualizarEmpresa(empresa);
+                        await empresaDAL.ActualizarEmpresa(empresa,BaseDatosEnum.TasklyFlowDyD);
                     }
                 } else {
-                    await empresaDAL.InsertarEmpresa(empresa);
+                    await empresaDAL.InsertarEmpresa(empresa,BaseDatosEnum.TasklyFlowDyD);
                 }
 
                 #region empleados
@@ -81,22 +80,22 @@ namespace ServicioAzureIAS.Jobs.GestionProyectos {
                         areaNew.area = empleadoApi.Area;
                         areaNew.IdAreaBuk = empleadoApi.IdAreaBuk;
                         if(areaNew.IsDifferentAreaApi(areaDyd)) {
-                            await areaDAL.ActualizarArea(areaNew);
+                            await areaDAL.ActualizarArea(areaNew,BaseDatosEnum.TasklyFlowDyD);
                         }
                     } else {
                         areaNew.area = empleadoApi.Area;
                         areaNew.IdAreaBuk = empleadoApi.IdAreaBuk;
                         areaNew.estado = true;
-                        await areaDAL.InsertarArea(areaNew);
+                        await areaDAL.InsertarArea(areaNew,BaseDatosEnum.TasklyFlowDyD);
                     }
 
                     if(empleadoEnEmpresaActual != null) {
                         if(empleadoEnEmpresaActual.isDifferentEmpleadoApi(empleadoApi)) {
                             empleado.Id = empleadoEnEmpresaActual.Id;
-                            await empleadoDAL.ActualizarEmpleado(empleado);
+                            await empleadoDAL.ActualizarEmpleado(empleado,BaseDatosEnum.TasklyFlowDyD);
                         }
                     } else {
-                        await empleadoDAL.InsertarEmpleado(empleado);
+                        await empleadoDAL.InsertarEmpleado(empleado,BaseDatosEnum.TasklyFlowDyD);
                     }
                 }
                 #endregion
@@ -104,10 +103,10 @@ namespace ServicioAzureIAS.Jobs.GestionProyectos {
             #endregion
 
             #region usuarios
-            var empleadosActualizadosBD = await empleadoDAL.ObtenerEmpleados();
-            var usuariosBD = await usuarioDAL.ObtenerUsuarios();
-            var empresasActualizadosBD = await empresaDAL.ObtenerEmpresas();
-            var areasActualizadosBD = await areaDAL.ObtenerAreas();
+            var empleadosActualizadosBD = await empleadoDAL.ObtenerEmpleados(BaseDatosEnum.TasklyFlowDyD);
+            var usuariosBD = await usuarioDAL.ObtenerUsuarios(BaseDatosEnum.TasklyFlowDyD);//dyd
+            var empresasActualizadosBD = await empresaDAL.ObtenerEmpresas(BaseDatosEnum.TasklyFlowDyD);
+            var areasActualizadosBD = await areaDAL.ObtenerAreas(BaseDatosEnum.TasklyFlowDyD);
 
             foreach(var usuarioBD in usuariosBD) {
                 var empleadoUsuarioLocal = empleadosActualizadosBD.FirstOrDefault(e => e.Id == usuarioBD.EmpleadoId);
@@ -139,33 +138,33 @@ namespace ServicioAzureIAS.Jobs.GestionProyectos {
                     var areaLocal = areasActualizadosBD.FirstOrDefault(e => e.IdAreaBuk == empleado.AreaId);
                     empleado.EmpresaId = empresaLocal.EmpresaId;
                     empleado.AreaId = areaLocal.IdArea;
-                    await usuarioDAL.ActualizarUsuario(empleado);
+                    await usuarioDAL.ActualizarUsuario(empleado, BaseDatosEnum.TasklyFlowDyD);
                 }
             }
             #endregion
 
             #region empresas
-            List<Empresa> empresasGestor = await empresaDAL.ObtenerEmpresas();
-            List<Empresa> empresasPro = await empresaDAL.ObtenerEmpresasHolding();
+            List<Empresa> empresasGestor = await empresaDAL.ObtenerEmpresas(BaseDatosEnum.TasklyFlowDyD);
+            List<Empresa> empresasPro = await empresaDAL.ObtenerEmpresas(BaseDatosEnum.TasklyFlowHolding);
 
-            List<Empleado> empleadosGestor = await empleadoDAL.ObtenerEmpleados();
-            List<Empleado> empleadosPro = await empleadoDAL.ObtenerEmpleadosHolding();
+            List<Empleado> empleadosGestor = await empleadoDAL.ObtenerEmpleados(BaseDatosEnum.TasklyFlowDyD);
+            List<Empleado> empleadosPro = await empleadoDAL.ObtenerEmpleados(BaseDatosEnum.TasklyFlowHolding);
 
-            List<Area> areasGestor = await areaDAL.ObtenerAreas();
-            List<Area> areasPro = await areaDAL.ObtenerAreasHolding();
+            List<Area> areasGestor = await areaDAL.ObtenerAreas(BaseDatosEnum.TasklyFlowDyD);
+            List<Area> areasPro = await areaDAL.ObtenerAreas(BaseDatosEnum.TasklyFlowHolding);
 
 
-            List<Usuario> usuariosPro = await usuarioDAL.ObtenerUsuariosHolding();
+            List<Usuario> usuariosPro = await usuarioDAL.ObtenerUsuarios(BaseDatosEnum.TasklyFlowHolding);
 
             funciones.logueo("iniciar copiado de empresas a gestor pro:");
             foreach(var empresaGestor in empresasGestor) {
                 var empresaPro = empresasPro.FirstOrDefault(e => e.ID_BUK == empresaGestor.ID_BUK);
                 if(empresaPro == null) {
-                    await empresaDAL.InsertarEmpresaHolding(empresaGestor);
+                    await empresaDAL.InsertarEmpresa(empresaGestor, BaseDatosEnum.TasklyFlowHolding);
                 }
                 if(empresaPro != null && empresaPro.isDifferentEmpresa(empresaGestor)) {
                     empresaGestor.EmpresaId = empresaPro.EmpresaId;
-                    await empresaDAL.ActualizarEmpresaHolding(empresaGestor);
+                    await empresaDAL.ActualizarEmpresa(empresaGestor, BaseDatosEnum.TasklyFlowHolding);
                 }
             }
             #endregion empresas
@@ -177,10 +176,10 @@ namespace ServicioAzureIAS.Jobs.GestionProyectos {
                 var areaPro = areasPro.FirstOrDefault(a => a.IdAreaBuk == areaGestor.IdAreaBuk);
 
                 if(areaPro == null) {
-                    await areaDAL.InsertarAreaHolding(areaGestor);
+                    await areaDAL.InsertarArea(areaGestor, BaseDatosEnum.TasklyFlowHolding);
                 } else if(areaPro.IsDifferentAreaApi(areaGestor)) {
                     areaGestor.IdArea = areaPro.IdArea;
-                    await areaDAL.ActualizarAreaHolding(areaGestor);
+                    await areaDAL.ActualizarArea(areaGestor, BaseDatosEnum.TasklyFlowHolding);
                 }
             }
             #endregion Areas
@@ -190,10 +189,10 @@ namespace ServicioAzureIAS.Jobs.GestionProyectos {
                 var empleadoPro = empleadosPro.FirstOrDefault(e => e.IdBuk == empleadoGestor.IdBuk && e.IdEmpresa == empleadoGestor.IdEmpresa);
 
                 if(empleadoPro == null) {
-                    await empleadoDAL.InsertarEmpleadoHolding(empleadoGestor);
+                    await empleadoDAL.InsertarEmpleado(empleadoGestor,BaseDatosEnum.TasklyFlowHolding);
                 } else if(empleadoPro.isDifferentEmpleado(empleadoGestor)) {
                     empleadoGestor.Id = empleadoPro.Id;
-                    await empleadoDAL.ActualizarEmpleadoHolding(empleadoGestor);
+                    await empleadoDAL.ActualizarEmpleado(empleadoGestor,BaseDatosEnum.TasklyFlowHolding);
                 }
             }
             #endregion empleados
@@ -235,7 +234,7 @@ namespace ServicioAzureIAS.Jobs.GestionProyectos {
                     usuarioActualizado.EmpresaId = empresaPro.EmpresaId;
                     usuarioActualizado.AreaId = areaPro.IdArea;
 
-                    await usuarioDAL.ActualizarUsuarioHolding(usuarioActualizado);
+                    await usuarioDAL.ActualizarUsuario(usuarioActualizado, BaseDatosEnum.TasklyFlowHolding);
                 }
             }
             funciones.logueo("fin del job: sincronizar data buk");

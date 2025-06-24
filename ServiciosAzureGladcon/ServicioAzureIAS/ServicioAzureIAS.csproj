@@ -113,6 +113,7 @@
     <Compile Include="Clases\GestioProyectos\Area.cs" />
     <Compile Include="Clases\GestioProyectos\Empleado.cs" />
     <Compile Include="Clases\GestioProyectos\Empresa.cs" />
+    <Compile Include="Clases\Enum\BaseDatosEnum.cs" />
     <Compile Include="Clases\GestioProyectos\Usuario.cs" />
     <Compile Include="Clases\GladconData\consolidado.cs" />
     <Compile Include="Clases\GladconData\consolidado_delete.cs" />
@@ -149,6 +150,7 @@
     <Compile Include="DAL\GestionProyectos\AreaDAL.cs" />
     <Compile Include="DAL\GestionProyectos\EmpresaDAL.cs" />
     <Compile Include="DAL\GestionProyectos\EmpleadoDAL.cs" />
+    <Compile Include="DAL\ConnectionHelperDAL.cs" />
     <Compile Include="DAL\GestionProyectos\UsuarioDAL.cs" />
     <Compile Include="DAL\limpiarLogDAL.cs" />
     <Compile Include="DAL\maquinaDAL.cs" />
