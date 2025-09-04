@@ -82,6 +82,8 @@
     <Compile Include="clases\AuditableEntity.cs" />
     <Compile Include="clases\Cliente.cs" />
     <Compile Include="clases\Clientes\CAL_IngresoClienteSala.cs" />
+    <Compile Include="clases\Clientes\ControlAcceso\ClienteControlAccesoEntidad.cs" />
+    <Compile Include="clases\Clientes\ControlAcceso\ClienteControlAccesoIds.cs" />
     <Compile Include="clases\CMP_Jugada.cs" />
     <Compile Include="clases\CMP_JugadaExca.cs" />
     <Compile Include="clases\CMP_Sesion.cs" />
@@ -103,6 +105,7 @@
     <Compile Include="clases\TCM_Modelo.cs" />
     <Compile Include="DAL\Asignacion_M_TDAL.cs" />
     <Compile Include="DAL\ClienteDAL.cs" />
+    <Compile Include="DAL\Clientes\ControlAcceso\ClientesControlAccesoDAL.cs" />
     <Compile Include="DAL\Clientes\IngresoClienteSalaDAL.cs" />
     <Compile Include="DAL\CMP_JugadaDAL.cs" />
     <Compile Include="DAL\CMP_JugadaExcaDAL.cs" />
@@ -123,6 +126,8 @@
     <Compile Include="DAL\SorteoSalaDAL.cs" />
     <Compile Include="DAL\TCM_ModeloDAL.cs" />
     <Compile Include="Helpers\Http\HttpClientIas.cs" />
+    <Compile Include="Jobs\ClientesControlAcceso\MigracionClientesControlAccesoJob.cs" />
+    <Compile Include="Jobs\ClientesControlAcceso\MigracionClientesControlAccesoScheduler.cs" />
     <Compile Include="Jobs\Clientes\MigracionIngresoClientesSalaJob.cs" />
     <Compile Include="Jobs\Clientes\MigracionIngresoClientesSalaScheduler.cs" />
     <Compile Include="Jobs\MigracionData\JobMigracionData.cs" />
@@ -135,6 +140,7 @@
       <DependentUpon>ProjectInstaller.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Service\Ias\Clientes\ControlAcceso\ClientesControlAccesoService.cs" />
     <Compile Include="Service\Ias\Clientes\IngresoClienteSalaService.cs" />
     <Compile Include="ServicioController.cs" />
     <Compile Include="ServicioServidorVPN.cs">

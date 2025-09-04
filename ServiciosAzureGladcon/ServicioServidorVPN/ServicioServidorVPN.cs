@@ -1,27 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using ServicioServidorVPN.Jobs;
+using ServicioServidorVPN.Jobs.Clientes;
+using ServicioServidorVPN.Jobs.ClientesControlAcceso;
+using ServicioServidorVPN.utilitarios;
+using System;
 using System.Configuration;
-using System.Data;
-using System.Diagnostics;
-using System.Linq;
-using System.Net.Sockets;
 using System.Net;
+using System.Net.Sockets;
 using System.ServiceProcess;
-using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
-using System.Web.Http.SelfHost;
-using ServicioServidorVPN.utilitarios;
-using System.Web.Http.Cors;
 using System.Web.Http;
-using ServicioServidorVPN.Jobs;
-using ServicioServidorVPN.Jobs.Clientes;
+using System.Web.Http.Cors;
+using System.Web.Http.SelfHost;
 
-namespace ServicioServidorVPN
-{
-    partial class ServicioServidorVPN : ServiceBase
-    {
+namespace ServicioServidorVPN {
+    partial class ServicioServidorVPN : ServiceBase {
         public static string nombreservicio = "ServicioServidorVPN";
 
         public static string conectionOnline = "";
@@ -37,13 +30,11 @@ namespace ServicioServidorVPN
         public static string urlApiERP = "";
         public static int urlenvio = 0;
         public static System.Timers.Timer temporizadorServer = new System.Timers.Timer();
-        public ServicioServidorVPN()
-        {
+        public ServicioServidorVPN() {
             InitializeComponent();
         }
 
-        protected override void OnStart(string[] args)
-        {
+        protected override void OnStart(string[] args) {
             funciones.logueo("El servicio se ha iniciado");
 
             Task.Run(async () => {
@@ -53,6 +44,11 @@ namespace ServicioServidorVPN
 
             Task.Run(async () => {
                 MigracionIngresoClientesSalaScheduler scheduler = new MigracionIngresoClientesSalaScheduler();
+                await scheduler.Start();
+            });
+
+            Task.Run(async () => {
+                MigracionClientesControlAccesoScheduler scheduler = new MigracionClientesControlAccesoScheduler();
                 await scheduler.Start();
             });
             funciones.logueo("Jobs iniciados");
@@ -67,8 +63,7 @@ namespace ServicioServidorVPN
 
         }
 
-        protected override void OnStop()
-        {
+        protected override void OnStop() {
             //enviar correo
             string mensajeEnviar = "Se Detuvo el Servicio VPN a las : " + string.Format("{0:dd/MM/yyyy hh: mm: ss tt}", DateTime.Now);
             Correo correo = new Correo();
@@ -77,26 +72,21 @@ namespace ServicioServidorVPN
 
             // TODO: agregar código aquí para realizar cualquier anulación necesaria para detener el servicio.
         }
-        internal void Start()
-        {
+        internal void Start() {
             OnStart(null);
         }
-        public static string GetLocalIPAddress()
-        {
+        public static string GetLocalIPAddress() {
             string ipad = "";
             var host = Dns.GetHostEntry(Dns.GetHostName());
-            foreach (var ip in host.AddressList)
-            {
-                if (ip.AddressFamily == AddressFamily.InterNetwork)
-                {
+            foreach(var ip in host.AddressList) {
+                if(ip.AddressFamily == AddressFamily.InterNetwork) {
                     ipad = ipad + " " + ip.ToString();
                 }
             }
             return ipad;
             throw new Exception("Local IP Address Not Found!");
         }
-        public void declararvariables()
-        {
+        public void declararvariables() {
             puertoserviciowindows = ConfigurationManager.AppSettings["puertoserviciowindows"];
             //conectionOnline = ConfigurationManager.ConnectionStrings["conectionOnline"].ConnectionString;
             //conection = ConfigurationManager.ConnectionStrings["conection"].ConnectionString;
@@ -112,22 +102,19 @@ namespace ServicioServidorVPN
             //urlenvio = Convert.ToInt32(ConfigurationManager.AppSettings["urlIASEnvio"]);
             //urlApiERP = ConfigurationManager.AppSettings["urlApiERP"];
         }
-        public void IniciarServidor()
-        {
+        public void IniciarServidor() {
             declararvariables();
             var config = new HttpSelfHostConfiguration(urlserviciowindows);
             HttpSelfHostServer server = null;
 
-            try
-            {
+            try {
                 var cors = new EnableCorsAttribute("*", "*", "*");
                 config.MaxReceivedMessageSize = 2147483647; // use config for this value
                 config.EnableCors(cors);
                 config.Routes.MapHttpRoute(
                    name: "API",
                    routeTemplate: "{controller}/{action}/{id}/{id2}/{id3}/{id4}",
-                   defaults: new
-                   {
+                   defaults: new {
 
                        id = System.Web.Http.RouteParameter.Optional,
                        id2 = System.Web.Http.RouteParameter.Optional,
@@ -148,11 +135,8 @@ namespace ServicioServidorVPN
                 Correo correo = new Correo();
                 string listaCorreosEnviar = "intranet.corporacionpj@gmail.com";
                 correo.EnviarCorreo(listaCorreosEnviar, "Servicio VPN(Data Warehouse)", mensajeEnviar);
-            }
-            catch (Exception ex)
-            {
-                if (server != null)
-                {
+            } catch(Exception ex) {
+                if(server != null) {
                     server.CloseAsync().Wait();
                     server.Dispose();
                     server = null;
@@ -161,12 +145,9 @@ namespace ServicioServidorVPN
                 temporizadorServer.Start();
 
                 string msg = "";
-                if (ex.InnerException == null)
-                {
+                if(ex.InnerException == null) {
                     msg = ex.Message;
-                }
-                else
-                {
+                } else {
                     msg = ex.InnerException.GetBaseException().Message;
                 }
                 funciones.logueo(" - " + ex.Message.ToString() + "\n -- " + msg, "Error");
@@ -174,14 +155,10 @@ namespace ServicioServidorVPN
             }
         }
 
-        private void timerfuncionServer(object source, ElapsedEventArgs e)
-        {
-            try
-            {
+        private void timerfuncionServer(object source, ElapsedEventArgs e) {
+            try {
                 IniciarServidor();
-            }
-            catch (Exception ex)
-            {
+            } catch(Exception ex) {
             }
         }
     }
