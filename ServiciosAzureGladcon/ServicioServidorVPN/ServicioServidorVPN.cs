@@ -45,12 +45,11 @@ namespace ServicioServidorVPN {
             Task.Run(async () => {
                 MigracionIngresoClientesSalaScheduler scheduler = new MigracionIngresoClientesSalaScheduler();
                 await scheduler.Start();
+
+                MigracionClientesControlAccesoScheduler schedulerClienteControlAcceso = new MigracionClientesControlAccesoScheduler();
+                await schedulerClienteControlAcceso.Start();
             });
 
-            Task.Run(async () => {
-                MigracionClientesControlAccesoScheduler scheduler = new MigracionClientesControlAccesoScheduler();
-                await scheduler.Start();
-            });
             funciones.logueo("Jobs iniciados");
 
             //temporizador Servers

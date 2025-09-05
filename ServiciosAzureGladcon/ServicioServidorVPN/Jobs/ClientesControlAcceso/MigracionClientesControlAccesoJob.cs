@@ -16,9 +16,9 @@ namespace ServicioServidorVPN.Jobs.ClientesControlAcceso {
         private readonly ClientesControlAccesoService _clientesControlAccesoService;
         private readonly ClientesControlAccesoDAL _clientesControlAccesoDAL;
 
-        public MigracionClientesControlAccesoJob(ClientesControlAccesoService clientesControlAccesoService, ClientesControlAccesoDAL clientesControlAccesoDAL) {
-            _clientesControlAccesoService = clientesControlAccesoService;
-            _clientesControlAccesoDAL = clientesControlAccesoDAL;
+        public MigracionClientesControlAccesoJob() {
+            _clientesControlAccesoService = new ClientesControlAccesoService();
+            _clientesControlAccesoDAL = new ClientesControlAccesoDAL();
         }
 
         public async Task Execute(IJobExecutionContext context) {
@@ -33,7 +33,7 @@ namespace ServicioServidorVPN.Jobs.ClientesControlAcceso {
             try {
                 clientesControlAcceso = await _clientesControlAccesoService.ObtenerClientesControlAccesoIas(cantidadRegistrosMigrados);
                 bool hayClientes = clientesControlAcceso.Count > 0;
-                string logClientesControlAcceso = hayClientes ? $"{clientesControlAcceso.Count} clientes de control de acceso para migrar." : "No hay ingresos de clientes de control de acceso para migrar.";
+                string logClientesControlAcceso = hayClientes ? $"{clientesControlAcceso.Count} clientes de control de acceso para migrar." : "No hay clientes de control de acceso para migrar.";
                 funciones.logueo(logClientesControlAcceso);
                 if(!hayClientes) {
                     return;
@@ -48,20 +48,20 @@ namespace ServicioServidorVPN.Jobs.ClientesControlAcceso {
                 clientesControlAcceso.RemoveAll(x => clientesControlAccesoExistentes.Any(y => y.IdCliente == x.IdCliente && y.CodSala == x.CodSala));
 
                 bool migracionCompleta = await _clientesControlAccesoDAL.InsertarClientesControlAccesiMasivamente(clientesControlAcceso);
-                string logMigracionCompleta = migracionCompleta ? $"{clientesControlAcceso.Count} clientes de control de acceso migrados correctamente, desde {clientesControlAcceso.FirstOrDefault()?.IdCliente ?? 0} - {clientesControlAcceso.LastOrDefault()?.IdCliente ?? 0}." : $"No se pudo insertar masivamente los {clientesControlAcceso.Count} ingresos de clientes a sala.";
+                string logMigracionCompleta = migracionCompleta ? $"{clientesControlAcceso.Count} clientes de control de acceso migrados correctamente, desde {clientesControlAcceso.FirstOrDefault()?.IdCliente ?? 0} - {clientesControlAcceso.LastOrDefault()?.IdCliente ?? 0}." : $"No se pudo insertar masivamente los {clientesControlAcceso.Count} clientes de control de acceso.";
                 funciones.logueo(logMigracionCompleta);
                 if(!migracionCompleta) {
                     return;
                 }
 
                 bool marcadoComoMigrado = await _clientesControlAccesoService.MarcarComoMigrados(ids, fechaMigracionDwh);
-                string logMarcadoComoMigrado = marcadoComoMigrado ? $"Se marcó como migrado {ids.Count} ingresos de clientes a sala en el IAS, desde {ids.FirstOrDefault()} - {ids.LastOrDefault()}." : $"No se pudo marcar como migrado {ids.Count} ingresos de clientes a sala ({string.Join(",", ids)}).";
+                string logMarcadoComoMigrado = marcadoComoMigrado ? $"Se marcó como migrado {ids.Count} clientes de control de acceso del IAS, desde {ids.FirstOrDefault()?.IdCliente ?? 0} - {ids.LastOrDefault()?.IdCliente ?? 0}." : $"No se pudo marcar como migrado {ids.Count} clientes de control de acceso ({string.Join(",", ids.Select(x => x.IdCliente))}).";
                 funciones.logueo(logMarcadoComoMigrado);
             } catch(Exception ex) {
                 funciones.logueo($"Error al intentar migrar ingresos de clientes a sala, desde: {clientesControlAcceso.FirstOrDefault()?.IdCliente ?? 0} - {clientesControlAcceso.LastOrDefault()?.IdCliente ?? 0}. {ex.Message}", "Error");
                 if(ids.Count > 0) {
                     bool migracionRevertida = await _clientesControlAccesoService.RevertirEstadoMigracion(ids);
-                    string logMigracionRevertida = migracionRevertida ? $"Se revirtió el estado de migración de {ids.Count} ingresos de clientes a sala, desde {ids.FirstOrDefault()} - {ids.LastOrDefault()}." : $"No se pudo revertir el estado de migración de {ids.Count} ingresos de clientes a sala ({string.Join(",", ids)}).";
+                    string logMigracionRevertida = migracionRevertida ? $"Se revirtió el estado de migración de {ids.Count} clientes de control de acceso de IAS, desde {ids.FirstOrDefault()?.IdCliente ?? 0} - {ids.LastOrDefault()?.IdCliente ?? 0}." : $"No se pudo revertir el estado de migración de {ids.Count} clientes de control de acceso de IAS ({string.Join(",", ids.Select(x => x.IdCliente))}).";
                     funciones.logueo(logMigracionRevertida);
                 }
             }

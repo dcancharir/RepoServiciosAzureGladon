@@ -26,8 +26,7 @@ namespace ServicioServidorVPN.Jobs.ClientesControlAcceso {
                 .ForJob(jobDetail)
                 .WithSimpleSchedule(x => x
                     .WithIntervalInMinutes(intervaloJob)
-                    .RepeatForever()
-                )
+                    .RepeatForever().Build())
                 .StartNow()
                 .Build();
 
