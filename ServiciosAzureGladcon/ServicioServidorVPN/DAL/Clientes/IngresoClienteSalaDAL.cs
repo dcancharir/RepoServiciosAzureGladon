@@ -61,7 +61,7 @@ namespace ServicioServidorVPN.DAL.Clientes {
                     foreach(var batch in batches) {
                         List<string> parameterNames = batch.Select((id, index) => $"@id{index}").ToList();
                         string query = $@"
-                            SELECT Id
+                            SELECT *
                             FROM CAL_IngresoClienteSala 
                             WHERE Id IN ({string.Join(",", parameterNames)})
                         ";
