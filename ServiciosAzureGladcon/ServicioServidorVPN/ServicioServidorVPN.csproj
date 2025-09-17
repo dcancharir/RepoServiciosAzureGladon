@@ -96,7 +96,11 @@
     <Compile Include="clases\CMP_SorteoSalaExca.cs" />
     <Compile Include="clases\ContadoresOnline.cs" />
     <Compile Include="clases\Jugada.cs" />
+    <Compile Include="clases\Ludopata\ContactoLudopata.cs" />
+    <Compile Include="clases\Ludopata\Ludopata.cs" />
     <Compile Include="clases\Marcas.cs" />
+    <Compile Include="clases\Mincetur\LudopataMincetur.cs" />
+    <Compile Include="clases\Mincetur\ResponseMinceturLudopata.cs" />
     <Compile Include="clases\Response\Ias\ResponseServiceIas.cs" />
     <Compile Include="clases\Sala.cs" />
     <Compile Include="clases\Sesion.cs" />
@@ -119,6 +123,7 @@
     <Compile Include="DAL\CMP_SorteoSalaExcaDAL.cs" />
     <Compile Include="DAL\ContadoresOnlineDataWhereHouseDAL.cs" />
     <Compile Include="DAL\JugadaDAL.cs" />
+    <Compile Include="DAL\Ludopatas\LudopataDAL.cs" />
     <Compile Include="DAL\MarcasDAL.cs" />
     <Compile Include="DAL\SalaDAL.cs" />
     <Compile Include="DAL\SesionDAL.cs" />
@@ -130,6 +135,8 @@
     <Compile Include="Jobs\ClientesControlAcceso\MigracionClientesControlAccesoScheduler.cs" />
     <Compile Include="Jobs\Clientes\MigracionIngresoClientesSalaJob.cs" />
     <Compile Include="Jobs\Clientes\MigracionIngresoClientesSalaScheduler.cs" />
+    <Compile Include="Jobs\Ludopatas\SincronizacionLudopatasMinceturScheduler.cs" />
+    <Compile Include="Jobs\Ludopatas\SincronizacionLudopatasMinceturJob.cs" />
     <Compile Include="Jobs\MigracionData\JobMigracionData.cs" />
     <Compile Include="Jobs\MigracionData\MyScheduler.cs" />
     <Compile Include="Program.cs" />
@@ -142,6 +149,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service\Ias\Clientes\ControlAcceso\ClientesControlAccesoService.cs" />
     <Compile Include="Service\Ias\Clientes\IngresoClienteSalaService.cs" />
+    <Compile Include="Service\Mincetur\MinceturService.cs" />
     <Compile Include="ServicioController.cs" />
     <Compile Include="ServicioServidorVPN.cs">
       <SubType>Component</SubType>
@@ -191,6 +199,7 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="app.manifest" />
+    <None Include="Jobs\Ludopatas\ludopatas.json" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

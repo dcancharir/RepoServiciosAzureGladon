@@ -1,6 +1,7 @@
 ﻿using ServicioServidorVPN.Jobs;
 using ServicioServidorVPN.Jobs.Clientes;
 using ServicioServidorVPN.Jobs.ClientesControlAcceso;
+using ServicioServidorVPN.Jobs.Ludopatas;
 using ServicioServidorVPN.utilitarios;
 using System;
 using System.Configuration;
@@ -48,6 +49,9 @@ namespace ServicioServidorVPN {
 
                 MigracionClientesControlAccesoScheduler schedulerClienteControlAcceso = new MigracionClientesControlAccesoScheduler();
                 await schedulerClienteControlAcceso.Start();
+
+                SincronizacionLudopatasMinceturScheduler schedulerLudopatas = new SincronizacionLudopatasMinceturScheduler();
+                await schedulerLudopatas.Start();
             });
 
             funciones.logueo("Jobs iniciados");
