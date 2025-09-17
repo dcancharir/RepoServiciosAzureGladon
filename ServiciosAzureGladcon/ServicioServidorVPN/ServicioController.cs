@@ -242,14 +242,16 @@ namespace ServicioServidorVPN {
                     item.COD_SALA = Convert.ToString(CodSala);
                     var insertado = _asignacionMTDAL.GuardarAsignacionMT(item);
                 }
-                foreach(var item in listaModelos) {
-                    item.CodSala = CodSala;
-                    var insertado = _modeloDAL.GuardarModelos(item);
-                }
-                foreach(var item in listaMarcas) {
-                    item.CodSala = CodSala;
-                    var insertado = _marcasDAL.GuardarMarcas(item);
-                }
+                //foreach(var item in listaModelos)
+                //{
+                //    item.CodSala = CodSala;
+                //    var insertado=_modeloDAL.GuardarModelos(item);
+                //}
+                //foreach(var item in listaMarcas)
+                //{
+                //    item.CodSala = CodSala;
+                //    var insertado=_marcasDAL.GuardarMarcas(item);
+                //}
                 return Json(new { respuesta = true });
             } catch(Exception ex) {
                 funciones.logueo("ERROR  - RecepcionarDataMaquinas " + ex.Message, "Error");
