@@ -270,14 +270,14 @@ namespace ServicioServidorVPN
                 {
                     listaMaquinas = items.listaMaquinas.ToObject<List<Asignacion_M_T>>();
                 }
-                if (items.listaMarcas != null)
-                {
-                    listaMarcas=items.listaMarcas.ToObject<List<Marcas>>();
-                }
-                if (items.listaModelos != null)
-                {
-                    listaModelos=items.listaModelos.ToObject<List<TCM_Modelo>>();
-                }
+                //if (items.listaMarcas != null)
+                //{
+                //    listaMarcas=items.listaMarcas.ToObject<List<Marcas>>();
+                //}
+                //if (items.listaModelos != null)
+                //{
+                //    listaModelos=items.listaModelos.ToObject<List<TCM_Modelo>>();
+                //}
                 if (items.codSala != null)
                 {
                     CodSala = items.codSala.ToObject<int>();
